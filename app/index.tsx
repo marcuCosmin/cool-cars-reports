@@ -24,7 +24,7 @@ const getStyles = () =>
   } as const)
 
 export default function Index() {
-  const { selectedCar } = useAppSelector((state) => state.selectedCar)
+  const { id } = useAppSelector((state) => state.selectedCar)
   const dispatch = useDispatch()
 
   const [selectOptions, setSelectOptions] = useState<string[]>([])
@@ -55,11 +55,11 @@ export default function Index() {
       <Select
         label="Select a vehicle"
         options={selectOptions}
-        value={selectedCar}
+        value={id}
         onChange={onSelectChange}
       />
 
-      {selectedCar && (
+      {id && (
         <Button style={styles.button} onClick={onButtonClick}>
           <Typography type="button">Proceed</Typography>
         </Button>

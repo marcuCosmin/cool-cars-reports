@@ -1,11 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
 type SelectedCarState = {
-  selectedCar: string
+  id: string
 }
 
 const initialState: SelectedCarState = {
-  selectedCar: "",
+  id: "",
 }
 
 const selectedCarSlice = createSlice({
@@ -13,7 +13,7 @@ const selectedCarSlice = createSlice({
   initialState,
   reducers: {
     setSelectedCar: (state, action: PayloadAction<string>) => {
-      state.selectedCar = action.payload
+      state.id = action.payload
     },
   },
 })

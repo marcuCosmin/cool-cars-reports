@@ -34,11 +34,12 @@ const getStyles = () =>
 export default function Check() {
   const styles = useStyles(getStyles)
   const dispatch = useAppDispatch()
-  const { questions, answers, user } = useAppSelector(
-    ({ questions, answers, user }) => ({
+  const { questions, answers, user, selectedCar } = useAppSelector(
+    ({ questions, answers, user, selectedCar }) => ({
       questions,
       answers,
       user,
+      selectedCar,
     })
   )
 
@@ -82,6 +83,7 @@ export default function Check() {
       exterior: answers.exterior,
       odoReading: answers.odoReading as OdoReading,
       uid: user.uid as string,
+      carId: selectedCar.id,
     })
     dispatch(resetAnswers())
     dispatch(closeLoadingOverlay())
