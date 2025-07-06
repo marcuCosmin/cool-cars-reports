@@ -26,6 +26,7 @@ export const getQuestions = async () => {
 
 type AddCheckProps = {
   uid: string
+  carId: string
   interior: Question[]
   exterior: Question[]
   odoReading: OdoReading
@@ -36,12 +37,14 @@ export const addCheck = async ({
   interior,
   exterior,
   odoReading,
+  carId,
 }: AddCheckProps) => {
   const checkRef = collection(firestore, "daily-checks", "questions", "checks")
   const currentTime = new Date().getTime()
   const timestamp = new Timestamp(currentTime / 1000, 0)
 
   await addDoc(checkRef, {
+    carId,
     createDate: timestamp,
     driverId: uid,
     interior,
