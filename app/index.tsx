@@ -1,13 +1,9 @@
 import { router } from "expo-router"
-import { useEffect, useState } from "react"
-
-import { firestore } from "@/firebase/config"
-import { collection, getDocs } from "firebase/firestore"
+import { useEffect } from "react"
 
 import { resetAnswers } from "@/redux/answersSlice"
-import { useAppSelector } from "@/redux/config"
-import { setSelectedCar } from "@/redux/selectedCarSlice"
-import { useDispatch } from "react-redux"
+import { fetchCars, setSelectedCar } from "@/redux/carsSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/config"
 
 import { Button } from "@/components/basic/Button"
 import { Select } from "@/components/basic/Select"
@@ -24,21 +20,15 @@ const getStyles = () =>
   } as const)
 
 export default function Index() {
-  const { id } = useAppSelector((state) => state.selectedCar)
-  const dispatch = useDispatch()
+  const { selectedCar, carsList } = useAppSelector((state) => state.cars)
+  const dispatch = useAppDispatch()
 
-  const [selectOptions, setSelectOptions] = useState<string[]>([])
+  const selectOptions = carsList.map((car) => car.id)
 
   const styles = useStyles(getStyles)
 
   useEffect(() => {
-    ;(async () => {
-      const carsSnapshot = await getDocs(collection(firestore, "cars"))
-
-      const carsIds = carsSnapshot.docs.map((doc) => doc.id)
-
-      setSelectOptions(carsIds)
-    })()
+    dispatch(fetchCars())
   }, [])
 
   const onButtonClick = () => router.push("/reports")
@@ -51,15 +41,14 @@ export default function Index() {
   return (
     <View>
       <Typography type="heading">Cool Cars South Coast</Typography>
-
       <Select
         label="Select a vehicle"
         options={selectOptions}
-        value={id}
+        value={selectedCar.id}
         onChange={onSelectChange}
       />
 
-      {id && (
+      {selectedCar.id && (
         <Button style={styles.button} onClick={onButtonClick}>
           <Typography type="button">Proceed</Typography>
         </Button>

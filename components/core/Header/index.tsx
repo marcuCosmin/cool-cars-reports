@@ -6,11 +6,11 @@ import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
 import { Logout } from "@/components/core/Logout"
+import { NotificationsLink } from "@/components/core/NotificationsLink"
 
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { NotificationsLink } from "../NotificationsLink"
 import { Link } from "./Link"
 
 const getStyles = (theme: Theme) =>
@@ -55,7 +55,7 @@ const linksConfig = {
 
 export const Header = () => {
   const styles = useStyles(getStyles)
-  const { selectedCar } = useAppSelector((state) => state.selectedCar)
+  const { selectedCar } = useAppSelector((state) => state.cars)
   const pathname = usePathname()
   const isHome = pathname === "/"
   const segments = useSegments()
@@ -67,7 +67,7 @@ export const Header = () => {
       <View style={styles.mainView}>
         <NotificationsLink />
 
-        <Typography style={styles.title}>{selectedCar}</Typography>
+        <Typography style={styles.title}>{selectedCar.id}</Typography>
 
         <Logout />
       </View>

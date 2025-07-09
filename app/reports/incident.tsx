@@ -1,11 +1,14 @@
 import { useState } from "react"
+import { KeyboardAvoidingView } from "react-native"
 
+import { useAppSelector } from "@/redux/config"
+
+import { useApi } from "@/hooks/useApi"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
 import { Input } from "@/components/basic/Input"
 import { Typography } from "@/components/basic/Typography"
-import { KeyboardAvoidingView } from "react-native"
 
 const getStyles = () =>
   ({
@@ -24,11 +27,22 @@ const getStyles = () =>
 
 export default function Incident() {
   const [value, setValue] = useState("")
+  const { selectedCar } = useAppSelector(({ cars }) => cars)
+
+  const { executeApiRequest } = useApi()
   const styles = useStyles(getStyles)
 
   const onChange = (text: string) => setValue(text)
 
-  const onSubmitClick = () => {}
+  const onSubmitClick = () =>
+    executeApiRequest({
+      path: "/reports/incidents",
+      method: "POST",
+      payload: {
+        incident: value,
+        carId: selectedCar.id,
+      },
+    })
 
   return (
     <KeyboardAvoidingView

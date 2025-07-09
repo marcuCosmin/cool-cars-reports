@@ -2,17 +2,11 @@ import { router } from "expo-router"
 
 import { useEffect } from "react"
 
-import { addCheck } from "@/firebase/utils"
-
 import { resetAnswers, type OdoReading } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
-import {
-  closeLoadingOverlay,
-  showLoadingOverlay,
-} from "@/redux/loadingOverlaySlice"
 import { fetchQuestions } from "@/redux/questionsSlice"
-import { showToast } from "@/redux/toastSlice"
 
+import { useApi } from "@/hooks/useApi"
 import { useStyles } from "@/hooks/useStyles"
 
 import {
@@ -34,12 +28,13 @@ const getStyles = () =>
 export default function Check() {
   const styles = useStyles(getStyles)
   const dispatch = useAppDispatch()
-  const { questions, answers, user, selectedCar } = useAppSelector(
-    ({ questions, answers, user, selectedCar }) => ({
+  const { executeApiRequest } = useApi()
+  const { questions, answers, user, cars } = useAppSelector(
+    ({ questions, answers, user, cars }) => ({
       questions,
       answers,
       user,
-      selectedCar,
+      cars,
     })
   )
 
@@ -77,17 +72,19 @@ export default function Check() {
   ]
 
   const onSubmitClick = async () => {
-    dispatch(showLoadingOverlay("Submitting your report"))
-    await addCheck({
-      interior: answers.interior,
-      exterior: answers.exterior,
-      odoReading: answers.odoReading as OdoReading,
-      uid: user.uid as string,
-      carId: selectedCar.id,
+    await executeApiRequest({
+      method: "POST",
+      path: "/cars/checks",
+      payload: {
+        interior: answers.interior,
+        exterior: answers.exterior,
+        odoReading: answers.odoReading as OdoReading,
+        uid: user.uid as string,
+        carId: cars.selectedCar.id,
+      },
     })
+
     dispatch(resetAnswers())
-    dispatch(closeLoadingOverlay())
-    dispatch(showToast("Your report has been sent!"))
     router.push("/")
   }
 

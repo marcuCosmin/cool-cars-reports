@@ -6,14 +6,14 @@ import {
 } from "react-redux"
 
 import { answers } from "./answersSlice"
+import { cars } from "./carsSlice"
 import { loadingOverlay } from "./loadingOverlaySlice"
 import { questions } from "./questionsSlice"
-import { selectedCar } from "./selectedCarSlice"
 import { toast } from "./toastSlice"
 import { user } from "./userSlice"
 
 export const store = configureStore({
-  reducer: { user, selectedCar, questions, answers, loadingOverlay, toast },
+  reducer: { user, cars, questions, answers, loadingOverlay, toast },
 })
 
 type State = ReturnType<typeof store.getState>

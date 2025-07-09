@@ -1,7 +1,4 @@
-import { type OdoReading } from "@/redux/answersSlice"
-
-import { addDoc, collection, doc, getDoc, Timestamp } from "firebase/firestore"
-
+import { collection, doc, getDoc, getDocs } from "firebase/firestore"
 import { firestore } from "./config"
 
 export type Question = {
@@ -15,6 +12,7 @@ export type QuestionDoc = {
 
 export const getQuestions = async () => {
   const questionsRef = doc(firestore, "daily-checks", "questions")
+
   const questionsSnapshot = await getDoc(questionsRef)
 
   if (!questionsSnapshot.exists()) {
@@ -24,33 +22,19 @@ export const getQuestions = async () => {
   return questionsSnapshot.data() as QuestionDoc
 }
 
-type AddCheckProps = {
-  uid: string
-  carId: string
-  interior: Question[]
-  exterior: Question[]
-  odoReading: OdoReading
+export type Car = {
+  id: string
 }
 
-export const addCheck = async ({
-  uid,
-  interior,
-  exterior,
-  odoReading,
-  carId,
-}: AddCheckProps) => {
-  const checkRef = collection(firestore, "daily-checks", "questions", "checks")
-  const currentTime = new Date().getTime()
-  const timestamp = new Timestamp(currentTime / 1000, 0)
+export const getCars = async () => {
+  const carsRef = collection(firestore, "cars")
+  const carsSnapshot = await getDocs(carsRef)
 
-  await addDoc(checkRef, {
-    carId,
-    createDate: timestamp,
-    driverId: uid,
-    interior,
-    exterior,
-    odoReading,
-  })
+  if (carsSnapshot.empty) {
+    return []
+  }
+
+  const snapshotDocs = carsSnapshot.docs as Car[]
+
+  return snapshotDocs.map((doc) => ({ id: doc.id }))
 }
-
-export const addIncident = async () => {}

@@ -18,13 +18,13 @@ const loadingOverlaySlice = createSlice({
       state.isLoading = true
       state.text = action.payload
     },
-    closeLoadingOverlay: (state) => {
+    hideLoadingOverlay: (state) => {
       state.isLoading = false
       state.text = undefined
     },
   },
 })
 
-export const { closeLoadingOverlay, showLoadingOverlay } =
+export const { hideLoadingOverlay, showLoadingOverlay } =
   loadingOverlaySlice.actions
 export const { reducer: loadingOverlay } = loadingOverlaySlice
