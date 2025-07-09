@@ -1,0 +1,33 @@
+name: Deploy APK to EAS
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.15.0'
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Authenticate with EAS
+        run: eas whoami
+        env:
+          EAS_ACCESS_TOKEN: ${{ secrets.EAS_ACCESS_TOKEN }}
+
+      - name: Build APK with EAS
+        run: eas build --platform android --non-interactive --profile production
+        env:
+          EAS_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
