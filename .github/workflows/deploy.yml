@@ -14,7 +14,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.15.0'
+          node-version: "20.15.0"
 
       - name: Install dependencies
         run: npm i
@@ -25,7 +25,7 @@ jobs:
       - name: Authenticate with EAS
         run: eas whoami
         env:
-          EAS_ACCESS_TOKEN: ${{ secrets.EAS_ACCESS_TOKEN }}
+          EAS_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
 
       - name: Build APK with EAS
         run: eas build --platform android --non-interactive --profile production
