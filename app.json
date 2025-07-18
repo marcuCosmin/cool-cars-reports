@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Cool Cars Reports",
-    "slug": "cool-cars-daily-check",
+    "slug": "cool-cars-reports",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "coolcarsdailycheck",
+    "scheme": "coolcarsreports",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "cool.cars.reports"
     },
     "plugins": [
       "expo-router",
@@ -32,6 +33,22 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "38636129-f85c-4650-a57a-a0958896054c"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD",
+      "enabled": true,
+      "url": "https://u.expo.dev/38636129-f85c-4650-a57a-a0958896054c"
+    },
+    "owner": "marcucosmin3"
   }
 }
