@@ -6,6 +6,7 @@ import { firebaseAuth } from "@/firebase/config"
 import { signInWithCustomToken } from "firebase/auth"
 
 import { useAppDispatch } from "@/redux/config"
+import { showToast } from "@/redux/toastSlice"
 
 import { useStyles } from "@/hooks/useStyles"
 
@@ -13,7 +14,6 @@ import { Button } from "@/components/basic/Button"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
-import { showToast } from "@/redux/toastSlice"
 
 const getStyles = () =>
   ({
@@ -26,7 +26,7 @@ type LocalSearchParams = {
   authToken?: string
 }
 
-export const Auth = () => {
+export default function Auth() {
   const { authToken } = useLocalSearchParams<LocalSearchParams>()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(!!authToken)
@@ -63,7 +63,6 @@ export const Auth = () => {
 
   return (
     <View style={styles.view}>
-      <Typography>Auth token: {authToken}</Typography>
       <Typography type="heading">Please log in to continue</Typography>
       <Button onClick={onButtonClick}>
         <Typography type="button">Log in</Typography>

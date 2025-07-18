@@ -14,7 +14,6 @@ import { View } from "@/components/basic/View"
 
 import { type Theme } from "@/hooks/useTheme"
 
-import { Auth } from "./Auth"
 import { Header } from "./Header"
 import { Toast } from "./Toast"
 
@@ -58,16 +57,20 @@ export const Layout = () => {
       <Toast />
       {user.uid && <Header />}
       <View style={styles.mainView}>
-        {user.uid ? (
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "fade",
-            }}
-          />
-        ) : (
-          <Auth />
-        )}
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        >
+          <Stack.Protected guard={!!user.uid}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="reports" />
+          </Stack.Protected>
+          <Stack.Protected guard={!user.uid}>
+            <Stack.Screen name="auth" />
+          </Stack.Protected>
+        </Stack>
       </View>
     </View>
   )
