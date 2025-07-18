@@ -25,4 +25,4 @@ jobs:
         run: npm i
 
       - name: Commit update
-        run: eas update --auto --non-interactive
+        run: eas update --channel production --auto --non-interactive

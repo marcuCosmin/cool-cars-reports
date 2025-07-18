@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { firebaseAuth } from "@/firebase/config"
 import { signInWithCustomToken } from "firebase/auth"
 
-import { useAppDispatch } from "@/redux/config"
+import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { showToast } from "@/redux/toastSlice"
 
 import { useStyles } from "@/hooks/useStyles"
@@ -27,6 +27,7 @@ type LocalSearchParams = {
 }
 
 export default function Auth() {
+  const { uid } = useAppSelector((state) => state.user)
   const { authToken } = useLocalSearchParams<LocalSearchParams>()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(!!authToken)
@@ -63,6 +64,7 @@ export default function Auth() {
 
   return (
     <View style={styles.view}>
+      <Typography type="heading">{uid}</Typography>
       <Typography type="heading">Please log in to continue</Typography>
       <Button onClick={onButtonClick}>
         <Typography type="button">Log in</Typography>
