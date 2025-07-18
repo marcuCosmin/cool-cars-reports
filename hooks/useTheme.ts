@@ -21,6 +21,7 @@ const getTheme = (isDarkMode: boolean) => ({
   inputPadding: 10,
   inputHeight: 60,
   actionCardSize: 150,
+  mainViewPaddingX: 10,
 })
 
 export type Theme = ReturnType<typeof getTheme>

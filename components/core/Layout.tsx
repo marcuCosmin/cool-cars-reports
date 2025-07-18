@@ -12,17 +12,24 @@ import { useStyles } from "@/hooks/useStyles"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { View } from "@/components/basic/View"
 
+import { type Theme } from "@/hooks/useTheme"
+
+import { Auth } from "./Auth"
 import { Header } from "./Header"
 import { Toast } from "./Toast"
 
-const getStyles = () => ({
-  view: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 100,
-    paddingTop: 20,
-  },
-})
+const getStyles = (theme: Theme) =>
+  ({
+    container: {
+      position: "relative",
+    },
+    mainView: {
+      paddingLeft: theme.mainViewPaddingX,
+      paddingRight: theme.mainViewPaddingX,
+      paddingBottom: 100,
+      paddingTop: 20,
+    },
+  } as const)
 
 export const Layout = () => {
   const { user, loadingOverlay } = useAppSelector(
@@ -43,28 +50,24 @@ export const Layout = () => {
     return <LoadingView />
   }
 
-  //   if (!user.uid) {
-  //     return (
-  //       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //         <Text>Please log in to continue.</Text>
-  //       </View>
-  //     )
-  //   }
-
   return (
-    <View style={{ position: "relative" }}>
+    <View style={styles.container}>
       {loadingOverlay.isLoading && (
         <LoadingView overlay text={loadingOverlay.text} />
       )}
       <Toast />
-      <Header />
-      <View style={styles.view}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: "fade",
-          }}
-        />
+      {user.uid && <Header />}
+      <View style={styles.mainView}>
+        {user.uid ? (
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",
+            }}
+          />
+        ) : (
+          <Auth />
+        )}
       </View>
     </View>
   )
