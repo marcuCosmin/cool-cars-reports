@@ -63,6 +63,7 @@ export const Auth = () => {
 
   return (
     <View style={styles.view}>
+      <Typography>Auth token: {authToken}</Typography>
       <Typography type="heading">Please log in to continue</Typography>
       <Button onClick={onButtonClick}>
         <Typography type="button">Log in</Typography>
