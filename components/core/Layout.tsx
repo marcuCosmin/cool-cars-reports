@@ -4,15 +4,14 @@ import { useEffect } from "react"
 import { firebaseAuth } from "@/firebase/config"
 import { onIdTokenChanged } from "firebase/auth"
 
-import { useAppSelector } from "@/redux/config"
-import { handleIDTokenChange } from "@/redux/userSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/config"
+import { clearUserData, initUserData } from "@/redux/userSlice"
 
 import { useStyles } from "@/hooks/useStyles"
+import { type Theme } from "@/hooks/useTheme"
 
 import { LoadingView } from "@/components/basic/LoadingView"
 import { View } from "@/components/basic/View"
-
-import { type Theme } from "@/hooks/useTheme"
 
 import { Header } from "./Header"
 import { Toast } from "./Toast"
@@ -34,15 +33,24 @@ export const Layout = () => {
   const { user, loadingOverlay } = useAppSelector(
     ({ user, loadingOverlay }) => ({ user, loadingOverlay })
   )
+  const dispatch = useAppDispatch()
   const styles = useStyles(getStyles)
 
   useEffect(() => {
-    const onIdTokenChangedCleanup = onIdTokenChanged(
+    const cancelTokenChangeSubscription = onIdTokenChanged(
       firebaseAuth,
-      handleIDTokenChange
+      (user) => {
+        if (user) {
+          const { uid } = user
+          dispatch(initUserData({ uid }))
+          return
+        }
+
+        dispatch(clearUserData())
+      }
     )
 
-    return onIdTokenChangedCleanup
+    return cancelTokenChangeSubscription
   }, [])
 
   if (user.isLoading) {

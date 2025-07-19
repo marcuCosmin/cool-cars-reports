@@ -1,7 +1,7 @@
 import { router, type RelativePathString } from "expo-router"
 import { ScrollView, StyleSheet, TextStyle, type ViewStyle } from "react-native"
 
-import { QuestionDoc } from "@/firebase/utils"
+import { type QuestionDoc } from "@/firebase/utils"
 
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"

@@ -17,6 +17,8 @@ const getStyles = (theme: Theme) =>
       borderColor: theme.colors.text,
       borderWidth: theme.borderWidth,
       position: "absolute",
+      maxWidth: "100%",
+      maxHeight: 200,
       zIndex: 9999,
       top: 50,
       display: "flex",

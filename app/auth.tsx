@@ -43,7 +43,7 @@ export default function Auth() {
         setLoading(true)
         await signInWithCustomToken(firebaseAuth, authToken)
       } catch (error) {
-        let errorMessage = "An error occurred during login."
+        let errorMessage = "An error occurred during login"
         if (error instanceof Error) {
           errorMessage = error.message
           return
@@ -56,7 +56,8 @@ export default function Auth() {
     })()
   }, [authToken])
 
-  const onButtonClick = () => openURL("https://cool-cars-garage.co.uk")
+  const onButtonClick = () =>
+    openURL(process.env.EXPO_PUBLIC_WEB_APP_URL as string)
 
   if (loading) {
     return <LoadingView text="Logging in..." />

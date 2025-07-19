@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-
 import { User } from "firebase/auth"
+
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
 type UID = string | null
 
@@ -11,30 +11,24 @@ type UserState = {
 
 const initialState: UserState = {
   uid: null,
-  isLoading: false,
+  isLoading: true,
 }
-
-export const handleIDTokenChange = createAsyncThunk(
-  "user/",
-  (user: User | null) => {
-    if (user) {
-      return user.uid
-    }
-
-    return null
-  }
-)
 
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(handleIDTokenChange.fulfilled, (state, action) => {
-      state.uid = action.payload
+  reducers: {
+    initUserData: (state, action: PayloadAction<Pick<User, "uid">>) => {
+      console.log("initUserData", action.payload)
+      state.uid = action.payload.uid
       state.isLoading = false
-    })
+    },
+    clearUserData: (state) => {
+      state.uid = null
+      state.isLoading = false
+    },
   },
 })
 
+export const { initUserData, clearUserData } = userSlice.actions
 export const { reducer: user } = userSlice

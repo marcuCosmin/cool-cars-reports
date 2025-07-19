@@ -26,3 +26,5 @@ jobs:
 
       - name: Commit update
         run: eas update --channel production --auto --non-interactive
+        env:
+          EXPO_PUBLIC_WEB_APP_URL: https://cool-cars-garage.co.uk

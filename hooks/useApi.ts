@@ -1,11 +1,13 @@
-import { useAppDispatch, useAppSelector } from "@/redux/config"
+import { firebaseAuth } from "@/firebase/config"
+
+import { useAppDispatch } from "@/redux/config"
 import {
   hideLoadingOverlay,
   showLoadingOverlay,
 } from "@/redux/loadingOverlaySlice"
 import { showToast } from "@/redux/toastSlice"
 
-const baseUrl = "https://api.cool-cars-garage.co.uk"
+const baseUrl = process.env.EXPO_PUBLIC_API_URL
 
 type ExecuteApiRequest = {
   path: string
@@ -14,7 +16,6 @@ type ExecuteApiRequest = {
 }
 
 export const useApi = () => {
-  const { uid } = useAppSelector(({ user }) => user)
   const dispatch = useAppDispatch()
 
   const executeApiRequest = async ({
@@ -22,12 +23,14 @@ export const useApi = () => {
     method,
     payload,
   }: ExecuteApiRequest) => {
+    const idToken = await firebaseAuth.currentUser?.getIdToken()
+
     const fallbackError = `An unknown error occurred while fetching data from ${path}`
     const requestOptions: RequestInit = {
       method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${uid}`,
+        Authorization: `Bearer ${idToken}`,
       },
     }
 
@@ -46,7 +49,7 @@ export const useApi = () => {
         throw new Error(data.error || fallbackError)
       }
 
-      dispatch(showToast("Data fetched successfully!"))
+      dispatch(showToast(data.message || "Action completed successfully"))
 
       return data
     } catch (error: unknown) {
