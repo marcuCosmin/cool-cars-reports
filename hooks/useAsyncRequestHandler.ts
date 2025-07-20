@@ -17,7 +17,9 @@ export const useAsyncRequestHandler = <T extends GenericRequest>({
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useAppDispatch()
 
-  const handleAsyncRequest = async (...args: Parameters<T>) => {
+  const handleAsyncRequest = async (
+    ...args: Parameters<T>
+  ): Promise<Awaited<ReturnType<T> | undefined>> => {
     setIsLoading(true)
     try {
       const data = await request(...args)

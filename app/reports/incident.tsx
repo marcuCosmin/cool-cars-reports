@@ -1,3 +1,4 @@
+import { router } from "expo-router"
 import { useState } from "react"
 import { KeyboardAvoidingView } from "react-native"
 
@@ -35,16 +36,22 @@ export default function Incident() {
   const { isLoading, handleAsyncRequest: handleIncidentSubmit } =
     useAsyncRequestHandler({
       request: postIncident,
+      successMessage: "Incident reported successfully",
     })
   const styles = useStyles(getStyles)
 
   const onChange = (text: string) => setValue(text)
 
-  const onSubmitClick = () =>
-    handleIncidentSubmit({
+  const onSubmitClick = async () => {
+    const response = await handleIncidentSubmit({
       carId,
-      incident: value,
+      description: value,
     })
+
+    if (response) {
+      router.push("/reports")
+    }
+  }
 
   return (
     <KeyboardAvoidingView
@@ -52,7 +59,7 @@ export default function Incident() {
       behavior="height"
       keyboardVerticalOffset={100}
     >
-      {isLoading && <LoadingView text="Submitting incident..." />}
+      {isLoading && <LoadingView overlay text="Submitting incident..." />}
       <Typography type="heading" style={styles.heading}>
         Incident
       </Typography>

@@ -17,7 +17,7 @@ export const postCheckAnswers = (payload: PostCheckAnswersPayload) =>
   })
 
 type PostIncidentPayload = {
-  incident: string
+  description: string
   carId: string
 }
 
