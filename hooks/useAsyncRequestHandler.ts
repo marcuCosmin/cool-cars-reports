@@ -1,0 +1,39 @@
+import { useState } from "react"
+
+import { useAppDispatch } from "@/redux/config"
+import { showToast } from "@/redux/toastSlice"
+
+type GenericRequest = (args?: any) => Promise<unknown>
+
+type UseAsyncRequestHandlerProps<T extends GenericRequest> = {
+  request: T
+  successMessage?: string
+}
+
+export const useAsyncRequestHandler = <T extends GenericRequest>({
+  request,
+  successMessage,
+}: UseAsyncRequestHandlerProps<T>) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useAppDispatch()
+
+  const handleAsyncRequest = async (...args: Parameters<T>) => {
+    setIsLoading(true)
+    try {
+      const data = await request(...args)
+
+      if (successMessage) {
+        dispatch(showToast(successMessage))
+      }
+
+      return data as Awaited<ReturnType<T>>
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      dispatch(showToast(errorMessage))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { isLoading, handleAsyncRequest }
+}

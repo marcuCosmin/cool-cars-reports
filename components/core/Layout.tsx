@@ -30,9 +30,7 @@ const getStyles = (theme: Theme) =>
   } as const)
 
 export const Layout = () => {
-  const { user, loadingOverlay } = useAppSelector(
-    ({ user, loadingOverlay }) => ({ user, loadingOverlay })
-  )
+  const { isLoading, uid } = useAppSelector(({ user }) => user)
   const dispatch = useAppDispatch()
   const styles = useStyles(getStyles)
 
@@ -53,17 +51,14 @@ export const Layout = () => {
     return cancelTokenChangeSubscription
   }, [])
 
-  if (user.isLoading) {
+  if (isLoading) {
     return <LoadingView />
   }
 
   return (
     <View style={styles.container}>
-      {loadingOverlay.isLoading && (
-        <LoadingView overlay text={loadingOverlay.text} />
-      )}
       <Toast />
-      {user.uid && <Header />}
+      {uid && <Header />}
       <View style={styles.mainView}>
         <Stack
           screenOptions={{
@@ -71,11 +66,11 @@ export const Layout = () => {
             animation: "fade",
           }}
         >
-          <Stack.Protected guard={!!user.uid}>
+          <Stack.Protected guard={!!uid}>
             <Stack.Screen name="index" />
             <Stack.Screen name="reports" />
           </Stack.Protected>
-          <Stack.Protected guard={!user.uid}>
+          <Stack.Protected guard={!uid}>
             <Stack.Screen name="auth" />
           </Stack.Protected>
         </Stack>

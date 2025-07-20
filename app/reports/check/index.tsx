@@ -2,11 +2,11 @@ import { router } from "expo-router"
 
 import { useEffect } from "react"
 
-import { resetAnswers, type OdoReading } from "@/redux/answersSlice"
+import { submitAnswers, type OdoReading } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { fetchQuestions } from "@/redux/questionsSlice"
+import { showToast } from "@/redux/toastSlice"
 
-import { useApi } from "@/hooks/useApi"
 import { useStyles } from "@/hooks/useStyles"
 
 import {
@@ -28,12 +28,10 @@ const getStyles = () =>
 export default function Check() {
   const styles = useStyles(getStyles)
   const dispatch = useAppDispatch()
-  const { executeApiRequest } = useApi()
-  const { questions, answers, user, cars } = useAppSelector(
-    ({ questions, answers, user, cars }) => ({
+  const { questions, answers, cars } = useAppSelector(
+    ({ questions, answers, cars }) => ({
       questions,
       answers,
-      user,
       cars,
     })
   )
@@ -43,6 +41,11 @@ export default function Check() {
   const exteriorIsCompleted =
     questions.exterior.length === answers.exterior.length
   const odoReadingIsCompleted = answers.odoReading !== null
+
+  const checkStarted =
+    answers.interior.length > 0 ||
+    answers.exterior.length > 0 ||
+    answers.odoReading !== null
 
   const allSectionsAreCompleted =
     interiorIsCompleted && exteriorIsCompleted && odoReadingIsCompleted
@@ -71,26 +74,32 @@ export default function Check() {
     },
   ]
 
+  useEffect(() => {
+    if (checkStarted) {
+      return
+    }
+
+    dispatch(fetchQuestions())
+  }, [checkStarted])
+
   const onSubmitClick = async () => {
-    await executeApiRequest({
-      method: "POST",
-      path: "/cars/checks",
-      payload: {
+    const result = await dispatch(
+      submitAnswers({
         interior: answers.interior,
         exterior: answers.exterior,
         odoReading: answers.odoReading as OdoReading,
-        uid: user.uid as string,
         carId: cars.selectedCar.id,
-      },
-    })
+      })
+    )
 
-    dispatch(resetAnswers())
+    if (result.meta.requestStatus === "rejected") {
+      return
+    }
+
+    dispatch(showToast("Check submitted successfully!"))
+
     router.push("/")
   }
-
-  useEffect(() => {
-    dispatch(fetchQuestions())
-  }, [])
 
   if (questions.isLoading) {
     return <LoadingView />
@@ -98,6 +107,8 @@ export default function Check() {
 
   return (
     <View>
+      {answers.isLoading && <LoadingView overlay />}
+
       <Typography type="heading" style={styles.heading}>
         Vehicle check
       </Typography>

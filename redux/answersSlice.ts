@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
+import { postCheckAnswers } from "@/api/utils"
+import { createAppAsyncThunk } from "./utils"
+
 export type Answer = {
   label: string
   value: boolean
@@ -13,16 +16,23 @@ export type OdoReading = {
 }
 
 type SelectedCarState = {
+  isLoading: boolean
   interior: Answer[]
   exterior: Answer[]
   odoReading: OdoReading | null
 }
 
 const initialState: SelectedCarState = {
+  isLoading: false,
   interior: [],
   exterior: [],
   odoReading: null,
 }
+
+export const submitAnswers = createAppAsyncThunk(
+  "answers/submit",
+  postCheckAnswers
+)
 
 const answersSlice = createSlice({
   name: "answers",
@@ -48,6 +58,20 @@ const answersSlice = createSlice({
     setOdoReading: (state, action: PayloadAction<OdoReading | null>) => {
       state.odoReading = action.payload
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(submitAnswers.pending, (state) => {
+      state.isLoading = true
+    })
+    builder.addCase(submitAnswers.fulfilled, (state) => {
+      state.isLoading = false
+      state.interior = []
+      state.exterior = []
+      state.odoReading = null
+    })
+    builder.addCase(submitAnswers.rejected, (state) => {
+      state.isLoading = false
+    })
   },
 })
 

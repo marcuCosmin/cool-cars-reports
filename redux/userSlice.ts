@@ -19,7 +19,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     initUserData: (state, action: PayloadAction<Pick<User, "uid">>) => {
-      console.log("initUserData", action.payload)
       state.uid = action.payload.uid
       state.isLoading = false
     },

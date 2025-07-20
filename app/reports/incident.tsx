@@ -1,14 +1,17 @@
 import { useState } from "react"
 import { KeyboardAvoidingView } from "react-native"
 
+import { postIncident } from "@/api/utils"
+
 import { useAppSelector } from "@/redux/config"
 
-import { useApi } from "@/hooks/useApi"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
 import { Input } from "@/components/basic/Input"
+import { LoadingView } from "@/components/basic/LoadingView"
 import { Typography } from "@/components/basic/Typography"
+import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 
 const getStyles = () =>
   ({
@@ -27,21 +30,20 @@ const getStyles = () =>
 
 export default function Incident() {
   const [value, setValue] = useState("")
-  const { selectedCar } = useAppSelector(({ cars }) => cars)
+  const carId = useAppSelector(({ cars }) => cars.selectedCar.id)
 
-  const { executeApiRequest } = useApi()
+  const { isLoading, handleAsyncRequest: handleIncidentSubmit } =
+    useAsyncRequestHandler({
+      request: postIncident,
+    })
   const styles = useStyles(getStyles)
 
   const onChange = (text: string) => setValue(text)
 
   const onSubmitClick = () =>
-    executeApiRequest({
-      path: "/reports/incidents",
-      method: "POST",
-      payload: {
-        incident: value,
-        carId: selectedCar.id,
-      },
+    handleIncidentSubmit({
+      carId,
+      incident: value,
     })
 
   return (
@@ -50,6 +52,7 @@ export default function Incident() {
       behavior="height"
       keyboardVerticalOffset={100}
     >
+      {isLoading && <LoadingView text="Submitting incident..." />}
       <Typography type="heading" style={styles.heading}>
         Incident
       </Typography>

@@ -52,12 +52,12 @@ export const Toast = () => {
 
   return (
     <Button style={styles.view} onClick={onClick}>
-      <Typography type="button">{message}</Typography>
       <MaterialCommunityIcons
         name="information-outline"
         size={30}
         color={theme.colors.white}
       />
+      <Typography type="button">{message}</Typography>
     </Button>
   )
 }

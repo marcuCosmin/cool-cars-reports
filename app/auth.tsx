@@ -1,13 +1,12 @@
 import { openURL } from "expo-linking"
 import { useLocalSearchParams } from "expo-router"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
-import { firebaseAuth } from "@/firebase/config"
-import { signInWithCustomToken } from "firebase/auth"
+import { signIn } from "@/firebase/utils"
 
-import { useAppDispatch, useAppSelector } from "@/redux/config"
-import { showToast } from "@/redux/toastSlice"
+import { useAppSelector } from "@/redux/config"
 
+import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
@@ -29,8 +28,10 @@ type LocalSearchParams = {
 export default function Auth() {
   const { uid } = useAppSelector((state) => state.user)
   const { authToken } = useLocalSearchParams<LocalSearchParams>()
-  const dispatch = useAppDispatch()
-  const [loading, setLoading] = useState(!!authToken)
+  const { isLoading, handleAsyncRequest: handleSignIn } =
+    useAsyncRequestHandler({
+      request: signIn,
+    })
   const styles = useStyles(getStyles)
 
   useEffect(() => {
@@ -38,28 +39,13 @@ export default function Auth() {
       return
     }
 
-    ;(async () => {
-      try {
-        setLoading(true)
-        await signInWithCustomToken(firebaseAuth, authToken)
-      } catch (error) {
-        let errorMessage = "An error occurred during login"
-        if (error instanceof Error) {
-          errorMessage = error.message
-          return
-        }
-
-        dispatch(showToast(errorMessage))
-      } finally {
-        setLoading(false)
-      }
-    })()
+    handleSignIn(authToken)
   }, [authToken])
 
   const onButtonClick = () =>
     openURL(process.env.EXPO_PUBLIC_WEB_APP_URL as string)
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingView text="Logging in..." />
   }
 
