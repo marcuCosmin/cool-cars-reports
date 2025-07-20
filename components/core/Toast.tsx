@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useEffect } from "react"
+import { ScrollView } from "react-native"
 
 import { useAppSelector } from "@/redux/config"
 import { hideToast } from "@/redux/toastSlice"
@@ -8,23 +9,39 @@ import { useDispatch } from "react-redux"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
-import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
+import { View } from "@/components/basic/View"
+import { Button } from "../basic/Button"
 
 const getStyles = (theme: Theme) =>
   ({
     view: {
       borderColor: theme.colors.text,
       borderWidth: theme.borderWidth,
+      borderRadius: theme.borderRadius,
+      backgroundColor: theme.colors.primary,
+      padding: theme.inputPadding,
       position: "absolute",
       maxWidth: "100%",
-      maxHeight: 200,
+      maxHeight: 150,
+      flex: 1,
       zIndex: 9999,
       top: 50,
+      flexWrap: "wrap",
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       gap: 10,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    button: {
+      backgroundColor: "transparent",
+      padding: 0,
+    },
+    typography: {
+      textAlign: "left",
     },
   } as const)
 
@@ -51,13 +68,19 @@ export const Toast = () => {
   }
 
   return (
-    <Button style={styles.view} onClick={onClick}>
-      <MaterialCommunityIcons
-        name="information-outline"
-        size={30}
-        color={theme.colors.white}
-      />
-      <Typography type="button">{message}</Typography>
-    </Button>
+    <View style={styles.view}>
+      <Button style={styles.button} onClick={onClick}>
+        <MaterialCommunityIcons
+          name="close-circle"
+          size={30}
+          color={theme.colors.white}
+        />
+      </Button>
+      <ScrollView style={styles.scrollView}>
+        <Typography type="button" style={styles.typography}>
+          {message}
+        </Typography>
+      </ScrollView>
+    </View>
   )
 }
