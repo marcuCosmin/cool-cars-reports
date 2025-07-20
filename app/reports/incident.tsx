@@ -59,7 +59,7 @@ export default function Incident() {
       behavior="height"
       keyboardVerticalOffset={100}
     >
-      {isLoading && <LoadingView overlay text="Submitting incident..." />}
+      {isLoading && <LoadingView overlay />}
       <Typography type="heading" style={styles.heading}>
         Incident
       </Typography>
