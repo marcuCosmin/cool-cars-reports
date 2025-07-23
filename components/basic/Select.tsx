@@ -17,7 +17,7 @@ const getStyles = (theme: Theme) =>
     },
     selectedTextStyle: {
       color: theme.colors.text,
-      fontSize: theme.fontSize,
+      fontSize: theme.fontSize.medium,
       textAlign: "center",
     },
     containerStyle: {
@@ -37,7 +37,7 @@ const getStyles = (theme: Theme) =>
     },
     itemTextStyle: {
       color: theme.colors.text,
-      fontSize: theme.fontSize,
+      fontSize: theme.fontSize.medium,
       padding: theme.inputPadding,
       textAlign: "center",
       border: 0,

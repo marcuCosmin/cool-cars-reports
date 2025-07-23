@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import { useColorScheme } from "react-native"
 
 const white = "#ffffff"
@@ -15,7 +16,11 @@ const getTheme = (isDarkMode: boolean) => ({
     background: isDarkMode ? black : white,
     overlay: `${black}50`,
   },
-  fontSize: 16,
+  fontSize: {
+    small: 12,
+    medium: 16,
+    large: 24,
+  },
   borderRadius: 8,
   borderWidth: 1,
   inputPadding: 10,
@@ -29,7 +34,7 @@ export type Theme = ReturnType<typeof getTheme>
 export const useTheme = () => {
   const themeMode = useColorScheme()
   const isDarkMode = themeMode === "dark"
-  const theme = getTheme(isDarkMode)
+  const theme = useMemo(() => getTheme(isDarkMode), [isDarkMode])
 
   return theme
 }

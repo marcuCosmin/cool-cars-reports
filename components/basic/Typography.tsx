@@ -7,24 +7,24 @@ import { type Theme } from "@/hooks/useTheme"
 const getStyles = (theme: Theme) =>
   ({
     heading: {
-      fontSize: 24,
-      fontWeight: "bold",
+      fontSize: theme.fontSize.large,
       color: theme.colors.primary,
+      fontWeight: "bold",
       marginBottom: 50,
       textAlign: "center",
     },
     label: {
-      fontSize: 16,
       color: theme.colors.text,
+      fontSize: theme.fontSize.medium,
       fontWeight: "semibold",
       marginBottom: 8,
     },
     text: {
-      fontSize: 16,
+      fontSize: theme.fontSize.medium,
       color: theme.colors.text,
     },
     button: {
-      fontSize: 16,
+      fontSize: theme.fontSize.medium,
       color: theme.colors.white,
       fontWeight: "semibold",
       textAlign: "center",

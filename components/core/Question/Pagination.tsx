@@ -33,7 +33,6 @@ const getStlyes = (theme: Theme) =>
     },
     typography: {
       color: theme.colors.primary,
-      fontSize: 15,
     },
     activeTypography: {
       color: theme.colors.white,

@@ -1,3 +1,5 @@
+import { StyleSheet, type StyleProp, type ViewStyle } from "react-native"
+
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
@@ -27,16 +29,19 @@ type Option = {
 }
 
 type TabProps = {
+  style?: StyleProp<ViewStyle>
   options: Option[]
   value: string
   onChange: (value: string) => void
 }
 
-export const Tab = ({ options, value, onChange }: TabProps) => {
+export const Tab = ({ style, options, value, onChange }: TabProps) => {
   const styles = useStyles(getStyles)
 
+  const mergedStyles = StyleSheet.flatten([styles.view, style])
+
   return (
-    <View style={styles.view}>
+    <View style={mergedStyles}>
       {options.map((option, index) => {
         const isActive = option.value === value
         const onClick = () => onChange(option.value)

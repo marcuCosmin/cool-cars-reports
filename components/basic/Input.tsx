@@ -16,7 +16,7 @@ const getStyles = (theme: Theme) =>
       borderRadius: theme.borderRadius,
       padding: theme.inputPadding,
       color: theme.colors.text,
-      fontSize: theme.fontSize,
+      fontSize: theme.fontSize.medium,
       height: theme.inputHeight,
       maxHeight: "50%",
     },

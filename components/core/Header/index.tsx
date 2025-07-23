@@ -56,9 +56,15 @@ const linksConfig = {
 export const Header = () => {
   const styles = useStyles(getStyles)
   const { selectedCar } = useAppSelector((state) => state.cars)
+
   const pathname = usePathname()
   const isHome = pathname === "/"
   const segments = useSegments()
+
+  const carIdSegmentIndex = segments.findIndex((segment) =>
+    segment.startsWith("[carId]")
+  )
+  const carIdUrlParam = pathname.split("/")[carIdSegmentIndex + 1]
 
   const slicedSegments = segments.slice(0, -1)
 
@@ -67,7 +73,9 @@ export const Header = () => {
       <View style={styles.mainView}>
         <NotificationsLink />
 
-        <Typography style={styles.title}>{selectedCar.id}</Typography>
+        <Typography style={styles.title}>
+          {carIdUrlParam || selectedCar.id}
+        </Typography>
 
         <Logout />
       </View>

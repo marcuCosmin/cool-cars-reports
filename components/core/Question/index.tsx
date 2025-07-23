@@ -10,24 +10,25 @@ import { type Theme } from "@/hooks/useTheme"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
+import { ScrollView } from "react-native"
 import { AnswerButtons } from "./AnswerButtons"
 import { Pagination } from "./Pagination"
 
 const getStyles = (theme: Theme) =>
   ({
-    typography: {
-      backgroundColor: theme.colors.background,
-      borderColor: theme.colors.primary,
+    labelView: {
       borderWidth: theme.borderWidth,
-      color: theme.colors.text,
+      borderColor: theme.colors.primary,
       borderRadius: theme.borderRadius,
+      padding: theme.inputPadding,
+      flex: 0,
       height: "40%",
-      padding: 10,
+      marginBottom: 50,
+    },
+    typography: {
       fontSize: 20,
-      verticalAlign: "middle",
       textAlign: "center",
     },
-
     mainMenuButton: {
       borderRadius: theme.borderRadius,
       display: "flex",
@@ -74,9 +75,12 @@ export const Question = () => {
   return (
     <View>
       <Typography type="heading">Check {displayedIndex}</Typography>
-      <Typography type="heading" style={styles.typography}>
-        {question?.label}
-      </Typography>
+
+      <View style={styles.labelView}>
+        <ScrollView>
+          <Typography style={styles.typography}>{question?.label}</Typography>
+        </ScrollView>
+      </View>
 
       <AnswerButtons
         sectionKey={sectionKey}
