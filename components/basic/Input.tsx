@@ -18,11 +18,11 @@ const getStyles = (theme: Theme) =>
       color: theme.colors.text,
       fontSize: theme.fontSize.medium,
       height: theme.inputHeight,
-      maxHeight: "50%",
     },
     textarea: {
-      height: "auto",
+      maxHeight: "50%",
       textAlignVertical: "top",
+      flex: 1,
     },
   } as const)
 

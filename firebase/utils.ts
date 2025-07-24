@@ -2,7 +2,6 @@ import { signInWithCustomToken } from "firebase/auth"
 import {
   collection,
   doc,
-  DocumentReference,
   getDoc,
   getDocs,
   limit,
@@ -157,12 +156,12 @@ export type Notification = {
 
 type GetNotificationsProps = {
   uid: string
-  lastDocRef?: DocumentReference
+  lastRefValue?: Timestamp
 }
 
 export const getNotificationsChunk = withErrorPropagation(
   "NOTIFICATIONS",
-  async ({ uid, lastDocRef }: GetNotificationsProps) => {
+  async ({ uid, lastRefValue }: GetNotificationsProps) => {
     const notificationsRef = collection(
       firestore,
       "users",
@@ -172,8 +171,8 @@ export const getNotificationsChunk = withErrorPropagation(
 
     const queryConstraints = [
       orderBy("creationTimestamp", "desc"),
-      lastDocRef && startAfter(lastDocRef),
-      limit(10),
+      lastRefValue && startAfter(lastRefValue),
+      limit(5),
     ].filter(Boolean) as QueryConstraint[]
 
     const notificationsQuery = query(notificationsRef, ...queryConstraints)
@@ -185,7 +184,6 @@ export const getNotificationsChunk = withErrorPropagation(
     }
 
     const notificationsDocs = notificationsSnapshot.docs
-    const lastDoc = notificationsDocs[notificationsDocs.length - 1]
 
     const notifications = notificationsDocs.map((doc) => {
       const data = doc.data() as Omit<Notification, "id">
@@ -196,7 +194,7 @@ export const getNotificationsChunk = withErrorPropagation(
       }
     })
 
-    return { notifications, lastDocRef: lastDoc.ref }
+    return notifications
   }
 )
 

@@ -1,5 +1,7 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useLocalSearchParams } from "expo-router"
 import { useEffect, useState } from "react"
+import { ScrollView } from "react-native"
 
 import { getIncident, type IncidentDoc } from "@/firebase/utils"
 
@@ -7,14 +9,12 @@ import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
+import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import { parseTimestampForDisplay } from "@/utils/parseTimestampForDisplay"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { ScrollView } from "react-native"
 
 const getStyles = (theme: Theme) =>
   ({

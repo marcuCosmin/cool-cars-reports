@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { getNotificationsChunk, type Notification } from "@/firebase/utils"
-import { DocumentReference } from "firebase/firestore"
+import { Timestamp } from "firebase/firestore"
 
 import { useAppSelector } from "@/redux/config"
 
 import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 
 export const useInfiniteNotificationsList = () => {
-  const [lastDocRef, setLastDocRef] = useState<DocumentReference | undefined>()
+  const [lastRefValue, setLastRefValue] = useState<Timestamp | undefined>()
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const [canFetchMore, setCanFetchMore] = useState(true)
   const uid = useAppSelector(({ user }) => user.uid)
 
   const { isLoading, handleAsyncRequest: handleNotificationsLoad } =
@@ -17,23 +18,25 @@ export const useInfiniteNotificationsList = () => {
       request: getNotificationsChunk,
     })
 
-  const loadNotificationsChunk = useCallback(async () => {
-    if (!uid) {
+  const loadNotificationsChunk = async () => {
+    if (!uid || isLoading || !canFetchMore) {
       return
     }
 
-    const result = await handleNotificationsLoad({
+    const notifications = await handleNotificationsLoad({
       uid,
-      lastDocRef,
+      lastRefValue,
     })
 
-    if (!result) {
+    if (!notifications) {
+      setCanFetchMore(false)
       return
     }
 
-    setNotifications((prev) => [...prev, ...result.notifications])
-    setLastDocRef(result.lastDocRef)
-  }, [uid, lastDocRef, handleNotificationsLoad])
+    setNotifications((prev) => [...prev, ...notifications])
+    const lastNotification = notifications[notifications.length - 1]
+    setLastRefValue(lastNotification.creationTimestamp)
+  }
 
   useEffect(() => {
     loadNotificationsChunk()

@@ -52,7 +52,7 @@ export const NotificationsList = () => {
       data={notifications}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      //   onEndReached={loadNotificationsChunk}
+      onEndReached={loadNotificationsChunk}
     />
   )
 }

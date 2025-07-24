@@ -6,16 +6,20 @@ import { postIncident } from "@/api/utils"
 
 import { useAppSelector } from "@/redux/config"
 
+import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
 import { Input } from "@/components/basic/Input"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { Typography } from "@/components/basic/Typography"
-import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
+import { View } from "@/components/basic/View"
 
 const getStyles = () =>
   ({
+    keyboardAvoidingView: {
+      flex: 1,
+    },
     heading: {
       textAlign: "center",
     },
@@ -54,23 +58,24 @@ export default function Incident() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "black" }}
-      behavior="height"
-      keyboardVerticalOffset={100}
-    >
+    <View>
       {isLoading && <LoadingView overlay />}
       <Typography type="heading" style={styles.heading}>
         Incident
       </Typography>
 
-      <Input type="textarea" value={value} onChange={onChange} />
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior="height"
+      >
+        <Input type="textarea" value={value} onChange={onChange} />
 
-      {!!value.length && (
-        <Button style={styles.button} onClick={onSubmitClick}>
-          <Typography type="button">Report incident</Typography>
-        </Button>
-      )}
-    </KeyboardAvoidingView>
+        {!!value.length && (
+          <Button style={styles.button} onClick={onSubmitClick}>
+            <Typography type="button">Report incident</Typography>
+          </Button>
+        )}
+      </KeyboardAvoidingView>
+    </View>
   )
 }

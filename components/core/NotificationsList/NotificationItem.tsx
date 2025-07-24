@@ -4,6 +4,7 @@ import { markNotificationAsViewed, type Notification } from "@/firebase/utils"
 
 import { useAppSelector } from "@/redux/config"
 
+import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
@@ -13,7 +14,6 @@ import { View } from "@/components/basic/View"
 
 import { parseTimestampForDisplay } from "@/utils/parseTimestampForDisplay"
 
-import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { getNotificationItemConfig } from "./getNotificationItemConfig"
 
 const getStyles = (theme: Theme) =>
@@ -46,6 +46,7 @@ export const NotificationItem = ({
   type,
   viewed,
   bulkCount,
+  id,
 }: Notification) => {
   const styles = useStyles(getStyles)
   const uid = useAppSelector((state) => state.user.uid)
@@ -66,7 +67,7 @@ export const NotificationItem = ({
     if (!viewed) {
       await handleMarkNotificationAsViewed({
         uid: uid as string,
-        notificationId: reference.id,
+        notificationId: id,
       })
     }
 
