@@ -1,5 +1,6 @@
 import { useStyles } from "@/hooks/useStyles"
-import { View } from "../View"
+
+import { View } from "@/components/basic/View"
 
 import { ActionCard, type ActionCardProps } from "./ActionCard"
 

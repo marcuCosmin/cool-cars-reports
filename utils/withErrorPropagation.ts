@@ -6,6 +6,7 @@ export const withErrorPropagation =
   async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
     try {
       const data = await request(...args)
+
       return data as Awaited<ReturnType<T>>
     } catch (error) {
       if (error instanceof Error) {

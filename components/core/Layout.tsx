@@ -13,7 +13,7 @@ import { type Theme } from "@/hooks/useTheme"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { View } from "@/components/basic/View"
 
-import { Header } from "./Header"
+import { Header } from "./Header/Header"
 import { Toast } from "./Toast"
 
 const getStyles = (theme: Theme) =>

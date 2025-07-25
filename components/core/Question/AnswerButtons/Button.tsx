@@ -1,10 +1,10 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { StyleSheet, type ViewStyle } from "react-native"
 
-import { Button as DefaultButton } from "@/components/basic/Button"
-
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
+
+import { Button as DefaultButton } from "@/components/basic/Button"
 
 const getStyles = (theme: Theme) =>
   ({

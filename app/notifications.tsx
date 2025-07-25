@@ -1,4 +1,4 @@
-import { NotificationsList } from "@/components/core/NotificationsList"
+import { NotificationsList } from "@/components/core/NotificationsList/NotificationsList"
 
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"

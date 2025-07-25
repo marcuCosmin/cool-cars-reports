@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
+
 import { showToast } from "./toastSlice"
 
 export const createAppAsyncThunk = <T extends (args?: any) => Promise<any>>(

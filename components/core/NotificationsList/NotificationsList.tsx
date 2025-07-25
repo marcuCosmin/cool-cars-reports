@@ -8,8 +8,9 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { Typography } from "@/components/basic/Typography"
 
-import { NotificationItem } from "./NotificationItem"
 import { useInfiniteNotificationsList } from "./useInfiniteNotificationsList"
+
+import { NotificationItem } from "./NotificationItem"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -26,7 +27,7 @@ const getStyles = (theme: Theme) =>
 const keyExtractor = (item: Notification) => item.id
 
 export const NotificationsList = () => {
-  const { notifications, isLoading, loadNotificationsChunk } =
+  const { notifications, loadNotificationsChunk } =
     useInfiniteNotificationsList()
 
   const styles = useStyles(getStyles)

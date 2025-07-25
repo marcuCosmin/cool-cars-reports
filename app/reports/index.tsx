@@ -3,7 +3,7 @@ import { router } from "expo-router"
 import {
   ActionCardList,
   type ActionCardProps,
-} from "@/components/basic/ActionCardList"
+} from "@/components/basic/ActionCardList/ActionCardList"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 

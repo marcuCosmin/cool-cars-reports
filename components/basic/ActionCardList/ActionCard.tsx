@@ -3,9 +3,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
-import { Button } from "../Button"
-import { Typography } from "../Typography"
-import { View } from "../View"
+import { Button } from "@/components/basic/Button"
+import { Typography } from "@/components/basic/Typography"
+import { View } from "@/components/basic/View"
 
 const getStyles = (theme: Theme) =>
   ({

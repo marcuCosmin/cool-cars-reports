@@ -9,9 +9,9 @@ import { useDispatch } from "react-redux"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
+import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
-import { Button } from "../basic/Button"
 
 const getStyles = (theme: Theme) =>
   ({

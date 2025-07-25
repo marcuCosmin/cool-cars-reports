@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useSegments } from "expo-router"
+import { ScrollView } from "react-native"
 
 import { type QuestionDoc } from "@/firebase/utils"
 
@@ -10,8 +11,7 @@ import { type Theme } from "@/hooks/useTheme"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { ScrollView } from "react-native"
-import { AnswerButtons } from "./AnswerButtons"
+import { AnswerButtons } from "./AnswerButtons/AnswerButtons"
 import { Pagination } from "./Pagination"
 
 const getStyles = (theme: Theme) =>

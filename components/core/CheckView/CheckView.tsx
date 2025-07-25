@@ -6,7 +6,7 @@ import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
 import { LoadingView } from "@/components/basic/LoadingView"
-import { Tab } from "@/components/basic/Tab"
+import { Tab } from "@/components/basic/Tab/Tab"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 

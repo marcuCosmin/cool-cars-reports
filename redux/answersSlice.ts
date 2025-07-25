@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { postCheckAnswers } from "@/api/utils"
+
 import { createAppAsyncThunk } from "./utils"
 
 export type Answer = {

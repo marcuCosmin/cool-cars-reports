@@ -5,15 +5,14 @@ import { setOdoReading, type OdoReadingUnit } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 
 import { useStyles } from "@/hooks/useStyles"
-import { type Theme } from "@/hooks/useTheme"
 
 import { Button } from "@/components/basic/Button"
 import { Input } from "@/components/basic/Input"
-import { Tab } from "@/components/basic/Tab"
+import { Tab } from "@/components/basic/Tab/Tab"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-const getStyles = (theme: Theme) =>
+const getStyles = () =>
   ({
     button: {
       marginTop: "auto",

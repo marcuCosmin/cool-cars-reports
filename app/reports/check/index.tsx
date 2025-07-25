@@ -12,7 +12,7 @@ import { useStyles } from "@/hooks/useStyles"
 import {
   ActionCardList,
   type ActionCardProps,
-} from "@/components/basic/ActionCardList"
+} from "@/components/basic/ActionCardList/ActionCardList"
 import { Button } from "@/components/basic/Button"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { Typography } from "@/components/basic/Typography"

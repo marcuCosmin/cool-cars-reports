@@ -1,10 +1,10 @@
 import { ActivityIndicator, StyleSheet } from "react-native"
 
-import { View } from "./View"
-
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
+
 import { Typography } from "./Typography"
+import { View } from "./View"
 
 const getStyles = (theme: Theme) =>
   ({

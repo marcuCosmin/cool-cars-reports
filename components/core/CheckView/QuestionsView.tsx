@@ -4,10 +4,10 @@ import { ScrollView } from "react-native"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
+import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import type { AnswerWithFault } from "./CheckView.model"
 
 const getStyles = (theme: Theme) =>

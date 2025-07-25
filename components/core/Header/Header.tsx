@@ -6,7 +6,7 @@ import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
 import { Logout } from "@/components/core/Logout"
-import { NotificationsLink } from "@/components/core/NotificationsLink"
+import { NotificationsLink } from "@/components/core/NotificationsLink/NotificationsLink"
 
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
