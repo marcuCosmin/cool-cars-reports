@@ -7,14 +7,17 @@ type GenericRequest = (args?: any) => Promise<unknown>
 
 type UseAsyncRequestHandlerProps<T extends GenericRequest> = {
   request: T
+  isLoadingByDefault?: boolean
   successMessage?: string
 }
 
 export const useAsyncRequestHandler = <T extends GenericRequest>({
   request,
   successMessage,
+  isLoadingByDefault = false,
 }: UseAsyncRequestHandlerProps<T>) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(isLoadingByDefault)
+
   const dispatch = useAppDispatch()
 
   const handleAsyncRequest = useCallback(

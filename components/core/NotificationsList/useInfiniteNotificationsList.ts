@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { getNotificationsChunk, type Notification } from "@/firebase/utils"
 import { Timestamp } from "firebase/firestore"
@@ -12,14 +12,18 @@ export const useInfiniteNotificationsList = () => {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [canFetchMore, setCanFetchMore] = useState(true)
   const uid = useAppSelector(({ user }) => user.uid)
+  const executedFirstLoadRef = useRef(false)
 
   const { isLoading, handleAsyncRequest: handleNotificationsLoad } =
     useAsyncRequestHandler({
       request: getNotificationsChunk,
+      isLoadingByDefault: true,
     })
 
   const loadNotificationsChunk = async () => {
-    if (!uid || isLoading || !canFetchMore) {
+    const isLoadingNextChunk = executedFirstLoadRef.current && isLoading
+
+    if (!uid || isLoadingNextChunk || !canFetchMore) {
       return
     }
 
@@ -30,12 +34,14 @@ export const useInfiniteNotificationsList = () => {
 
     if (!notifications) {
       setCanFetchMore(false)
+      executedFirstLoadRef.current = true
       return
     }
 
     setNotifications((prev) => [...prev, ...notifications])
     const lastNotification = notifications[notifications.length - 1]
     setLastRefValue(lastNotification.creationTimestamp)
+    executedFirstLoadRef.current = true
   }
 
   useEffect(() => {
@@ -44,7 +50,7 @@ export const useInfiniteNotificationsList = () => {
 
   return {
     notifications,
-    isLoading,
+    isLoadingFirstChunk: !executedFirstLoadRef.current && isLoading,
     loadNotificationsChunk,
   }
 }

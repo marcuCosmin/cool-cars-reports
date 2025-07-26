@@ -10,10 +10,17 @@ import { Typography } from "@/components/basic/Typography"
 
 import { useInfiniteNotificationsList } from "./useInfiniteNotificationsList"
 
+import { Collapsible } from "@/components/basic/Collapsible/Collapsible"
+import { View } from "@/components/basic/View"
+
+import { LoadingView } from "@/components/basic/LoadingView"
 import { NotificationItem } from "./NotificationItem"
 
 const getStyles = (theme: Theme) =>
   ({
+    collapsible: {
+      marginBottom: 20,
+    },
     flatList: {
       backgroundColor: theme.colors.background,
       gap: 20,
@@ -27,7 +34,7 @@ const getStyles = (theme: Theme) =>
 const keyExtractor = (item: Notification) => item.id
 
 export const NotificationsList = () => {
-  const { notifications, loadNotificationsChunk } =
+  const { isLoadingFirstChunk, notifications, loadNotificationsChunk } =
     useInfiniteNotificationsList()
 
   const styles = useStyles(getStyles)
@@ -39,6 +46,10 @@ export const NotificationsList = () => {
     []
   )
 
+  if (isLoadingFirstChunk) {
+    return <LoadingView text="Loading notifications..." />
+  }
+
   if (!notifications.length) {
     return (
       <Typography style={styles.noResultsTypography}>
@@ -48,12 +59,22 @@ export const NotificationsList = () => {
   }
 
   return (
-    <FlatList
-      contentContainerStyle={styles.flatList}
-      data={notifications}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      onEndReached={loadNotificationsChunk}
-    />
+    <View>
+      <Collapsible style={styles.collapsible} id="parent">
+        <Collapsible id="child">
+          <Typography>This is my text</Typography>
+          <Typography>This is my text</Typography>
+          <Typography>This is my text</Typography>
+        </Collapsible>
+      </Collapsible>
+
+      <FlatList
+        contentContainerStyle={styles.flatList}
+        data={notifications}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        onEndReached={loadNotificationsChunk}
+      />
+    </View>
   )
 }
