@@ -6,12 +6,12 @@ import { resetAnswers } from "@/redux/answersSlice"
 import { fetchCars, setSelectedCar } from "@/redux/carsSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 
+import { useStyles } from "@/hooks/useStyles"
+
 import { Button } from "@/components/basic/Button"
 import { Select } from "@/components/basic/Select"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
-
-import { useStyles } from "@/hooks/useStyles"
 
 const getStyles = () =>
   ({
@@ -21,10 +21,13 @@ const getStyles = () =>
   } as const)
 
 export default function Index() {
-  const { selectedCar, carsList } = useAppSelector((state) => state.cars)
+  const selectedCar = useAppSelector((state) => state.cars.selectedCar)
+  const carsList = useAppSelector((state) =>
+    state.cars.carsList.map(({ id }) => ({ id }))
+  )
   const dispatch = useAppDispatch()
 
-  const selectOptions = carsList.map((car) => car.id)
+  const selectOptions = carsList.map((car) => ({ value: car.id }))
 
   const styles = useStyles(getStyles)
 
@@ -44,6 +47,7 @@ export default function Index() {
       <Typography type="heading">Cool Cars South Coast</Typography>
       <Select
         label="Select a vehicle"
+        showSearch
         options={selectOptions}
         value={selectedCar.id}
         onChange={onSelectChange}

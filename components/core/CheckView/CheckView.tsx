@@ -90,7 +90,9 @@ export const CheckView = ({
     }
   }
 
-  const parsedTimestamp = parseTimestampForDisplay(creationTimestamp)
+  const parsedTimestamp = parseTimestampForDisplay({
+    timestamp: creationTimestamp,
+  })
 
   if (isLoadingFaults) {
     return <LoadingView text="Loading check details..." />

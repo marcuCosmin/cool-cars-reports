@@ -14,7 +14,7 @@ import { View } from "@/components/basic/View"
 
 import { parseTimestampForDisplay } from "@/utils/parseTimestampForDisplay"
 
-import { getNotificationItemConfig } from "./getNotificationItemConfig"
+import { getNotificationItemConfig } from "./NotificationsList.utils"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -54,7 +54,9 @@ export const NotificationItem = ({
     useAsyncRequestHandler({
       request: markNotificationAsViewed,
     })
-  const parsedTimestamp = parseTimestampForDisplay(creationTimestamp)
+  const parsedTimestamp = parseTimestampForDisplay({
+    timestamp: creationTimestamp,
+  })
 
   const { message, redirectUrl } = getNotificationItemConfig({
     reference,

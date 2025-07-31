@@ -31,7 +31,7 @@ type Option = {
 type TabProps = {
   style?: StyleProp<ViewStyle>
   options: Option[]
-  value: string
+  value?: string
   onChange: (value: string) => void
 }
 

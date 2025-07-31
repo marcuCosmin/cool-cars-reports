@@ -155,14 +155,22 @@ export type Notification = {
   }
 }
 
-type GetNotificationsProps = {
+export type NotificationsFilters = {
+  type: string
+  startDate: Timestamp | null
+  endDate: Timestamp | null
+  carId: string
+}
+
+type GetNotificationsChunkProps = {
   uid: string
   lastRefValue?: Timestamp
+  filters: NotificationsFilters
 }
 
 export const getNotificationsChunk = withErrorPropagation(
   "NOTIFICATIONS",
-  async ({ uid, lastRefValue }: GetNotificationsProps) => {
+  async ({ uid, lastRefValue, filters }: GetNotificationsChunkProps) => {
     const notificationsRef = collection(
       firestore,
       "users",
@@ -173,6 +181,10 @@ export const getNotificationsChunk = withErrorPropagation(
     const queryConstraints = [
       orderBy("creationTimestamp", "desc"),
       lastRefValue && startAfter(lastRefValue),
+      filters.type !== "all" && where("type", "==", filters.type),
+      filters.startDate && where("creationTimestamp", ">=", filters.startDate),
+      filters.endDate && where("creationTimestamp", "<=", filters.endDate),
+      filters.carId && where("carId", "==", filters.carId),
       limit(5),
     ].filter(Boolean) as QueryConstraint[]
 
@@ -181,7 +193,7 @@ export const getNotificationsChunk = withErrorPropagation(
     const notificationsSnapshot = await getDocs(notificationsQuery)
 
     if (notificationsSnapshot.empty) {
-      return
+      return []
     }
 
     const notificationsDocs = notificationsSnapshot.docs

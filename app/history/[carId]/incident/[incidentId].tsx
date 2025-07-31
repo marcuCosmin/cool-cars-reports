@@ -96,7 +96,9 @@ const Incident = () => {
 
   const { creationTimestamp, description, status } = incident
 
-  const parsedTimestamp = parseTimestampForDisplay(creationTimestamp)
+  const parsedTimestamp = parseTimestampForDisplay({
+    timestamp: creationTimestamp,
+  })
 
   return (
     <View style={styles.mainView}>

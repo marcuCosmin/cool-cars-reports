@@ -1,56 +1,97 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useReducer, useRef, useState } from "react"
 
-import { getNotificationsChunk, type Notification } from "@/firebase/utils"
+import {
+  getNotificationsChunk,
+  type Notification,
+  type NotificationsFilters,
+} from "@/firebase/utils"
 import { Timestamp } from "firebase/firestore"
 
 import { useAppSelector } from "@/redux/config"
 
 import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 
+import { filtersReducer } from "./NotificationsList.utils"
+
+import type { FiltersAction } from "./NotificationsList.model"
+
+const filtersInitialState: NotificationsFilters = {
+  type: "all",
+  startDate: null,
+  endDate: null,
+  carId: "",
+}
+
 export const useInfiniteNotificationsList = () => {
+  const [filters, dispatchFilters] = useReducer<
+    NotificationsFilters,
+    FiltersAction
+  >(filtersReducer, filtersInitialState)
   const [lastRefValue, setLastRefValue] = useState<Timestamp | undefined>()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [canFetchMore, setCanFetchMore] = useState(true)
+  const isFirstTimeLoadingRef = useRef(true)
   const uid = useAppSelector(({ user }) => user.uid)
-  const executedFirstLoadRef = useRef(false)
 
-  const { isLoading, handleAsyncRequest: handleNotificationsLoad } =
+  const { isLoading, handleAsyncRequest: handleInitialNotificationsLoad } =
     useAsyncRequestHandler({
       request: getNotificationsChunk,
       isLoadingByDefault: true,
     })
+  const { handleAsyncRequest: handleNextNotificationsLoad } =
+    useAsyncRequestHandler({
+      request: getNotificationsChunk,
+    })
 
-  const loadNotificationsChunk = async () => {
-    const isLoadingNextChunk = executedFirstLoadRef.current && isLoading
-
-    if (!uid || isLoadingNextChunk || !canFetchMore) {
-      return
-    }
-
-    const notifications = await handleNotificationsLoad({
+  const loadInitialChunk = async () => {
+    const notifications = await handleInitialNotificationsLoad({
       uid,
-      lastRefValue,
+      filters,
     })
 
     if (!notifications) {
       setCanFetchMore(false)
-      executedFirstLoadRef.current = true
+      isFirstTimeLoadingRef.current = false
+      return
+    }
+
+    setNotifications(notifications)
+    const lastNotification = notifications[notifications.length - 1]
+    setLastRefValue(lastNotification.creationTimestamp)
+    isFirstTimeLoadingRef.current = false
+  }
+
+  const loadNextNotificationsChunk = async () => {
+    if (!canFetchMore) {
+      return
+    }
+
+    const notifications = await handleNextNotificationsLoad({
+      uid,
+      lastRefValue,
+      filters,
+    })
+
+    if (!notifications) {
+      setCanFetchMore(false)
       return
     }
 
     setNotifications((prev) => [...prev, ...notifications])
     const lastNotification = notifications[notifications.length - 1]
     setLastRefValue(lastNotification.creationTimestamp)
-    executedFirstLoadRef.current = true
   }
 
   useEffect(() => {
-    loadNotificationsChunk()
-  }, [])
+    loadInitialChunk()
+  }, [filters])
 
   return {
+    filters,
+    dispatchFilters,
     notifications,
-    isLoadingFirstChunk: !executedFirstLoadRef.current && isLoading,
-    loadNotificationsChunk,
+    isInitLoading: isLoading,
+    isFirstTimeLoading: isFirstTimeLoadingRef.current && isLoading,
+    loadNextNotificationsChunk,
   }
 }

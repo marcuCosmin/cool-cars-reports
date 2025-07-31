@@ -2,15 +2,13 @@ import { User } from "firebase/auth"
 
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
-type UID = string | null
-
 type UserState = {
-  uid: UID
+  uid: string
   isLoading: boolean
 }
 
 const initialState: UserState = {
-  uid: null,
+  uid: "",
   isLoading: true,
 }
 
@@ -23,7 +21,7 @@ const userSlice = createSlice({
       state.isLoading = false
     },
     clearUserData: (state) => {
-      state.uid = null
+      state.uid = ""
       state.isLoading = false
     },
   },

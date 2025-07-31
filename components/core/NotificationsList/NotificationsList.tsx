@@ -8,13 +8,13 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { Typography } from "@/components/basic/Typography"
 
-import { useInfiniteNotificationsList } from "./useInfiniteNotificationsList"
-
-import { Collapsible } from "@/components/basic/Collapsible/Collapsible"
+import { LoadingView } from "@/components/basic/LoadingView"
 import { View } from "@/components/basic/View"
 
-import { LoadingView } from "@/components/basic/LoadingView"
+import { useInfiniteNotificationsList } from "./useInfiniteNotificationsList"
+
 import { NotificationItem } from "./NotificationItem"
+import { NotificationsFilters } from "./NotificationsFilters"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -34,8 +34,14 @@ const getStyles = (theme: Theme) =>
 const keyExtractor = (item: Notification) => item.id
 
 export const NotificationsList = () => {
-  const { isLoadingFirstChunk, notifications, loadNotificationsChunk } =
-    useInfiniteNotificationsList()
+  const {
+    filters,
+    dispatchFilters,
+    isInitLoading,
+    isFirstTimeLoading,
+    notifications,
+    loadNextNotificationsChunk,
+  } = useInfiniteNotificationsList()
 
   const styles = useStyles(getStyles)
 
@@ -46,35 +52,32 @@ export const NotificationsList = () => {
     []
   )
 
-  if (isLoadingFirstChunk) {
+  if (isFirstTimeLoading) {
     return <LoadingView text="Loading notifications..." />
-  }
-
-  if (!notifications.length) {
-    return (
-      <Typography style={styles.noResultsTypography}>
-        You currently don&apos;t have any notifications
-      </Typography>
-    )
   }
 
   return (
     <View>
-      <Collapsible style={styles.collapsible} id="parent">
-        <Collapsible id="child">
-          <Typography>This is my text</Typography>
-          <Typography>This is my text</Typography>
-          <Typography>This is my text</Typography>
-        </Collapsible>
-      </Collapsible>
-
-      <FlatList
-        contentContainerStyle={styles.flatList}
-        data={notifications}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReached={loadNotificationsChunk}
+      <NotificationsFilters
+        filters={filters}
+        dispatchFilters={dispatchFilters}
       />
+
+      {isInitLoading ? (
+        <LoadingView />
+      ) : notifications.length ? (
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={notifications}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onEndReached={loadNextNotificationsChunk}
+        />
+      ) : (
+        <Typography style={styles.noResultsTypography}>
+          You currently don&apos;t have any notifications
+        </Typography>
+      )}
     </View>
   )
 }
