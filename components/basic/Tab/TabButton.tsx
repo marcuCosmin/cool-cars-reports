@@ -28,13 +28,13 @@ const getStyles = (theme: Theme) =>
     },
   } as const)
 
-type ButtonProps = {
+type TabButtonProps = {
   label: string
   isActive: boolean
   onClick: () => void
 }
 
-export const Button = ({ label, isActive, onClick }: ButtonProps) => {
+export const TabButton = ({ label, isActive, onClick }: TabButtonProps) => {
   const styles = useStyles(getStyles)
 
   const mergedButtonStyles = StyleSheet.flatten<ViewStyle>([

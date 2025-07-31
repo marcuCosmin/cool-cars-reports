@@ -19,8 +19,8 @@ import { parseTimestampForDisplay } from "@/utils/parseTimestampForDisplay"
 const getStyles = (theme: Theme) =>
   ({
     mainView: {
+      gap: theme.gap,
       alignItems: "center",
-      gap: 15,
       padding: 20,
     },
     headingTypography: {

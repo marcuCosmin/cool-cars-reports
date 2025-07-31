@@ -6,6 +6,7 @@ import { Timestamp } from "firebase/firestore"
 import { useAppSelector } from "@/redux/config"
 
 import { useStyles } from "@/hooks/useStyles"
+import { type Theme } from "@/hooks/useTheme"
 
 import { Collapsible } from "@/components/basic/Collapsible"
 import { DatePicker } from "@/components/basic/DatePicker/DatePicker"
@@ -21,11 +22,11 @@ import {
 
 import type { FiltersAction } from "./NotificationsList.model"
 
-const getStyles = () =>
+const getStyles = (theme: Theme) =>
   ({
     view: {
+      gap: theme.gap,
       flex: 0,
-      gap: 10,
       flexDirection: "row",
       alignItems: "center",
     },
@@ -33,13 +34,13 @@ const getStyles = () =>
       marginBottom: 20,
     },
     collapsibleContentView: {
+      gap: theme.gap,
       flex: 0,
-      gap: 10,
     },
     dateRangeView: {
+      gap: theme.gap,
       flex: 0,
       flexDirection: "row",
-      gap: 10,
     },
   } as const)
 

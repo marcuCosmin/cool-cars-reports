@@ -23,7 +23,7 @@ const getStyles = (theme: Theme) =>
     },
     flatList: {
       backgroundColor: theme.colors.background,
-      gap: 20,
+      gap: theme.gap,
     },
     noResultsTypography: {
       textAlign: "center",

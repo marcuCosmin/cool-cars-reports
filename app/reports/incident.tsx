@@ -23,11 +23,6 @@ const getStyles = () =>
     heading: {
       textAlign: "center",
     },
-    buttonsView: {
-      display: "flex",
-      alignItems: "center",
-      gap: 50,
-    },
     button: {
       marginTop: 40,
     },

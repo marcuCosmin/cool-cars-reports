@@ -31,10 +31,10 @@ const getStyles = (theme: Theme) =>
     },
     mainMenuButton: {
       borderRadius: theme.borderRadius,
+      gap: theme.gap,
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      gap: 10,
       backgroundColor: "transparent",
       zIndex: 10,
     },

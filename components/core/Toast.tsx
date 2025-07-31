@@ -21,6 +21,7 @@ const getStyles = (theme: Theme) =>
       borderRadius: theme.borderRadius,
       backgroundColor: theme.colors.primary,
       padding: theme.inputPadding,
+      gap: theme.gap,
       position: "absolute",
       maxWidth: "100%",
       maxHeight: 150,
@@ -31,7 +32,6 @@ const getStyles = (theme: Theme) =>
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      gap: 10,
     },
     scrollView: {
       flex: 1,

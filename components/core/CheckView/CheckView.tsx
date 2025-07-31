@@ -21,8 +21,8 @@ import { useCheckFaults } from "./useCheckFaults"
 const getStyles = (theme: Theme) =>
   ({
     mainView: {
+      gap: theme.gap,
       alignItems: "center",
-      gap: 15,
     },
     headingTypography: {
       marginBottom: 0,

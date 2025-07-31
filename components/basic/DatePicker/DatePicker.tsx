@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 import { useStyles } from "@/hooks/useStyles"
+import { type Theme } from "@/hooks/useTheme"
 
 import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
@@ -12,11 +13,11 @@ import { DatePickerModal } from "./DatePickerModal"
 
 import type { DatePickerProps } from "./DatePicker.model"
 
-const getStyles = () =>
+const getStyles = (theme: Theme) =>
   ({
     containerView: {
+      gap: theme.gap,
       flex: 1,
-      gap: 10,
     },
     modalButton: {
       display: "flex",

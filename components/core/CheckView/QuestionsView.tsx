@@ -13,7 +13,7 @@ import type { AnswerWithFault } from "./CheckView.model"
 const getStyles = (theme: Theme) =>
   ({
     scrollView: {
-      gap: 15,
+      gap: theme.gap,
       alignItems: "center",
     },
     itemView: {
@@ -21,11 +21,11 @@ const getStyles = (theme: Theme) =>
       borderColor: theme.colors.primary,
       borderRadius: theme.borderRadius,
       padding: theme.inputPadding,
+      gap: theme.gap,
       alignItems: "center",
       width: "100%",
       flex: 0,
       maxWidth: "90%",
-      gap: 10,
     },
     labelTypography: {
       textAlign: "center",

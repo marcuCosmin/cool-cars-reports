@@ -15,10 +15,10 @@ const getStyles = (theme: Theme) =>
       flex: 1,
     },
     titleButton: {
+      gap: theme.gap,
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      gap: 10,
     },
     titleChevronIcon: {
       marginLeft: "auto",

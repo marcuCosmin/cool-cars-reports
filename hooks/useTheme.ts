@@ -21,10 +21,11 @@ const getTheme = (isDarkMode: boolean) => ({
     medium: 16,
     large: 24,
   },
+  gap: 10,
   borderRadius: 8,
   borderWidth: 1,
   inputPadding: 10,
-  inputHeight: 60,
+  inputHeight: 50,
   actionCardSize: 150,
   mainViewPaddingX: 10,
 })

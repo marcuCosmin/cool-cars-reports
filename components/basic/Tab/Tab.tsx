@@ -5,7 +5,7 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { View } from "@/components/basic/View"
 
-import { Button } from "./Button"
+import { TabButton } from "./TabButton"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -47,7 +47,7 @@ export const Tab = ({ style, options, value, onChange }: TabProps) => {
         const onClick = () => onChange(option.value)
 
         return (
-          <Button
+          <TabButton
             key={index}
             label={option.label}
             isActive={isActive}

@@ -12,9 +12,9 @@ const getStyles = (theme: Theme) =>
     button: {
       width: theme.actionCardSize,
       height: theme.actionCardSize,
+      gap: 20,
       display: "flex",
       alignItems: "center",
-      gap: 20,
       position: "relative",
     },
     typography: {

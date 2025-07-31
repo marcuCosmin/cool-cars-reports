@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Timestamp } from "firebase/firestore"
 
 import { useStyles } from "@/hooks/useStyles"
+import { type Theme } from "@/hooks/useTheme"
 
 import { Button } from "@/components/basic/Button"
 import { Modal } from "@/components/basic/Modal"
@@ -19,12 +20,12 @@ import {
 
 import type { DatePickerProps } from "./DatePicker.model"
 
-const getStyles = () =>
+const getStyles = (theme: Theme) =>
   ({
     dayMonthView: {
       flex: 0,
       flexDirection: "row",
-      gap: 10,
+      gap: theme.gap,
     },
     yearView: {
       flex: 0,
