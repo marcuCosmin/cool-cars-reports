@@ -9,7 +9,7 @@ import { useStyles } from "@/hooks/useStyles"
 
 import { View } from "@/components/basic/View"
 
-import { Button } from "./Button"
+import { AnswerButton } from "./AnswerButton"
 
 const getStlyes = () =>
   ({
@@ -73,8 +73,16 @@ export const AnswerButtons = ({
 
   return (
     <View style={styles.view}>
-      <Button icon="check" onClick={onYesClick} isActive={isYesButtonActive} />
-      <Button icon="close" onClick={onNoClick} isActive={isNoButtonActive} />
+      <AnswerButton
+        icon="check"
+        onClick={onYesClick}
+        isActive={isYesButtonActive}
+      />
+      <AnswerButton
+        icon="close"
+        onClick={onNoClick}
+        isActive={isNoButtonActive}
+      />
     </View>
   )
 }

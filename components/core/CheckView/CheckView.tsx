@@ -12,11 +12,12 @@ import { View } from "@/components/basic/View"
 
 import { parseTimestampForDisplay } from "@/utils/parseTimestampForDisplay"
 
-import { mapAnswersToFaults } from "./mapAnswersToFaults"
+import { useCheckFaults } from "./useCheckFaults"
 
 import { OdoReadingView } from "./OdoReadingView"
 import { QuestionsView } from "./QuestionsView"
-import { useCheckFaults } from "./useCheckFaults"
+
+import { mapAnswersToFaults } from "./CheckView.utils"
 
 const getStyles = (theme: Theme) =>
   ({

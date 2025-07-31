@@ -23,13 +23,17 @@ const getStyles = (theme: Theme) =>
     },
   } as const)
 
-type ButtonProps = {
+type AnswerButtonProps = {
   icon: "check" | "close"
   isActive?: boolean
   onClick: () => void
 }
 
-export const Button = ({ icon, isActive, onClick }: ButtonProps) => {
+export const AnswerButton = ({
+  icon,
+  isActive,
+  onClick,
+}: AnswerButtonProps) => {
   const styles = useStyles(getStyles)
   const mergedStyles = StyleSheet.compose<ViewStyle, ViewStyle, ViewStyle>(
     styles.button,

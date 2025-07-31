@@ -11,7 +11,7 @@ import { NotificationsLink } from "@/components/core/NotificationsLink/Notificat
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { Link } from "./Link"
+import { HeaderLink } from "./HeaderLink"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -81,7 +81,7 @@ export const Header = () => {
       </View>
 
       <View style={styles.linksView}>
-        {!isHome && <Link href="/" icon="home" label="Home" />}
+        {!isHome && <HeaderLink href="/" icon="home" label="Home" />}
         {slicedSegments.map((segment, index) => {
           if (segment === "_sitemap") {
             return null
@@ -96,7 +96,7 @@ export const Header = () => {
           }
 
           return (
-            <Link
+            <HeaderLink
               href={href}
               key={segment}
               icon={config.icon}

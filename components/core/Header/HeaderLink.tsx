@@ -21,19 +21,19 @@ const getStyles = (theme: Theme) =>
     },
   } as const)
 
-type LinkProps = {
+type HeaderLinkProps = {
   href: string
   label: string
   icon: "home" | "file-table" | "checkbox-multiple-outline"
   onClick?: () => void
 }
 
-export const Link = ({
+export const HeaderLink = ({
   href,
   label,
   icon,
   onClick: propsOnClick,
-}: LinkProps) => {
+}: HeaderLinkProps) => {
   const styles = useStyles(getStyles)
   const theme = useTheme()
 
