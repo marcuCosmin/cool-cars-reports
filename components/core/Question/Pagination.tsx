@@ -1,5 +1,5 @@
 import { router, type RelativePathString } from "expo-router"
-import { ScrollView, StyleSheet, TextStyle, type ViewStyle } from "react-native"
+import { ScrollView, StyleSheet } from "react-native"
 
 import { type QuestionDoc } from "@/firebase/utils"
 
@@ -9,6 +9,7 @@ import { type Theme } from "@/hooks/useTheme"
 import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
+import { useEffect, useRef } from "react"
 
 const getStlyes = (theme: Theme) =>
   ({
@@ -51,22 +52,33 @@ export const Pagination = ({
   questionIndex,
 }: PaginationProps) => {
   const styles = useStyles(getStlyes)
+  const listRef = useRef<ScrollView>(null)
+
+  useEffect(() => {
+    if (!listRef.current) {
+      return
+    }
+
+    listRef.current.scrollTo({
+      x: questionIndex * 50,
+      animated: false,
+    })
+  }, [sectionKey, questionIndex])
 
   return (
     <View style={styles.view}>
-      <ScrollView horizontal>
+      <ScrollView horizontal ref={listRef}>
         {[...Array(sectionLength).keys()].map((index) => {
           const isActive = index === questionIndex
-          const mergedButtonStyles = StyleSheet.compose<
-            ViewStyle,
-            ViewStyle,
-            ViewStyle
-          >(styles.button, isActive && styles.activeButton)
-          const mergedTypographyStyles = StyleSheet.compose<
-            TextStyle,
-            TextStyle,
-            TextStyle
-          >(styles.typography, isActive && styles.activeTypography)
+
+          const mergedButtonStyles = StyleSheet.flatten([
+            styles.button,
+            isActive && styles.activeButton,
+          ])
+          const mergedTypographyStyles = StyleSheet.flatten([
+            styles.typography,
+            isActive && styles.activeTypography,
+          ])
 
           const displayedIndex = index + 1
 
