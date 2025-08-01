@@ -19,7 +19,7 @@ const filtersInitialState: NotificationsFilters = {
   type: "all",
   startDate: null,
   endDate: null,
-  carId: "",
+  carId: "all",
 }
 
 export const useInfiniteNotificationsList = () => {

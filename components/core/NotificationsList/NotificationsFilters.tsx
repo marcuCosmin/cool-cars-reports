@@ -10,7 +10,7 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { Collapsible } from "@/components/basic/Collapsible"
 import { DatePicker } from "@/components/basic/DatePicker/DatePicker"
-import { Select } from "@/components/basic/Select"
+import { Select, type SelectOption } from "@/components/basic/Select"
 import { Tab } from "@/components/basic/Tab/Tab"
 import { View } from "@/components/basic/View"
 
@@ -53,9 +53,15 @@ export const NotificationsFilters = ({
   filters,
   dispatchFilters,
 }: NotificationsFiltersProps) => {
-  const carsSelectOptions = useAppSelector((state) =>
-    state.cars.carsList.map(({ id }) => ({ value: id }))
-  )
+  const carsSelectOptions = useAppSelector((state) => {
+    const carList: SelectOption[] = state.cars.carsList.map(({ id }) => ({
+      value: id,
+    }))
+
+    carList.unshift({ value: "all", label: "All" })
+
+    return carList
+  })
   const styles = useStyles(getStyles)
 
   const timestamps = {

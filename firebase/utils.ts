@@ -184,7 +184,7 @@ export const getNotificationsChunk = withErrorPropagation(
       filters.type !== "all" && where("type", "==", filters.type),
       filters.startDate && where("creationTimestamp", ">=", filters.startDate),
       filters.endDate && where("creationTimestamp", "<=", filters.endDate),
-      filters.carId && where("carId", "==", filters.carId),
+      filters.carId !== "all" && where("carId", "==", filters.carId),
       limit(5),
     ].filter(Boolean) as QueryConstraint[]
 
