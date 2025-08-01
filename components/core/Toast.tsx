@@ -48,7 +48,7 @@ const getStyles = (theme: Theme) =>
 export const Toast = () => {
   const theme = useTheme()
   const styles = useStyles(getStyles)
-  const { message } = useAppSelector((state) => state.toast)
+  const message = useAppSelector(({ toast }) => toast.message)
 
   const dispatch = useDispatch()
 

@@ -10,7 +10,7 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { Collapsible } from "@/components/basic/Collapsible"
 import { DatePicker } from "@/components/basic/DatePicker/DatePicker"
-import { Select, type SelectOption } from "@/components/basic/Select"
+import { Select } from "@/components/basic/Select"
 import { Tab } from "@/components/basic/Tab/Tab"
 import { View } from "@/components/basic/View"
 
@@ -18,6 +18,7 @@ import {
   get1MonthTimestamps,
   get1WeekTimestamps,
   get2WeeksTimestamps,
+  getCarsSelectOptions,
 } from "./NotificationsList.utils"
 
 import type { FiltersAction } from "./NotificationsList.model"
@@ -53,15 +54,9 @@ export const NotificationsFilters = ({
   filters,
   dispatchFilters,
 }: NotificationsFiltersProps) => {
-  const carsSelectOptions = useAppSelector((state) => {
-    const carList: SelectOption[] = state.cars.carsList.map(({ id }) => ({
-      value: id,
-    }))
+  const carsList = useAppSelector(({ cars }) => cars.carsList)
+  const carsSelectOptions = getCarsSelectOptions(carsList)
 
-    carList.unshift({ value: "all", label: "All" })
-
-    return carList
-  })
   const styles = useStyles(getStyles)
 
   const timestamps = {

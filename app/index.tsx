@@ -21,13 +21,12 @@ const getStyles = () =>
   } as const)
 
 export default function Index() {
+  const carsError = useAppSelector(({ cars }) => cars.error)
   const selectedCar = useAppSelector((state) => state.cars.selectedCar)
-  const carsList = useAppSelector((state) =>
-    state.cars.carsList.map(({ id }) => ({ id }))
-  )
-  const dispatch = useAppDispatch()
-
+  const carsList = useAppSelector((state) => state.cars.carsList)
   const selectOptions = carsList.map((car) => ({ value: car.id }))
+
+  const dispatch = useAppDispatch()
 
   const styles = useStyles(getStyles)
 
@@ -45,13 +44,18 @@ export default function Index() {
   return (
     <View>
       <Typography type="heading">Cool Cars South Coast</Typography>
-      <Select
-        label="Select a vehicle"
-        showSearch
-        options={selectOptions}
-        value={selectedCar.id}
-        onChange={onSelectChange}
-      />
+
+      {carsError ? (
+        <Typography>{carsError}</Typography>
+      ) : (
+        <Select
+          label="Select a vehicle"
+          showSearch
+          options={selectOptions}
+          value={selectedCar.id}
+          onChange={onSelectChange}
+        />
+      )}
 
       {selectedCar.id && (
         <Button style={styles.button} onClick={onButtonClick}>

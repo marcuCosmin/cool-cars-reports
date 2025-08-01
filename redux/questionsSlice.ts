@@ -1,23 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import { getQuestions, type QuestionDoc } from "@/firebase/utils"
 
-import { createAppAsyncThunk } from "./utils"
-
 type QuestionsState = QuestionDoc & {
   isLoading: boolean
+  error: string
 }
 
 const initialState: QuestionsState = {
   isLoading: true,
   interior: [],
   exterior: [],
+  error: "",
 }
 
-export const fetchQuestions = createAppAsyncThunk(
-  "questions/fetch",
-  getQuestions
-)
+export const fetchQuestions = createAsyncThunk("questions/fetch", getQuestions)
 
 const questionsSlice = createSlice({
   name: "questions",
@@ -29,6 +26,7 @@ const questionsSlice = createSlice({
     })
     builder.addCase(fetchQuestions.fulfilled, (state, action) => {
       state.isLoading = false
+      state.error = ""
 
       if (!action.payload) {
         return
@@ -41,6 +39,7 @@ const questionsSlice = createSlice({
       state.isLoading = false
       state.interior = []
       state.exterior = []
+      state.error = "Failed to fetch questions"
     })
   },
 })

@@ -15,8 +15,8 @@ export const store = configureStore({
   reducer: { user, cars, questions, answers, toast },
 })
 
-type State = ReturnType<typeof store.getState>
-type Dispatch = typeof store.dispatch
+export type State = ReturnType<typeof store.getState>
+export type Dispatch = typeof store.dispatch
 
 export const useAppDispatch: () => Dispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<State> = useSelector

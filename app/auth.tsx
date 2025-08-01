@@ -26,7 +26,7 @@ type LocalSearchParams = {
 }
 
 export default function Auth() {
-  const { uid } = useAppSelector((state) => state.user)
+  const uid = useAppSelector(({ user }) => user.uid)
   const { authToken } = useLocalSearchParams<LocalSearchParams>()
   const { isLoading, handleAsyncRequest: handleSignIn } =
     useAsyncRequestHandler({

@@ -2,10 +2,9 @@ import { router } from "expo-router"
 
 import { useEffect } from "react"
 
-import { submitAnswers, type OdoReading } from "@/redux/answersSlice"
+import { submitAnswers } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { fetchQuestions } from "@/redux/questionsSlice"
-import { showToast } from "@/redux/toastSlice"
 
 import { useStyles } from "@/hooks/useStyles"
 
@@ -28,24 +27,28 @@ const getStyles = () =>
 export default function Check() {
   const styles = useStyles(getStyles)
   const dispatch = useAppDispatch()
-  const { questions, answers, cars } = useAppSelector(
-    ({ questions, answers, cars }) => ({
-      questions,
-      answers,
-      cars,
-    })
+  const questionsError = useAppSelector(({ questions }) => questions.error)
+  const questionsAreLoading = useAppSelector(
+    ({ questions }) => questions.isLoading
   )
-
-  const interiorIsCompleted =
-    questions.interior.length === answers.interior.length
-  const exteriorIsCompleted =
-    questions.exterior.length === answers.exterior.length
-  const odoReadingIsCompleted = answers.odoReading !== null
-
-  const checkStarted =
-    answers.interior.length > 0 ||
-    answers.exterior.length > 0 ||
-    answers.odoReading !== null
+  const answersAreLoading = useAppSelector(({ answers }) => answers.isLoading)
+  const interiorIsCompleted = useAppSelector(
+    ({ answers, questions }) =>
+      questions.interior.length === answers.interior.length
+  )
+  const exteriorIsCompleted = useAppSelector(
+    ({ answers, questions }) =>
+      questions.exterior.length === answers.exterior.length
+  )
+  const odoReadingIsCompleted = useAppSelector(
+    ({ answers }) => answers.odoReading !== null
+  )
+  const checkStarted = useAppSelector(
+    ({ answers }) =>
+      answers.interior.length > 0 ||
+      answers.exterior.length > 0 ||
+      answers.odoReading !== null
+  )
 
   const allSectionsAreCompleted =
     interiorIsCompleted && exteriorIsCompleted && odoReadingIsCompleted
@@ -83,36 +86,32 @@ export default function Check() {
   }, [checkStarted])
 
   const onSubmitClick = async () => {
-    const result = await dispatch(
-      submitAnswers({
-        interior: answers.interior,
-        exterior: answers.exterior,
-        odoReading: answers.odoReading as OdoReading,
-        carId: cars.selectedCar.id,
-      })
-    )
+    const result = await dispatch(submitAnswers())
 
     if (result.meta.requestStatus === "rejected") {
       return
     }
 
-    dispatch(showToast("Check submitted successfully!"))
-
     router.push("/")
   }
 
-  if (questions.isLoading) {
+  if (questionsAreLoading) {
     return <LoadingView />
   }
 
   return (
     <View>
-      {answers.isLoading && <LoadingView overlay />}
+      {answersAreLoading && <LoadingView overlay />}
 
       <Typography type="heading" style={styles.heading}>
         Vehicle check
       </Typography>
-      <ActionCardList items={actionCardListItems} />
+
+      {questionsError ? (
+        <Typography>{questionsError}</Typography>
+      ) : (
+        <ActionCardList items={actionCardListItems} />
+      )}
 
       {allSectionsAreCompleted && (
         <Button onClick={onSubmitClick}>

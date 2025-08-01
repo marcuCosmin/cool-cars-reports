@@ -1,8 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { postCheckAnswers } from "@/api/utils"
 
-import { createAppAsyncThunk } from "./utils"
+import { type Dispatch, type State } from "./config"
+import { showToast } from "./toastSlice"
 
 export type Answer = {
   label: string
@@ -30,9 +31,30 @@ const initialState: SelectedCarState = {
   odoReading: null,
 }
 
-export const submitAnswers = createAppAsyncThunk(
+type AsyncThunkConfig = {
+  state: State
+  dispatch: Dispatch
+  rejectValue: string
+}
+
+export const submitAnswers = createAsyncThunk<void, void, AsyncThunkConfig>(
   "answers/submit",
-  postCheckAnswers
+  async (_, { getState, dispatch }) => {
+    try {
+      const { answers, cars } = getState()
+
+      const response = await postCheckAnswers({
+        interior: answers.interior,
+        exterior: answers.exterior,
+        odoReading: answers.odoReading as OdoReading,
+        carId: cars.selectedCar.id,
+      })
+
+      dispatch(showToast(response.message))
+    } catch (error) {
+      dispatch(showToast((error as Error).message))
+    }
+  }
 )
 
 const answersSlice = createSlice({

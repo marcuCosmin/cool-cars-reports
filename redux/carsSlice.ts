@@ -1,13 +1,16 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit"
 
 import { getCars, type Car } from "@/firebase/utils"
-
-import { createAppAsyncThunk } from "./utils"
 
 type SelectedCarState = {
   isLoading: boolean
   selectedCar: Car
   carsList: Car[]
+  error: string
 }
 
 const initialState: SelectedCarState = {
@@ -16,9 +19,10 @@ const initialState: SelectedCarState = {
     id: "",
   },
   carsList: [],
+  error: "",
 }
 
-export const fetchCars = createAppAsyncThunk("cars/fetch", getCars)
+export const fetchCars = createAsyncThunk("cars/fetch", getCars)
 
 const carsSlice = createSlice({
   name: "selectedCar",
@@ -36,10 +40,12 @@ const carsSlice = createSlice({
     builder.addCase(fetchCars.fulfilled, (state, action) => {
       state.isLoading = true
       state.carsList = action.payload
+      state.error = ""
     })
     builder.addCase(fetchCars.rejected, (state) => {
       state.isLoading = false
       state.carsList = []
+      state.error = "Failed to fetch cars"
     })
   },
 })

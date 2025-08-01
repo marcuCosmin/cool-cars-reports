@@ -1,8 +1,14 @@
 import { type RelativePathString } from "expo-router"
 
-import { type Notification, type NotificationsFilters } from "@/firebase/utils"
-
+import {
+  type Car,
+  type Notification,
+  type NotificationsFilters,
+} from "@/firebase/utils"
 import { Timestamp } from "firebase/firestore"
+
+import { type SelectOption } from "@/components/basic/Select"
+
 import type { FiltersAction } from "./NotificationsList.model"
 
 type GetNotificationConfigProps = Pick<
@@ -130,4 +136,14 @@ export const get1MonthTimestamps = () => {
   const endTimestamp = getEndTimestamp()
 
   return { startTimestamp, endTimestamp }
+}
+
+export const getCarsSelectOptions = (carsList: Car[]) => {
+  const carsSelectOptions: SelectOption[] = carsList.map(({ id }) => ({
+    value: id,
+  }))
+
+  carsSelectOptions.unshift({ value: "all", label: "All" })
+
+  return carsSelectOptions
 }

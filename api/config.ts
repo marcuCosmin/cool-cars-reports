@@ -14,7 +14,7 @@ type ApiErrorResponse = {
   error: string
 }
 
-type ApiDataResponse = {
+export type ApiDataResponse = {
   message: string
 }
 

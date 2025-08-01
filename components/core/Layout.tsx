@@ -30,7 +30,9 @@ const getStyles = (theme: Theme) =>
   } as const)
 
 export const Layout = () => {
-  const { isLoading, uid } = useAppSelector(({ user }) => user)
+  const uid = useAppSelector(({ user }) => user.uid)
+  const isLoading = useAppSelector(({ user }) => user.isLoading)
+
   const dispatch = useAppDispatch()
   const styles = useStyles(getStyles)
 

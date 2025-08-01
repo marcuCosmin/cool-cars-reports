@@ -49,7 +49,7 @@ export const NotificationItem = ({
   id,
 }: Notification) => {
   const styles = useStyles(getStyles)
-  const uid = useAppSelector((state) => state.user.uid)
+  const uid = useAppSelector(({ user }) => user.uid)
   const { handleAsyncRequest: handleMarkNotificationAsViewed } =
     useAsyncRequestHandler({
       request: markNotificationAsViewed,

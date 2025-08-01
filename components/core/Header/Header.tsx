@@ -55,7 +55,7 @@ const linksConfig = {
 
 export const Header = () => {
   const styles = useStyles(getStyles)
-  const { selectedCar } = useAppSelector((state) => state.cars)
+  const selectedCar = useAppSelector(({ cars }) => cars.selectedCar)
 
   const pathname = usePathname()
   const isHome = pathname === "/"
