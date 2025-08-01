@@ -74,14 +74,22 @@ export const Question = () => {
     return question?.label
   })
 
-  const paginationLength = useAppSelector(({ answers }) => {
+  const paginationLength = useAppSelector(({ answers, questions }) => {
     const answersSection = answers[sectionKey]
+    const questionsSection = questions[sectionKey]
 
-    return answersSection?.length
+    const totalQuestionsCount = questionsSection?.length
+    const answeredQuestionsCount = answersSection?.length
+    const paginationLength =
+      answeredQuestionsCount === totalQuestionsCount
+        ? answeredQuestionsCount
+        : answeredQuestionsCount + 1
+
+    return paginationLength
   })
 
   if (!questionLabel) {
-    return null
+    return <View />
   }
 
   return (
