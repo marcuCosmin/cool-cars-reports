@@ -1,8 +1,8 @@
 import { router } from "expo-router"
 
-import { Question, type QuestionDoc } from "@/firebase/utils"
+import { type QuestionDoc } from "@/firebase/utils"
 
-import { setAnswer, type Answer } from "@/redux/answersSlice"
+import { setAnswer } from "@/redux/answersSlice"
 import { useAppDispatch } from "@/redux/config"
 
 import { useStyles } from "@/hooks/useStyles"
@@ -26,26 +26,22 @@ type AnswerButtonsProps = {
   questionIndex: number
   sectionKey: keyof QuestionDoc
   hasNextQuestion: boolean
-  sectionIsCompleted: boolean
-  question: Question
-  answer?: Answer
+  questionLabel: string
+  answer?: boolean
 }
 
 export const AnswerButtons = ({
   questionIndex,
   sectionKey,
   hasNextQuestion,
-  sectionIsCompleted,
-  question,
+  questionLabel,
   answer,
 }: AnswerButtonsProps) => {
   const styles = useStyles(getStlyes)
   const dispatch = useAppDispatch()
 
-  const answerValue = answer?.value
-
-  const isYesButtonActive = answerValue === true && sectionIsCompleted
-  const isNoButtonActive = answerValue === false && sectionIsCompleted
+  const isYesButtonActive = answer === true
+  const isNoButtonActive = answer === false
 
   const handleButtonClick = (value: boolean) => {
     dispatch(
@@ -54,7 +50,7 @@ export const AnswerButtons = ({
         index: questionIndex,
         answer: {
           value,
-          label: question.label,
+          label: questionLabel,
         },
       })
     )

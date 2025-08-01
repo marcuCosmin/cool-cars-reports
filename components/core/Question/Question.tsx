@@ -50,25 +50,37 @@ export const Question = () => {
 
   const styles = useStyles(getStyles)
 
-  const { questionIndex } = useLocalSearchParams<LocalSearchParams>()
+  const { questionIndex: searchParamQuestionIndex } =
+    useLocalSearchParams<LocalSearchParams>()
+  const questionIndex = Number(searchParamQuestionIndex)
+  const displayedIndex = questionIndex + 1
 
-  const { questions, answers } = useAppSelector(({ questions, answers }) => ({
-    questions,
-    answers,
-  }))
+  const answerValue = useAppSelector(({ answers }) => {
+    const answersSection = answers[sectionKey]
+    const answer = answersSection?.[questionIndex]
+    return answer?.value
+  })
+  const hasNextQuestion = useAppSelector(({ questions }) => {
+    const questionsSection = questions[sectionKey]
 
-  const questionsSection = questions[sectionKey]
-  const answersSection = answers[sectionKey]
+    const hasNextQuestion = questionIndex < questionsSection?.length - 1
 
-  const sectionIsCompleted = answersSection?.length === questionsSection?.length
+    return hasNextQuestion
+  })
+  const questionLabel = useAppSelector(({ questions }) => {
+    const questionsSection = questions[sectionKey]
+    const question = questionsSection?.[questionIndex]
 
-  const numericIndex = Number(questionIndex)
-  const question = questionsSection?.[numericIndex]
-  const answer = answersSection?.[numericIndex]
-  const displayedIndex = numericIndex + 1
-  const hasNextQuestion = numericIndex < questionsSection?.length - 1
+    return question?.label
+  })
 
-  if (!question) {
+  const paginationLength = useAppSelector(({ answers }) => {
+    const answersSection = answers[sectionKey]
+
+    return answersSection?.length
+  })
+
+  if (!questionLabel) {
     return null
   }
 
@@ -78,24 +90,23 @@ export const Question = () => {
 
       <View style={styles.labelView}>
         <ScrollView>
-          <Typography style={styles.typography}>{question?.label}</Typography>
+          <Typography style={styles.typography}>{questionLabel}</Typography>
         </ScrollView>
       </View>
 
       <AnswerButtons
         sectionKey={sectionKey}
-        sectionIsCompleted={sectionIsCompleted}
-        questionIndex={numericIndex}
+        questionIndex={questionIndex}
         hasNextQuestion={hasNextQuestion}
-        question={question}
-        answer={answer}
+        questionLabel={questionLabel}
+        answer={answerValue}
       />
 
-      {sectionIsCompleted && (
+      {!!paginationLength && (
         <Pagination
           sectionKey={sectionKey}
-          questionIndex={numericIndex}
-          sectionLength={questionsSection?.length}
+          questionIndex={questionIndex}
+          sectionLength={paginationLength}
         />
       )}
     </View>
