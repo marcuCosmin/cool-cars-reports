@@ -7,18 +7,18 @@ import { View } from "@/components/basic/View"
 
 import { TabButton } from "./TabButton"
 
+import { getTabButtonPosition } from "./Tab.utils"
+
 const getStyles = (theme: Theme) =>
   ({
     view: {
       borderWidth: theme.borderWidth,
       borderColor: theme.colors.primary,
-      borderRadius: theme.borderRadius,
+      borderRadius: theme.borderRadius + theme.borderWidth * 2,
       height: theme.inputHeight,
       flex: 0,
-      flexShrink: 1,
       display: "flex",
       alignSelf: "center",
-      alignItems: "center",
       flexDirection: "row",
     },
   } as const)
@@ -46,9 +46,15 @@ export const Tab = ({ style, options, value, onChange }: TabProps) => {
         const isActive = option.value === value
         const onClick = () => onChange(option.value)
 
+        const position = getTabButtonPosition({
+          index,
+          optionsLength: options.length,
+        })
+
         return (
           <TabButton
             key={index}
+            position={position}
             label={option.label}
             isActive={isActive}
             onClick={onClick}

@@ -10,12 +10,13 @@ const getStyles = (theme: Theme) =>
   ({
     button: {
       borderColor: theme.colors.primary,
-      borderWidth: theme.borderWidth,
+      borderWidth: 0,
+      borderRightWidth: theme.borderWidth,
       borderRadius: 0,
       backgroundColor: "transparent",
       display: "flex",
+      flex: 0,
       justifyContent: "center",
-      height: "100%",
     },
     buttonActive: {
       backgroundColor: theme.colors.primary,
@@ -26,19 +27,38 @@ const getStyles = (theme: Theme) =>
     typgoraphyActive: {
       color: theme.colors.white,
     },
+    firstButton: {
+      borderTopLeftRadius: theme.borderRadius,
+      borderBottomLeftRadius: theme.borderRadius,
+      borderLeftWidth: 0,
+    },
+    lastButton: {
+      borderTopRightRadius: theme.borderRadius,
+      borderBottomRightRadius: theme.borderRadius,
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+    },
   } as const)
 
 type TabButtonProps = {
+  position: "first" | "middle" | "last"
   label: string
   isActive: boolean
   onClick: () => void
 }
 
-export const TabButton = ({ label, isActive, onClick }: TabButtonProps) => {
+export const TabButton = ({
+  label,
+  isActive,
+  position,
+  onClick,
+}: TabButtonProps) => {
   const styles = useStyles(getStyles)
 
   const mergedButtonStyles = StyleSheet.flatten<ViewStyle>([
     styles.button,
+    position === "first" && styles.firstButton,
+    position === "last" && styles.lastButton,
     isActive && styles.buttonActive,
   ])
   const mergedTypographyStyles = StyleSheet.flatten<TextStyle>([
