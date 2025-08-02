@@ -1,4 +1,4 @@
-import { usePathname, useSegments } from "expo-router"
+import { usePathname } from "expo-router"
 
 import { useAppSelector } from "@/redux/config"
 
@@ -10,6 +10,8 @@ import { NotificationsLink } from "@/components/core/NotificationsLink/Notificat
 
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
+
+import { useCarId } from "./useCarId"
 
 import { HeaderLink } from "./HeaderLink"
 
@@ -42,72 +44,47 @@ const getStyles = (theme: Theme) =>
     },
   } as const)
 
-const linksConfig = {
-  "/reports": {
-    label: "Reports",
-    icon: "file-table",
-  },
-  "/reports/check": {
-    label: "Checks",
-    icon: "checkbox-multiple-outline",
-  },
-} as const
-
 export const Header = () => {
-  const styles = useStyles(getStyles)
   const selectedCarId = useAppSelector(({ cars }) => cars.selectedCar.id)
+  const carId = useCarId()
 
   const pathname = usePathname()
-  const isHome = pathname === "/"
-  const segments = useSegments()
+  const isHomePath = pathname === "/"
+  const isReportsPath = pathname === "/reports"
+  const isCheckPath = pathname === "/reports/check"
+  const showReportsLinks = selectedCarId && !isReportsPath
 
-  const carIdSegmentIndex = segments.findIndex((segment) =>
-    segment.startsWith("[carId]")
-  )
-  const carIdUrlParam = pathname.split("/")[carIdSegmentIndex + 1]
-
-  const displayedReportsCarId = pathname.startsWith("/reports")
-    ? selectedCarId
-    : null
-  const displayedCarId = carIdUrlParam || displayedReportsCarId
-
-  const slicedSegments = segments.slice(0, -1)
+  const styles = useStyles(getStyles)
 
   return (
     <View style={styles.containerView}>
       <View style={styles.mainView}>
         <NotificationsLink />
 
-        <Typography style={styles.title}>{displayedCarId}</Typography>
+        <Typography style={styles.title}>{carId}</Typography>
 
         <Logout />
       </View>
 
-      <View style={styles.linksView}>
-        {!isHome && <HeaderLink href="/" icon="home" label="Home" />}
-        {slicedSegments.map((segment, index) => {
-          if (segment === "_sitemap") {
-            return null
-          }
+      {!isHomePath && (
+        <View style={styles.linksView}>
+          <HeaderLink href="/" icon="home" label="Home" />
 
-          const href = `/${slicedSegments.slice(0, index + 1).join("/")}`
+          {showReportsLinks && (
+            <>
+              <HeaderLink href="/reports" icon="file-table" label="Reports" />
 
-          const config = linksConfig[href as keyof typeof linksConfig]
-
-          if (!config) {
-            return null
-          }
-
-          return (
-            <HeaderLink
-              href={href}
-              key={segment}
-              icon={config.icon}
-              label={config.label}
-            />
-          )
-        })}
-      </View>
+              {!isCheckPath && (
+                <HeaderLink
+                  href="/reports/check"
+                  icon="checkbox-multiple-outline"
+                  label="Checks"
+                />
+              )}
+            </>
+          )}
+        </View>
+      )}
     </View>
   )
 }
