@@ -34,19 +34,16 @@ const tabOptions = [
 ]
 
 export default function OdoReading() {
-  const answeredValue = useAppSelector(
-    (state) => state.answers.odoReading?.value
-  )
-  const answeredUnit = useAppSelector((state) => state.answers.odoReading?.unit)
-  const [unit, setUnit] = useState<OdoReadingUnit>(answeredUnit || "km")
-  const [value, setValue] = useState<string>(answeredValue || "")
+  const answer = useAppSelector((state) => state.answers.odoReading)
+  const [unit, setUnit] = useState<OdoReadingUnit>(answer?.unit || "km")
+  const [value, setValue] = useState<string>(answer?.value || "")
   const dispatch = useAppDispatch()
   const styles = useStyles(getStyles)
 
   const onTabChange = (value: string) => setUnit(value as OdoReadingUnit)
 
   const onConfirmClick = () => {
-    if (value !== answeredValue || unit !== answeredUnit) {
+    if (value !== answer?.value || unit !== answer?.unit) {
       dispatch(setOdoReading({ value, unit }))
     }
 
