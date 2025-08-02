@@ -1,8 +1,12 @@
 import { useLocalSearchParams, useSegments } from "expo-router"
 import { ScrollView } from "react-native"
 
-import { type QuestionDoc } from "@/firebase/utils"
+import {
+  type QuestionDoc,
+  type Question as QuestionType,
+} from "@/firebase/utils"
 
+import { Answer } from "@/redux/answersSlice"
 import { useAppSelector } from "@/redux/config"
 
 import { useStyles } from "@/hooks/useStyles"
@@ -55,40 +59,23 @@ export const Question = () => {
   const questionIndex = Number(searchParamQuestionIndex)
   const displayedIndex = questionIndex + 1
 
-  const answerValue = useAppSelector(({ answers }) => {
-    const answersSection = answers[sectionKey]
-    const answer = answersSection?.[questionIndex]
-    return answer?.value
-  })
-  const hasNextQuestion = useAppSelector(({ questions }) => {
-    const questionsSection = questions[sectionKey]
+  const questions = useAppSelector(({ questions }) => questions[sectionKey])
+  const answers = useAppSelector(({ answers }) => answers[sectionKey])
 
-    const hasNextQuestion = questionIndex < questionsSection?.length - 1
+  const question = questions?.[questionIndex] as QuestionType | undefined
+  const answer = answers?.[questionIndex] as Answer | undefined
+  const hasNextQuestion = questionIndex < questions?.length - 1
 
-    return hasNextQuestion
-  })
-  const questionLabel = useAppSelector(({ questions }) => {
-    const questionsSection = questions[sectionKey]
-    const question = questionsSection?.[questionIndex]
+  const paginationItems = questions?.map((_, index) => {
+    const answer = answers?.[index] as Answer | undefined
 
-    return question?.label
+    return {
+      isActive: index === questionIndex,
+      isDisabled: !answer && index !== questionIndex,
+    }
   })
 
-  const paginationLength = useAppSelector(({ answers, questions }) => {
-    const answersSection = answers[sectionKey]
-    const questionsSection = questions[sectionKey]
-
-    const totalQuestionsCount = questionsSection?.length
-    const answeredQuestionsCount = answersSection?.length
-    const paginationLength =
-      answeredQuestionsCount === totalQuestionsCount
-        ? answeredQuestionsCount
-        : answeredQuestionsCount + 1
-
-    return paginationLength
-  })
-
-  if (!questionLabel) {
+  if (!question) {
     return <View />
   }
 
@@ -98,7 +85,7 @@ export const Question = () => {
 
       <View style={styles.labelView}>
         <ScrollView>
-          <Typography style={styles.typography}>{questionLabel}</Typography>
+          <Typography style={styles.typography}>{question.label}</Typography>
         </ScrollView>
       </View>
 
@@ -106,17 +93,15 @@ export const Question = () => {
         sectionKey={sectionKey}
         questionIndex={questionIndex}
         hasNextQuestion={hasNextQuestion}
-        questionLabel={questionLabel}
-        answer={answerValue}
+        questionLabel={question.label}
+        answer={answer?.value}
       />
 
-      {!!paginationLength && (
-        <Pagination
-          sectionKey={sectionKey}
-          questionIndex={questionIndex}
-          sectionLength={paginationLength}
-        />
-      )}
+      <Pagination
+        sectionKey={sectionKey}
+        questionIndex={questionIndex}
+        items={paginationItems}
+      />
     </View>
   )
 }

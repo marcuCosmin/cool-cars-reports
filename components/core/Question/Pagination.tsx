@@ -17,6 +17,9 @@ const getStlyes = (theme: Theme) =>
       flex: 0,
       marginTop: "auto",
     },
+    scrollContentView: {
+      gap: theme.gap,
+    },
     button: {
       borderRadius: theme.borderRadius,
       borderWidth: theme.borderWidth,
@@ -25,7 +28,6 @@ const getStlyes = (theme: Theme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      margin: 5,
       width: 50,
       height: 50,
     },
@@ -40,15 +42,20 @@ const getStlyes = (theme: Theme) =>
     },
   } as const)
 
+type PaginationItem = {
+  isActive: boolean
+  isDisabled: boolean
+}
+
 type PaginationProps = {
   questionIndex: number
   sectionKey: keyof QuestionDoc
-  sectionLength: number
+  items: PaginationItem[]
 }
 
 export const Pagination = ({
   sectionKey,
-  sectionLength,
+  items,
   questionIndex,
 }: PaginationProps) => {
   const styles = useStyles(getStlyes)
@@ -59,18 +66,22 @@ export const Pagination = ({
       return
     }
 
+    const itemSize = 50 + styles.scrollContentView.gap
+
     listRef.current.scrollTo({
-      x: questionIndex * 50,
+      x: questionIndex * itemSize,
       animated: false,
     })
   }, [sectionKey, questionIndex])
 
   return (
     <View style={styles.view}>
-      <ScrollView horizontal ref={listRef}>
-        {[...Array(sectionLength).keys()].map((index) => {
-          const isActive = index === questionIndex
-
+      <ScrollView
+        horizontal
+        ref={listRef}
+        contentContainerStyle={styles.scrollContentView}
+      >
+        {items.map(({ isActive, isDisabled }, index) => {
           const mergedButtonStyles = StyleSheet.flatten([
             styles.button,
             isActive && styles.activeButton,
@@ -88,7 +99,12 @@ export const Pagination = ({
             )
 
           return (
-            <Button style={mergedButtonStyles} key={index} onClick={onClick}>
+            <Button
+              style={mergedButtonStyles}
+              key={index}
+              onClick={onClick}
+              disabled={isDisabled}
+            >
               <Typography style={mergedTypographyStyles}>
                 {displayedIndex}
               </Typography>
