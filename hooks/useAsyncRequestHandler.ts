@@ -34,7 +34,6 @@ export const useAsyncRequestHandler = <T extends GenericRequest>({
 
         return data as Awaited<ReturnType<T>>
       } catch (error) {
-        console.log(error)
         const errorMessage = (error as Error).message
         dispatch(showToast(errorMessage))
       } finally {
