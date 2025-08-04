@@ -39,7 +39,7 @@ type AsyncThunkConfig = {
 
 export const submitAnswers = createAsyncThunk<void, void, AsyncThunkConfig>(
   "answers/submit",
-  async (_, { getState, dispatch }) => {
+  async (_, { getState, dispatch, rejectWithValue }) => {
     try {
       const { answers, cars } = getState()
 
@@ -52,7 +52,10 @@ export const submitAnswers = createAsyncThunk<void, void, AsyncThunkConfig>(
 
       dispatch(showToast(response.message))
     } catch (error) {
+      const errorMessage = (error as Error).message
       dispatch(showToast((error as Error).message))
+
+      return rejectWithValue(errorMessage)
     }
   }
 )
