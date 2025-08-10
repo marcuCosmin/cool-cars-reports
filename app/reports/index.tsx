@@ -15,13 +15,13 @@ const actionCardListItems: ActionCardProps[] = [
       router.push("/reports/check")
     },
   },
-  {
-    label: "Incident",
-    icon: "car-cog",
-    onClick: () => {
-      router.push("/reports/incident")
-    },
-  },
+  // {
+  //   label: "Incident",
+  //   icon: "car-cog",
+  //   onClick: () => {
+  //     router.push("/reports/incident")
+  //   },
+  // },
 ]
 
 export default function Reports() {

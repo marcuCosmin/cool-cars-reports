@@ -23,7 +23,9 @@ const getStyles = () =>
 export default function Index() {
   const carsError = useAppSelector(({ cars }) => cars.error)
   const selectedCar = useAppSelector((state) => state.cars.selectedCar)
-  const carsList = useAppSelector((state) => state.cars.carsList)
+  const carsList = ["HX15BXR", "NX16EBJ", "WX57NZH", "EA11PZO"].map((id) => ({
+    id,
+  }))
   const selectOptions = carsList.map((car) => ({ value: car.id }))
 
   const dispatch = useAppDispatch()

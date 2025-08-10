@@ -43,7 +43,7 @@ export default function Auth() {
   }, [authToken])
 
   const onButtonClick = () =>
-    openURL(`${process.env.EXPO_PUBLIC_WEB_APP_URL as string}/reports/auth`)
+    openURL(`${process.env.EXPO_PUBLIC_WEB_APP_URL as string}/auth`)
 
   if (isLoading) {
     return <LoadingView text="Logging in..." />
