@@ -57,7 +57,7 @@ export default function Auth() {
         <Typography type="button">
           {process.env.EXPO_PUBLIC_WEB_APP_URL}
         </Typography>
-        <Typography type="button">Log in</Typography>
+        <Typography type="button">Log in test</Typography>
       </Button>
     </View>
   )
