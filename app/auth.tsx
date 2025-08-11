@@ -54,9 +54,6 @@ export default function Auth() {
       <Typography type="heading">{uid}</Typography>
       <Typography type="heading">Please log in to continue</Typography>
       <Button onClick={onButtonClick}>
-        <Typography type="button">
-          {process.env.EXPO_PUBLIC_WEB_APP_URL}
-        </Typography>
         <Typography type="button">Log in</Typography>
       </Button>
     </View>
