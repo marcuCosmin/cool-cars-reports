@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+      - demo
 jobs:
   update:
     name: EAS Update
@@ -25,7 +26,12 @@ jobs:
         run: npm i
 
       - name: Commit update
-        run: eas update --channel production --auto --non-interactive
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            eas update --channel production --auto --non-interactive
+          elif [ "${GITHUB_REF_NAME}" = "demo" ]; then
+            eas update --channel demo --auto --non-interactive
+          fi
         env:
           EXPO_PUBLIC_WEB_APP_URL: https://cool-cars-garage.co.uk
           EXPO_PUBLIC_API_URL: https://api.cool-cars-garage.co.uk

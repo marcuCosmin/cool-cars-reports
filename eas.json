@@ -16,6 +16,14 @@
         "distribution": "internal",
         "buildType": "apk"
       }
+    },
+    "demo": {
+      "autoIncrement": false,
+      "channel": "demo",
+      "android": {
+        "distribution": "internal",
+        "buildType": "apk"
+      }
     }
   },
   "submit": {
