@@ -1,7 +1,6 @@
 import { useStyles } from "@/hooks/useStyles"
 
-import { View } from "@/components/basic/View"
-
+import { ScrollView } from "react-native"
 import { ActionCard, type ActionCardProps } from "./ActionCard"
 
 const getStyles = () =>
@@ -22,11 +21,11 @@ export const ActionCardList = ({ items }: ActionCardListProps) => {
   const styles = useStyles(getStyles)
 
   return (
-    <View style={styles.view}>
+    <ScrollView contentContainerStyle={styles.view}>
       {items.map((item, index) => (
         <ActionCard {...item} key={index} />
       ))}
-    </View>
+    </ScrollView>
   )
 }
 export type { ActionCardProps }

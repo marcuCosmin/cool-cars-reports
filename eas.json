@@ -23,6 +23,10 @@
       "android": {
         "distribution": "internal",
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_WEB_APP_URL": "https://cool-cars-garage.co.uk",
+        "EXPO_PUBLIC_API_URL": "https://api.cool-cars-garage.co.uk"
       }
     }
   },

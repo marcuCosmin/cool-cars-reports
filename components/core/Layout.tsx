@@ -71,6 +71,10 @@ export const Layout = () => {
           <Stack.Protected guard={!!uid}>
             <Stack.Screen name="index" />
             <Stack.Screen name="reports" />
+            <Stack.Screen name="reports/check" />
+            <Stack.Screen name="reports/check/exterior/[questionIndex]" />
+            <Stack.Screen name="reports/check/interior/[questionIndex]" />
+            <Stack.Screen name="reports/check/odo-reading" />
             <Stack.Screen name="notifications" />
             <Stack.Screen name="history" />
           </Stack.Protected>
