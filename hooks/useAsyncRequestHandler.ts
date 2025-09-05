@@ -3,7 +3,7 @@ import { useCallback, useState } from "react"
 import { useAppDispatch } from "@/redux/config"
 import { showToast } from "@/redux/toastSlice"
 
-type GenericRequest = (args?: any) => Promise<unknown>
+type GenericRequest = (...args: any[]) => Promise<unknown>
 
 type UseAsyncRequestHandlerProps<T extends GenericRequest> = {
   request: T

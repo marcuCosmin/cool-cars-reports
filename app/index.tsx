@@ -1,11 +1,13 @@
 import { router } from "expo-router"
 
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useEffect } from "react"
 
 import { resetAnswers } from "@/redux/answersSlice"
 import { fetchCars, setSelectedCar } from "@/redux/carsSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 
+import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
@@ -26,20 +28,38 @@ export default function Index() {
   const carsList = useAppSelector((state) => state.cars.carsList)
   const selectOptions = carsList.map((car) => ({ value: car.id }))
 
+  const { handleAsyncRequest: onSelectChange } = useAsyncRequestHandler({
+    request: async (value: string) => {
+      dispatch(setSelectedCar(value))
+      dispatch(resetAnswers())
+
+      await AsyncStorage.setItem("selectedCarId", value)
+    },
+  })
+  const { handleAsyncRequest: loadStoredCarId } = useAsyncRequestHandler({
+    request: async () => {
+      const storedCarId = await AsyncStorage.getItem("selectedCarId")
+
+      if (!storedCarId) {
+        return
+      }
+
+      dispatch(setSelectedCar(storedCarId))
+    },
+  })
+
   const dispatch = useAppDispatch()
 
   const styles = useStyles(getStyles)
 
   useEffect(() => {
-    dispatch(fetchCars())
+    ;(async () => {
+      await dispatch(fetchCars())
+      await loadStoredCarId()
+    })()
   }, [])
 
   const onButtonClick = () => router.push("/reports")
-
-  const onSelectChange = (value: string) => {
-    dispatch(setSelectedCar(value))
-    dispatch(resetAnswers())
-  }
 
   return (
     <View>
