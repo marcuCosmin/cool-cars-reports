@@ -1,7 +1,6 @@
-import { type ActionDispatch } from "react"
+import { useState, type ActionDispatch } from "react"
 
 import { type NotificationsFilters as NotificationsFiltersType } from "@/firebase/utils"
-import { Timestamp } from "firebase/firestore"
 
 import { useAppSelector } from "@/redux/config"
 
@@ -54,6 +53,7 @@ export const NotificationsFilters = ({
   filters,
   dispatchFilters,
 }: NotificationsFiltersProps) => {
+  const [selectedDateTab, setSelectedDateTab] = useState("all-time")
   const carsList = useAppSelector(({ cars }) => cars.carsList)
   const carsSelectOptions = getCarsSelectOptions(carsList)
 
@@ -66,22 +66,6 @@ export const NotificationsFilters = ({
     "1-month": get1MonthTimestamps(),
   }
 
-  const dateTabValue = Object.keys(timestamps).find((key) => {
-    const value = timestamps[key as keyof typeof timestamps]
-
-    if (!filters.startDate || !filters.endDate) {
-      return (
-        value.endTimestamp === filters.endDate &&
-        value.startTimestamp === filters.startDate
-      )
-    }
-
-    return (
-      value.startTimestamp?.isEqual(filters.startDate) &&
-      value.endTimestamp?.isEqual(filters.endDate)
-    )
-  })
-
   const onTypeChange = (value: string) => {
     dispatchFilters({ type: "SET_TYPE", payload: value })
   }
@@ -89,6 +73,8 @@ export const NotificationsFilters = ({
   const onDateTabChange = (value: string) => {
     const { startTimestamp, endTimestamp } =
       timestamps[value as keyof typeof timestamps]
+
+    setSelectedDateTab(value)
 
     dispatchFilters({
       type: "SET_START_DATE",
@@ -100,9 +86,9 @@ export const NotificationsFilters = ({
     })
   }
 
-  const onStartDateChange = (date: Timestamp) =>
+  const onStartDateChange = (date: number) =>
     dispatchFilters({ type: "SET_START_DATE", payload: date })
-  const onEndDateChange = (date: Timestamp) =>
+  const onEndDateChange = (date: number) =>
     dispatchFilters({ type: "SET_END_DATE", payload: date })
   const onCarIdChange = (carId: string) =>
     dispatchFilters({ type: "SET_CAR_ID", payload: carId })
@@ -135,7 +121,7 @@ export const NotificationsFilters = ({
               { value: "2-weeks", label: "2 weeks" },
               { value: "1-month", label: "1 month" },
             ]}
-            value={dateTabValue}
+            value={selectedDateTab}
             onChange={onDateTabChange}
           />
 

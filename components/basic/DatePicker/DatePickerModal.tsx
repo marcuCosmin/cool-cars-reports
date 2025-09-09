@@ -1,7 +1,5 @@
 import { useState } from "react"
 
-import { Timestamp } from "firebase/firestore"
-
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
@@ -94,9 +92,9 @@ export const DatePickerModal = ({
   }
 
   const onConfirmClick = () => {
-    const timestamp = Timestamp.fromDate(
-      new Date(selectedYear, selectedMonth, selectedDay)
-    )
+    const date = new Date(selectedYear, selectedMonth, selectedDay)
+    const timestamp = date.getTime()
+
     onChange(timestamp)
     onModalClose()
   }

@@ -35,6 +35,7 @@ const Check = () => {
   const { isLoading, handleAsyncRequest: handleGetCheck } =
     useAsyncRequestHandler({
       request: getCheck,
+      isLoadingByDefault: true,
     })
 
   useEffect(() => {

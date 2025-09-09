@@ -39,7 +39,7 @@ export const getDaysOptions = ({ year, month }: GetDaysOptions) => {
 }
 
 export const getInitialState = (value: DatePickerProps["value"]) => {
-  const date = value ? value.toDate() : new Date()
+  const date = value ? new Date(value) : new Date()
 
   const currentDay = date.getDate()
   const currentMonth = date.getMonth()

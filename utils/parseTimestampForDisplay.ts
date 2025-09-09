@@ -1,7 +1,5 @@
-import { Timestamp } from "firebase/firestore"
-
 type ParseTimestampForDisplayOptions = {
-  timestamp: Timestamp
+  timestamp: number
   showTime?: boolean
 }
 
@@ -9,7 +7,7 @@ export const parseTimestampForDisplay = ({
   timestamp,
   showTime = true,
 }: ParseTimestampForDisplayOptions) => {
-  const date = timestamp.toDate()
+  const date = new Date(timestamp)
 
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",

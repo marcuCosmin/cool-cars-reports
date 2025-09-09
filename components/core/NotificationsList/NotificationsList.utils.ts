@@ -5,7 +5,6 @@ import {
   type Notification,
   type NotificationsFilters,
 } from "@/firebase/utils"
-import { Timestamp } from "firebase/firestore"
 
 import { type SelectOption } from "@/components/basic/Select"
 
@@ -85,7 +84,7 @@ const getEndTimestamp = () => {
   const currentDate = new Date()
   currentDate.setHours(23, 59, 59, 999)
 
-  const endTimestamp = Timestamp.fromDate(currentDate)
+  const endTimestamp = currentDate.getTime()
   return endTimestamp
 }
 
@@ -98,7 +97,7 @@ export const get1WeekTimestamps = () => {
   const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
   currentWeek.setDate(currentDate.getDate() - daysFromMonday)
 
-  const startTimestamp = Timestamp.fromDate(currentWeek)
+  const startTimestamp = currentWeek.getTime()
   const endTimestamp = getEndTimestamp()
 
   return { startTimestamp, endTimestamp }
@@ -114,7 +113,7 @@ export const get2WeeksTimestamps = () => {
     dayOfWeekForTwoWeeks === 0 ? 6 : dayOfWeekForTwoWeeks - 1
   startOfPrevWeek.setDate(currentDate.getDate() - daysFromMondayForTwoWeeks - 7)
 
-  const startTimestamp = Timestamp.fromDate(startOfPrevWeek)
+  const startTimestamp = startOfPrevWeek.getTime()
 
   const endTimestamp = getEndTimestamp()
 
@@ -131,7 +130,7 @@ export const get1MonthTimestamps = () => {
     1
   )
 
-  const startTimestamp = Timestamp.fromDate(startOfMonth)
+  const startTimestamp = startOfMonth.getTime()
 
   const endTimestamp = getEndTimestamp()
 

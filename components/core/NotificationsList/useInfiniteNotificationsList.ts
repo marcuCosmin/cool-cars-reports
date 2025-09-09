@@ -5,7 +5,6 @@ import {
   type Notification,
   type NotificationsFilters,
 } from "@/firebase/utils"
-import { Timestamp } from "firebase/firestore"
 
 import { useAppSelector } from "@/redux/config"
 
@@ -27,7 +26,7 @@ export const useInfiniteNotificationsList = () => {
     NotificationsFilters,
     FiltersAction
   >(filtersReducer, filtersInitialState)
-  const [lastRefValue, setLastRefValue] = useState<Timestamp | undefined>()
+  const [lastRefValue, setLastRefValue] = useState<number | undefined>()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [canFetchMore, setCanFetchMore] = useState(true)
   const isFirstTimeLoadingRef = useRef(true)

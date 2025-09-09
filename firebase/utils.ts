@@ -10,7 +10,6 @@ import {
   query,
   QueryConstraint,
   startAfter,
-  Timestamp,
   updateDoc,
   where,
 } from "firebase/firestore"
@@ -77,7 +76,7 @@ export const getCars = withErrorPropagation(async () => {
 })
 
 export type CheckDoc = {
-  creationTimestamp: Timestamp
+  creationTimestamp: number
   driverId: string
   odoReading: OdoReading
   interior: Answer[]
@@ -106,7 +105,7 @@ export const getCheck = withErrorPropagation(
 
 export type FaultDoc = {
   driverId: string
-  creationTimestamp: Timestamp
+  creationTimestamp: number
   description: string
   checkId: string
   carId: string
@@ -131,7 +130,7 @@ export const getCheckFaults = withErrorPropagation(
 
 export type IncidentDoc = {
   description: string
-  creationTimestamp: Timestamp
+  creationTimestamp: number
   driverId: string
   status: "pending" | "resolved"
 }
@@ -160,7 +159,7 @@ type ReportsNotificationType = "incident" | "check" | "fault"
 
 export type Notification = {
   id: string
-  creationTimestamp: Timestamp
+  creationTimestamp: number
   viewed: boolean
   carId: string
   bulkCount?: number
@@ -173,14 +172,14 @@ export type Notification = {
 
 export type NotificationsFilters = {
   type: string
-  startDate: Timestamp | null
-  endDate: Timestamp | null
+  startDate: number | null
+  endDate: number | null
   carId: string
 }
 
 type GetNotificationsChunkProps = {
   uid: string
-  lastRefValue?: Timestamp
+  lastRefValue?: number
   filters: NotificationsFilters
 }
 
