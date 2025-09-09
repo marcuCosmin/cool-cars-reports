@@ -20,6 +20,9 @@ const getStyles = (theme: Theme) =>
       flexDirection: "row",
       alignItems: "center",
     },
+    titleTypography: {
+      color: theme.colors.white,
+    },
     titleChevronIcon: {
       marginLeft: "auto",
     },
@@ -72,7 +75,7 @@ export const Collapsible = ({
             color={theme.colors.white}
           />
         )}
-        <Typography>{title}</Typography>
+        <Typography style={styles.titleTypography}>{title}</Typography>
         <MaterialCommunityIcons
           style={styles.titleChevronIcon}
           name={indicatorIcon}
