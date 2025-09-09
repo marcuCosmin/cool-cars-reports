@@ -1,7 +1,5 @@
 import { firebaseAuth } from "@/firebase/config"
 
-import { withErrorPropagation } from "@/utils/withErrorPropagation"
-
 const baseUrl = `${process.env.EXPO_PUBLIC_API_URL}/cars`
 
 type ExecuteApiRequestProps = {
@@ -23,10 +21,7 @@ export const executeApiRequest = async ({
   method,
   payload,
 }: ExecuteApiRequestProps) => {
-  const requestName = path.replace("/", "").toUpperCase()
-  const requestId = `API ${requestName}`
-
-  const request = withErrorPropagation(requestId, async () => {
+  const request = async () => {
     const idToken = await firebaseAuth.currentUser?.getIdToken()
 
     const response = await fetch(`${baseUrl}${path}`, {
@@ -45,7 +40,7 @@ export const executeApiRequest = async ({
     }
 
     return data as ApiDataResponse
-  })
+  }
 
   const result = await request()
 

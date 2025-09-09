@@ -29,8 +29,8 @@ const carsSlice = createSlice({
   initialState,
   reducers: {
     setSelectedCar: (state, action: PayloadAction<string>) => {
-      const car = state.carsList.find((car) => car.id === action.payload) as Car
-      state.selectedCar = car
+      const car = state.carsList.find((car) => car.id === action.payload)
+      state.selectedCar = car || initialState.selectedCar
     },
   },
   extraReducers: (builder) => {
@@ -45,7 +45,8 @@ const carsSlice = createSlice({
     builder.addCase(fetchCars.rejected, (state) => {
       state.isLoading = false
       state.carsList = []
-      state.error = "Failed to fetch cars"
+      state.error = "Failed to fetch cars details"
+      state.selectedCar = initialState.selectedCar
     })
   },
 })

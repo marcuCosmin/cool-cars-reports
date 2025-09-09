@@ -11,6 +11,7 @@ import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
+import { ErrorView } from "@/components/basic/ErrorView"
 import { Select } from "@/components/basic/Select"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
@@ -66,7 +67,7 @@ export default function Index() {
       <Typography type="heading">Cool Cars South Coast</Typography>
 
       {carsError ? (
-        <Typography>{carsError}</Typography>
+        <ErrorView message={carsError} />
       ) : (
         <Select
           label="Select a vehicle"

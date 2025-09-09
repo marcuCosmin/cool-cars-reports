@@ -1,3 +1,4 @@
+import { FirebaseError } from "firebase/app"
 import { signInWithCustomToken } from "firebase/auth"
 import {
   collection,
@@ -17,7 +18,25 @@ import { firebaseAuth, firestore } from "./config"
 
 import { Answer, OdoReading } from "@/redux/answersSlice"
 
-import { withErrorPropagation } from "@/utils/withErrorPropagation"
+const withErrorPropagation =
+  <T extends (...args: any[]) => Promise<unknown>>(request: T) =>
+  async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
+    try {
+      const data = await request(...args)
+
+      return data as Awaited<ReturnType<T>>
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        throw new Error(error.message)
+      }
+
+      if (error instanceof Error) {
+        throw new Error(error.message)
+      }
+
+      throw new Error(`An unknown error occurred`)
+    }
+  }
 
 export type Question = {
   label: string
@@ -28,7 +47,7 @@ export type QuestionDoc = {
   exterior: Question[]
 }
 
-export const getQuestions = withErrorPropagation("QUESTIONS", async () => {
+export const getQuestions = withErrorPropagation(async () => {
   const questionsRef = doc(firestore, "reports-config", "questions")
 
   const questionsSnapshot = await getDoc(questionsRef)
@@ -44,7 +63,7 @@ export type Car = {
   id: string
 }
 
-export const getCars = withErrorPropagation("CARS", async () => {
+export const getCars = withErrorPropagation(async () => {
   const carsRef = collection(firestore, "cars")
   const carsSnapshot = await getDocs(carsRef)
 
@@ -71,7 +90,6 @@ type GetCheckProps = {
 }
 
 export const getCheck = withErrorPropagation(
-  "GET CHECK",
   async ({ carId, checkId }: GetCheckProps) => {
     const checkRef = doc(firestore, "cars", carId, "checks", checkId)
     const checkSnapshot = await getDoc(checkRef)
@@ -96,7 +114,6 @@ export type FaultDoc = {
 }
 
 export const getCheckFaults = withErrorPropagation(
-  "GET CHECK FAULTS",
   async ({ carId, checkId }: GetCheckProps) => {
     const faultsRef = collection(firestore, "cars", carId, "faults")
     const faultsQuery = query(faultsRef, where("checkId", "==", checkId))
@@ -125,7 +142,6 @@ type GetIncidentProps = {
 }
 
 export const getIncident = withErrorPropagation(
-  "GET INCIDENT",
   async ({ carId, incidentId }: GetIncidentProps) => {
     const incidentRef = doc(firestore, "cars", carId, "incidents", incidentId)
     const incidentSnapshot = await getDoc(incidentRef)
@@ -169,7 +185,6 @@ type GetNotificationsChunkProps = {
 }
 
 export const getNotificationsChunk = withErrorPropagation(
-  "NOTIFICATIONS",
   async ({ uid, lastRefValue, filters }: GetNotificationsChunkProps) => {
     const notificationsRef = collection(
       firestore,
@@ -217,7 +232,6 @@ type MarkNotificationAsViewedProps = {
 }
 
 export const markNotificationAsViewed = withErrorPropagation(
-  "MARK NOTIFICATION AS VIEWED",
   async ({ uid, notificationId }: MarkNotificationAsViewedProps) => {
     const notificationRef = doc(
       firestore,
@@ -231,6 +245,6 @@ export const markNotificationAsViewed = withErrorPropagation(
   }
 )
 
-export const signIn = withErrorPropagation("SIGN IN", (authToken: string) =>
+export const signIn = withErrorPropagation((authToken: string) =>
   signInWithCustomToken(firebaseAuth, authToken)
 )

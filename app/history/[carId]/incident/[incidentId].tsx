@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useLocalSearchParams } from "expo-router"
 import { useEffect, useState } from "react"
 import { ScrollView } from "react-native"
@@ -7,8 +6,9 @@ import { getIncident, type IncidentDoc } from "@/firebase/utils"
 
 import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
-import { useTheme, type Theme } from "@/hooks/useTheme"
+import { type Theme } from "@/hooks/useTheme"
 
+import { ErrorView } from "@/components/basic/ErrorView"
 import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import { LoadingView } from "@/components/basic/LoadingView"
 import { Typography } from "@/components/basic/Typography"
@@ -44,9 +44,6 @@ const getStyles = (theme: Theme) =>
       flex: 1,
       flexDirection: "row",
     },
-    errorView: {
-      alignItems: "center",
-    },
   } as const)
 
 type LocalSearchParams = {
@@ -57,7 +54,6 @@ type LocalSearchParams = {
 const Incident = () => {
   const { carId, incidentId } = useLocalSearchParams<LocalSearchParams>()
   const styles = useStyles(getStyles)
-  const theme = useTheme()
 
   const [incident, setIncident] = useState<IncidentDoc>()
 
@@ -82,16 +78,7 @@ const Incident = () => {
   }
 
   if (!incident) {
-    return (
-      <View style={styles.errorView}>
-        <Typography type="heading">Failed to load incident details</Typography>
-        <MaterialCommunityIcons
-          name="emoticon-sad"
-          size={100}
-          color={theme.colors.primary}
-        />
-      </View>
-    )
+    return <ErrorView message="Failed to load incident details" />
   }
 
   const { creationTimestamp, description, status } = incident
