@@ -30,10 +30,6 @@ const getStyles = (theme: Theme) =>
   } as const)
 
 export const Layout = () => {
-  const submittedCheckId = useAppSelector(
-    ({ submittedCheck }) => submittedCheck.id
-  )
-
   const uid = useAppSelector(({ user }) => user.uid)
   const isLoading = useAppSelector(({ user }) => user.isLoading)
 
