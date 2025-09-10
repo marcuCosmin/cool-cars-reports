@@ -13,9 +13,10 @@ import {
   type ActionCardProps,
 } from "@/components/basic/ActionCardList/ActionCardList"
 import { Button } from "@/components/basic/Button"
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
+import { setSubmittedCheckId } from "@/redux/submittedCheckSlice"
 
 const getStyles = () =>
   ({
@@ -92,7 +93,11 @@ export default function Check() {
       return
     }
 
-    router.push("/")
+    const checkId = result.payload as string
+
+    dispatch(setSubmittedCheckId(checkId))
+
+    router.dismissTo("/")
   }
 
   if (questionsAreLoading) {

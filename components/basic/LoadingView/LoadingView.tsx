@@ -1,10 +1,19 @@
-import { ActivityIndicator, StyleSheet } from "react-native"
+import {
+  ActivityIndicator,
+  StyleSheet,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native"
 
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
-import { Typography } from "./Typography"
-import { View } from "./View"
+import { Typography } from "@/components/basic/Typography"
+import { View } from "@/components/basic/View"
+
+import { loadingViewSize } from "./LoadingView.const"
+
+import type { LoadingViewSize } from "./LoadingView.model"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -29,15 +38,24 @@ const getStyles = (theme: Theme) =>
 type LoadingViewProps = {
   text?: string
   overlay?: boolean
+  size?: LoadingViewSize
+  style?: StyleProp<ViewStyle>
 }
 
-export const LoadingView = ({ text, overlay }: LoadingViewProps) => {
+export const LoadingView = ({
+  text,
+  overlay,
+  size = "large",
+  style,
+}: LoadingViewProps) => {
   const theme = useTheme()
   const styles = useStyles(getStyles)
+  const sizeValue = loadingViewSize[size]
 
   const mergedViewStyles = StyleSheet.flatten([
     styles.loadingView,
     overlay && styles.overlay,
+    style,
   ])
 
   const mergedTypographyStyles = StyleSheet.flatten([
@@ -55,7 +73,7 @@ export const LoadingView = ({ text, overlay }: LoadingViewProps) => {
           {text}
         </Typography>
       )}
-      <ActivityIndicator size={100} color={activityIndicatorColor} />
+      <ActivityIndicator size={sizeValue} color={activityIndicatorColor} />
     </View>
   )
 }

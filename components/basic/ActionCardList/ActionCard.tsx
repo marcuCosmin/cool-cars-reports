@@ -6,6 +6,7 @@ import { useTheme, type Theme } from "@/hooks/useTheme"
 import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
+import { StyleSheet } from "react-native"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -16,6 +17,9 @@ const getStyles = (theme: Theme) =>
       display: "flex",
       alignItems: "center",
       position: "relative",
+    },
+    buttonWithOverlay: {
+      opacity: 1,
     },
     typography: {
       fontSize: 20,
@@ -47,6 +51,7 @@ export type ActionCardProps = {
   label: string
   icon: Icons
   displayOverlay?: boolean
+  disabled?: boolean
   overlayIcon?: Icons
   onClick: () => void
 }
@@ -55,14 +60,20 @@ export const ActionCard = ({
   icon,
   label,
   displayOverlay,
+  disabled,
   overlayIcon,
   onClick,
 }: ActionCardProps) => {
   const theme = useTheme()
   const styles = useStyles(getStyles)
 
+  const buttonStyle = StyleSheet.flatten([
+    styles.button,
+    displayOverlay && styles.buttonWithOverlay,
+  ])
+
   return (
-    <Button style={styles.button} onClick={onClick}>
+    <Button style={buttonStyle} onClick={onClick} disabled={disabled}>
       {displayOverlay && (
         <View style={styles.overlay}>
           {overlayIcon && (

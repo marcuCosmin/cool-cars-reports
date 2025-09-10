@@ -38,9 +38,9 @@ export const Button = ({ children, disabled, style, onClick }: ButtonProps) => {
   const mergeStyles = ({ pressed }: PressableStateCallbackType) =>
     StyleSheet.flatten([
       styles.pressable,
-      style,
       pressed && styles.pressed,
       disabled && styles.disabled,
+      style,
     ])
 
   return (

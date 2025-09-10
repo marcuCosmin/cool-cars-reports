@@ -10,7 +10,7 @@ import { clearUserData, initUserData } from "@/redux/userSlice"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { View } from "@/components/basic/View"
 
 import { Header } from "./Header/Header"
@@ -30,6 +30,10 @@ const getStyles = (theme: Theme) =>
   } as const)
 
 export const Layout = () => {
+  const submittedCheckId = useAppSelector(
+    ({ submittedCheck }) => submittedCheck.id
+  )
+
   const uid = useAppSelector(({ user }) => user.uid)
   const isLoading = useAppSelector(({ user }) => user.isLoading)
 

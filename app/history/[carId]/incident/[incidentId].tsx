@@ -10,7 +10,7 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { ErrorView } from "@/components/basic/ErrorView"
 import { IssuesStatus } from "@/components/basic/IssuesStatus"
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 

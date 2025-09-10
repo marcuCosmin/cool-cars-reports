@@ -10,7 +10,7 @@ import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 

@@ -10,7 +10,7 @@ import { useTheme } from "@/hooks/useTheme"
 
 import { CheckView } from "@/components/core/CheckView/CheckView"
 
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 

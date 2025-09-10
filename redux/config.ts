@@ -8,11 +8,12 @@ import {
 import { answers } from "./answersSlice"
 import { cars } from "./carsSlice"
 import { questions } from "./questionsSlice"
+import { submittedCheck } from "./submittedCheckSlice"
 import { toast } from "./toastSlice"
 import { user } from "./userSlice"
 
 export const store = configureStore({
-  reducer: { user, cars, questions, answers, toast },
+  reducer: { user, cars, questions, answers, toast, submittedCheck },
 })
 
 export type State = ReturnType<typeof store.getState>

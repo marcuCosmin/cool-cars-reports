@@ -11,7 +11,7 @@ import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
 import { Input } from "@/components/basic/Input"
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
@@ -30,6 +30,9 @@ const getStyles = () =>
 
 export default function Incident() {
   const [value, setValue] = useState("")
+  const submittedCheckId = useAppSelector(
+    ({ submittedCheck }) => submittedCheck.id
+  )
   const carId = useAppSelector(({ cars }) => cars.selectedCar.id)
 
   const { isLoading, handleAsyncRequest: handleIncidentSubmit } =
@@ -45,10 +48,11 @@ export default function Incident() {
     const response = await handleIncidentSubmit({
       carId,
       description: value,
+      checkId: submittedCheckId,
     })
 
     if (response) {
-      router.push("/reports")
+      router.dismissTo("/")
     }
   }
 

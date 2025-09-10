@@ -2,21 +2,23 @@ import { firebaseAuth } from "@/firebase/config"
 
 const baseUrl = `${process.env.EXPO_PUBLIC_API_URL}/cars`
 
+type ApiErrorResponse = {
+  error: string
+}
+
+type ApiDataResponse = {
+  message: string
+}
+
 type ExecuteApiRequestProps = {
   path: "/incidents" | "/checks"
   method: "POST"
   payload: Record<string, unknown>
 }
 
-type ApiErrorResponse = {
-  error: string
-}
-
-export type ApiDataResponse = {
-  message: string
-}
-
-export const executeApiRequest = async ({
+export const executeApiRequest = async <
+  Response extends Record<string, unknown> = ApiDataResponse
+>({
   path,
   method,
   payload,
@@ -33,13 +35,13 @@ export const executeApiRequest = async ({
       body: JSON.stringify(payload),
     })
 
-    const data: ApiDataResponse | ApiErrorResponse = await response.json()
+    const data: Response | ApiErrorResponse = await response.json()
 
     if (!response.ok) {
       throw new Error((data as ApiErrorResponse).error)
     }
 
-    return data as ApiDataResponse
+    return data as Response
   }
 
   const result = await request()

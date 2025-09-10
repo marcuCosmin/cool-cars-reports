@@ -6,28 +6,44 @@ import { useEffect } from "react"
 import { resetAnswers } from "@/redux/answersSlice"
 import { fetchCars, setSelectedCar } from "@/redux/carsSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
+import { fetchCheckSubmittedToday } from "@/redux/submittedCheckSlice"
 
 import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
 import { useStyles } from "@/hooks/useStyles"
 
 import { Button } from "@/components/basic/Button"
 import { ErrorView } from "@/components/basic/ErrorView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Select } from "@/components/basic/Select"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
 const getStyles = () =>
   ({
-    button: {
+    footerView: {
       marginTop: "auto",
+      flex: 0,
+    },
+    loadingView: {
+      flex: 0,
     },
   } as const)
 
 export default function Index() {
+  const uid = useAppSelector(({ user }) => user.uid)
   const carsError = useAppSelector(({ cars }) => cars.error)
   const selectedCar = useAppSelector((state) => state.cars.selectedCar)
   const carsList = useAppSelector((state) => state.cars.carsList)
   const selectOptions = carsList.map((car) => ({ value: car.id }))
+  const isCarsLoading = useAppSelector(({ cars }) => cars.isLoading)
+  const isSubmittedCheckLoading = useAppSelector(
+    ({ submittedCheck }) => submittedCheck.isLoading
+  )
+  const submittedCheckError = useAppSelector(
+    ({ submittedCheck }) => submittedCheck.error
+  )
+
+  const styles = useStyles(getStyles)
 
   const { handleAsyncRequest: onSelectChange } = useAsyncRequestHandler({
     request: async (value: string) => {
@@ -51,8 +67,6 @@ export default function Index() {
 
   const dispatch = useAppDispatch()
 
-  const styles = useStyles(getStyles)
-
   useEffect(() => {
     ;(async () => {
       await dispatch(fetchCars())
@@ -60,14 +74,22 @@ export default function Index() {
     })()
   }, [])
 
+  useEffect(() => {
+    if (!selectedCar.id) {
+      return
+    }
+
+    dispatch(fetchCheckSubmittedToday({ carId: selectedCar.id, uid }))
+  }, [selectedCar.id])
+
   const onButtonClick = () => router.push("/reports")
 
   return (
     <View>
       <Typography type="heading">Cool Cars South Coast</Typography>
 
-      {carsError ? (
-        <ErrorView message={carsError} />
+      {carsError || submittedCheckError ? (
+        <ErrorView message={carsError || submittedCheckError} />
       ) : (
         <Select
           label="Select a vehicle"
@@ -78,11 +100,17 @@ export default function Index() {
         />
       )}
 
-      {selectedCar.id && (
-        <Button style={styles.button} onClick={onButtonClick}>
-          <Typography type="button">Proceed</Typography>
-        </Button>
-      )}
+      <View style={styles.footerView}>
+        {isSubmittedCheckLoading || isCarsLoading ? (
+          <LoadingView size="small" style={styles.loadingView} />
+        ) : (
+          selectedCar.id && (
+            <Button onClick={onButtonClick}>
+              <Typography type="button">Proceed</Typography>
+            </Button>
+          )
+        )}
+      </View>
     </View>
   )
 }

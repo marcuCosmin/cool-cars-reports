@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { postCheckAnswers } from "@/api/utils"
+import { postCheckAnswers, type PostCheckAnswersResponse } from "@/api/utils"
 
 import { type Dispatch, type State } from "./config"
 import { showToast } from "./toastSlice"
@@ -37,28 +37,31 @@ type AsyncThunkConfig = {
   rejectValue: string
 }
 
-export const submitAnswers = createAsyncThunk<void, void, AsyncThunkConfig>(
-  "answers/submit",
-  async (_, { getState, dispatch, rejectWithValue }) => {
-    try {
-      const { answers, cars } = getState()
+export const submitAnswers = createAsyncThunk<
+  PostCheckAnswersResponse["checkId"],
+  void,
+  AsyncThunkConfig
+>("answers/submit", async (_, { getState, dispatch, rejectWithValue }) => {
+  try {
+    const { answers, cars } = getState()
 
-      const response = await postCheckAnswers({
-        interior: answers.interior,
-        exterior: answers.exterior,
-        odoReading: answers.odoReading as OdoReading,
-        carId: cars.selectedCar.id,
-      })
+    const response = await postCheckAnswers({
+      interior: answers.interior,
+      exterior: answers.exterior,
+      odoReading: answers.odoReading as OdoReading,
+      carId: cars.selectedCar.id,
+    })
 
-      dispatch(showToast(response.message))
-    } catch (error) {
-      const errorMessage = (error as Error).message
-      dispatch(showToast((error as Error).message))
+    dispatch(showToast("Check submitted successfully!"))
 
-      return rejectWithValue(errorMessage)
-    }
+    return response.checkId
+  } catch (error) {
+    const errorMessage = (error as Error).message
+    dispatch(showToast(errorMessage))
+
+    return rejectWithValue(errorMessage)
   }
-)
+})
 
 const answersSlice = createSlice({
   name: "answers",

@@ -247,3 +247,46 @@ export const markNotificationAsViewed = withErrorPropagation(
 export const signIn = withErrorPropagation((authToken: string) =>
   signInWithCustomToken(firebaseAuth, authToken)
 )
+
+type GetCheckSubmittedTodayProps = {
+  carId: string
+  uid: string
+}
+
+export const getCheckSubmittedToday = withErrorPropagation(
+  async ({ carId, uid }: GetCheckSubmittedTodayProps) => {
+    const checksRef = collection(firestore, "cars", carId, "checks")
+
+    const startOfToday = new Date()
+    startOfToday.setHours(0, 0, 0, 0)
+    const startTimestamp = startOfToday.getTime()
+
+    const endOfToday = new Date(startOfToday)
+    endOfToday.setHours(23, 59, 59, 999)
+    const endTimestamp = endOfToday.getTime()
+
+    const checksQuery = query(
+      checksRef,
+      where("driverId", "==", uid),
+      where("creationTimestamp", ">=", startTimestamp),
+      where("creationTimestamp", "<=", endTimestamp)
+    )
+
+    const checksSnapshot = await getDocs(checksQuery)
+
+    if (checksSnapshot.empty) {
+      return
+    }
+
+    const [todaySubmittedCheck] = checksSnapshot.docs.map((doc) => {
+      const data = doc.data() as CheckDoc
+
+      return {
+        ...data,
+        id: doc.id,
+      }
+    })
+
+    return todaySubmittedCheck
+  }
+)

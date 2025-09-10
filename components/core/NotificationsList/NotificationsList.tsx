@@ -8,7 +8,7 @@ import { type Theme } from "@/hooks/useTheme"
 
 import { Typography } from "@/components/basic/Typography"
 
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { View } from "@/components/basic/View"
 
 import { useInfiniteNotificationsList } from "./useInfiniteNotificationsList"

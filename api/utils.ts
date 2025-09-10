@@ -2,15 +2,17 @@ import { type Answer, type OdoReading } from "@/redux/answersSlice"
 
 import { executeApiRequest } from "./config"
 
-export type PostCheckAnswersPayload = {
+type PostCheckAnswersPayload = {
   interior: Answer[]
   exterior: Answer[]
   odoReading: OdoReading
   carId: string
 }
-
+export type PostCheckAnswersResponse = {
+  checkId: string
+}
 export const postCheckAnswers = (payload: PostCheckAnswersPayload) =>
-  executeApiRequest({
+  executeApiRequest<PostCheckAnswersResponse>({
     path: "/checks",
     method: "POST",
     payload,
@@ -19,6 +21,7 @@ export const postCheckAnswers = (payload: PostCheckAnswersPayload) =>
 type PostIncidentPayload = {
   description: string
   carId: string
+  checkId: string
 }
 
 export const postIncident = (payload: PostIncidentPayload) =>

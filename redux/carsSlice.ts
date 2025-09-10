@@ -38,7 +38,7 @@ const carsSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(fetchCars.fulfilled, (state, action) => {
-      state.isLoading = true
+      state.isLoading = false
       state.carsList = action.payload
       state.error = ""
     })

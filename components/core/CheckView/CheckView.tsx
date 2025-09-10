@@ -5,7 +5,7 @@ import { type CheckDoc } from "@/firebase/utils"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
-import { LoadingView } from "@/components/basic/LoadingView"
+import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Tab } from "@/components/basic/Tab/Tab"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
