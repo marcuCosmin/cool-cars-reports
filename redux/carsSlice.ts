@@ -17,6 +17,7 @@ const initialState: SelectedCarState = {
   isLoading: true,
   selectedCar: {
     id: "",
+    council: "PSV",
   },
   carsList: [],
   error: "",

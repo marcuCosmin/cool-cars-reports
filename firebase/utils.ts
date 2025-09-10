@@ -46,8 +46,15 @@ export type QuestionDoc = {
   exterior: Question[]
 }
 
-export const getQuestions = withErrorPropagation(async () => {
-  const questionsRef = doc(firestore, "reports-config", "questions")
+const questionsPaths: Record<Councils, string> = {
+  PSV: "psv-questions",
+  Cornwall: "taxi-questions",
+}
+
+export const getQuestions = withErrorPropagation(async (council: Councils) => {
+  const questionsPath = questionsPaths[council]
+
+  const questionsRef = doc(firestore, "reports-config", questionsPath)
 
   const questionsSnapshot = await getDoc(questionsRef)
 
@@ -58,8 +65,11 @@ export const getQuestions = withErrorPropagation(async () => {
   return questionsSnapshot.data() as QuestionDoc
 })
 
+type Councils = "PSV" | "Cornwall"
+
 export type Car = {
   id: string
+  council: Councils
 }
 
 export const getCars = withErrorPropagation(async () => {
@@ -70,9 +80,16 @@ export const getCars = withErrorPropagation(async () => {
     return []
   }
 
-  const snapshotDocs = carsSnapshot.docs as Car[]
+  const snapshotDocs = carsSnapshot.docs
 
-  return snapshotDocs.map((doc) => ({ id: doc.id }))
+  return snapshotDocs.map((doc) => {
+    const { council } = doc.data() as Omit<Car, "id">
+
+    return {
+      id: doc.id,
+      council,
+    }
+  })
 })
 
 export type CheckDoc = {

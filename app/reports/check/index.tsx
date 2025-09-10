@@ -32,6 +32,9 @@ export default function Check() {
   const questionsAreLoading = useAppSelector(
     ({ questions }) => questions.isLoading
   )
+  const selectedCarCouncil = useAppSelector(
+    ({ cars }) => cars.selectedCar.council
+  )
   const answersAreLoading = useAppSelector(({ answers }) => answers.isLoading)
   const interiorIsCompleted = useAppSelector(
     ({ answers, questions }) =>
@@ -83,7 +86,7 @@ export default function Check() {
       return
     }
 
-    dispatch(fetchQuestions())
+    dispatch(fetchQuestions(selectedCarCouncil))
   }, [checkStarted])
 
   const onSubmitClick = async () => {
