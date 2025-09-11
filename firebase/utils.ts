@@ -46,13 +46,12 @@ export type QuestionDoc = {
   exterior: Question[]
 }
 
-const questionsPaths: Record<Councils, string> = {
+const questionsPaths: Partial<Record<Councils, string>> = {
   PSV: "psv-questions",
-  Cornwall: "taxi-questions",
 }
 
 export const getQuestions = withErrorPropagation(async (council: Councils) => {
-  const questionsPath = questionsPaths[council]
+  const questionsPath = questionsPaths[council] || "taxi-questions"
 
   const questionsRef = doc(firestore, "reports-config", questionsPath)
 
