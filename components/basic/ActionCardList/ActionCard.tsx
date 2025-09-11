@@ -22,7 +22,8 @@ const getStyles = (theme: Theme) =>
       opacity: 1,
     },
     typography: {
-      fontSize: 20,
+      fontSize: theme.fontSize.medium,
+      fontWeight: "bold",
     },
     overlay: {
       height: theme.actionCardSize,

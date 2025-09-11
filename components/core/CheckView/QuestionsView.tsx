@@ -57,6 +57,8 @@ export const QuestionsView = ({ answers }: QuestionsViewProps) => {
         {answers.map((answer, index) => {
           const { fault, label } = answer
 
+          console.log(fault)
+
           const iconName = answer.value ? "check-circle" : "close-circle"
           const iconColor = answer.value
             ? theme.colors.primary

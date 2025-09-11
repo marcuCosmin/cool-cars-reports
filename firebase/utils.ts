@@ -92,32 +92,28 @@ export const getCars = withErrorPropagation(async () => {
 })
 
 export type CheckDoc = {
+  carId: string
   creationTimestamp: number
   driverId: string
   odoReading: OdoReading
   interior: Answer[]
   exterior: Answer[]
+  faultsCount?: number
+  hasUnresolvedFaults?: boolean
 }
 
-type GetCheckProps = {
-  carId: string
-  checkId: string
-}
+export const getCheck = withErrorPropagation(async (checkId: string) => {
+  const checkRef = doc(firestore, "checks", checkId)
+  const checkSnapshot = await getDoc(checkRef)
 
-export const getCheck = withErrorPropagation(
-  async ({ carId, checkId }: GetCheckProps) => {
-    const checkRef = doc(firestore, "cars", carId, "checks", checkId)
-    const checkSnapshot = await getDoc(checkRef)
-
-    if (!checkSnapshot.exists()) {
-      return
-    }
-
-    const check = checkSnapshot.data() as CheckDoc
-
-    return check
+  if (!checkSnapshot.exists()) {
+    return
   }
-)
+
+  const check = checkSnapshot.data() as CheckDoc
+
+  return check
+})
 
 export type FaultDoc = {
   driverId: string
@@ -128,21 +124,19 @@ export type FaultDoc = {
   status: "pending" | "resolved"
 }
 
-export const getCheckFaults = withErrorPropagation(
-  async ({ carId, checkId }: GetCheckProps) => {
-    const faultsRef = collection(firestore, "cars", carId, "faults")
-    const faultsQuery = query(faultsRef, where("checkId", "==", checkId))
-    const faultsSnapshot = await getDocs(faultsQuery)
+export const getCheckFaults = withErrorPropagation(async (checkId: string) => {
+  const faultsRef = collection(firestore, "faults")
+  const faultsQuery = query(faultsRef, where("checkId", "==", checkId))
+  const faultsSnapshot = await getDocs(faultsQuery)
 
-    if (faultsSnapshot.empty) {
-      return []
-    }
-
-    const data = faultsSnapshot.docs.map((doc) => doc.data() as FaultDoc)
-
-    return data
+  if (faultsSnapshot.empty) {
+    return []
   }
-)
+
+  const data = faultsSnapshot.docs.map((doc) => doc.data() as FaultDoc)
+
+  return data
+})
 
 export type IncidentDoc = {
   description: string
@@ -151,25 +145,18 @@ export type IncidentDoc = {
   status: "pending" | "resolved"
 }
 
-type GetIncidentProps = {
-  carId: string
-  incidentId: string
-}
+export const getIncident = withErrorPropagation(async (incidentId: string) => {
+  const incidentRef = doc(firestore, "incidents", incidentId)
+  const incidentSnapshot = await getDoc(incidentRef)
 
-export const getIncident = withErrorPropagation(
-  async ({ carId, incidentId }: GetIncidentProps) => {
-    const incidentRef = doc(firestore, "cars", carId, "incidents", incidentId)
-    const incidentSnapshot = await getDoc(incidentRef)
-
-    if (!incidentSnapshot.exists()) {
-      return
-    }
-
-    const incident = incidentSnapshot.data() as IncidentDoc
-
-    return incident
+  if (!incidentSnapshot.exists()) {
+    return
   }
-)
+
+  const incident = incidentSnapshot.data() as IncidentDoc
+
+  return incident
+})
 
 type ReportsNotificationType = "incident" | "check" | "fault"
 
@@ -271,7 +258,7 @@ type GetCheckSubmittedTodayProps = {
 
 export const getCheckSubmittedToday = withErrorPropagation(
   async ({ carId, uid }: GetCheckSubmittedTodayProps) => {
-    const checksRef = collection(firestore, "cars", carId, "checks")
+    const checksRef = collection(firestore, "checks")
 
     const startOfToday = new Date()
     startOfToday.setHours(0, 0, 0, 0)
@@ -283,6 +270,7 @@ export const getCheckSubmittedToday = withErrorPropagation(
 
     const checksQuery = query(
       checksRef,
+      where("carId", "==", carId),
       where("driverId", "==", uid),
       where("creationTimestamp", ">=", startTimestamp),
       where("creationTimestamp", "<=", endTimestamp)

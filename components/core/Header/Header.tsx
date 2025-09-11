@@ -45,6 +45,9 @@ const getStyles = (theme: Theme) =>
   } as const)
 
 export const Header = () => {
+  const submittedCheckId = useAppSelector(
+    ({ submittedCheck }) => submittedCheck.id
+  )
   const selectedCarId = useAppSelector(({ cars }) => cars.selectedCar.id)
   const carId = useCarId()
 
@@ -74,7 +77,7 @@ export const Header = () => {
             <>
               <HeaderLink href="/reports" icon="file-table" label="Reports" />
 
-              {!isCheckPath && (
+              {!isCheckPath && !submittedCheckId && (
                 <HeaderLink
                   href="/reports/check"
                   icon="checkbox-multiple-outline"

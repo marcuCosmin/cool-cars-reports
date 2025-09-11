@@ -27,10 +27,7 @@ export const useCheckFaults = ({ carId, checkId }: UseCheckFaultsProps) => {
 
   useEffect(() => {
     const initFaults = async () => {
-      const faultsData = await handleGetCheckFaults({
-        carId,
-        checkId,
-      })
+      const faultsData = await handleGetCheckFaults(checkId)
 
       if (!faultsData) {
         return

@@ -47,7 +47,7 @@ const submittedCheckSlice = createSlice({
     })
     builder.addCase(fetchCheckSubmittedToday.rejected, (state) => {
       state.isLoading = false
-      state.error = "Failed to pass the daily check verification"
+      state.error = "Failed to execute the daily check verification"
       state.id = ""
     })
   },

@@ -64,10 +64,7 @@ const Incident = () => {
 
   useEffect(() => {
     ;(async () => {
-      const fetchedIncident = await handleGetIncident({
-        carId,
-        incidentId,
-      })
+      const fetchedIncident = await handleGetIncident(incidentId)
 
       setIncident(fetchedIncident)
     })()

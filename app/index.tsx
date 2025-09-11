@@ -43,6 +43,8 @@ export default function Index() {
     ({ submittedCheck }) => submittedCheck.error
   )
 
+  const error = carsError || submittedCheckError
+
   const styles = useStyles(getStyles)
 
   const { handleAsyncRequest: onSelectChange } = useAsyncRequestHandler({
@@ -88,8 +90,8 @@ export default function Index() {
     <View>
       <Typography type="heading">Cool Cars South Coast</Typography>
 
-      {carsError || submittedCheckError ? (
-        <ErrorView message={carsError || submittedCheckError} />
+      {error ? (
+        <ErrorView message={error} />
       ) : (
         <Select
           label="Select a vehicle"
@@ -104,7 +106,8 @@ export default function Index() {
         {isSubmittedCheckLoading || isCarsLoading ? (
           <LoadingView size="small" style={styles.loadingView} />
         ) : (
-          selectedCar.id && (
+          selectedCar.id &&
+          !error && (
             <Button onClick={onButtonClick}>
               <Typography type="button">Proceed</Typography>
             </Button>

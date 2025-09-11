@@ -40,10 +40,7 @@ const Check = () => {
 
   useEffect(() => {
     ;(async () => {
-      const check = await handleGetCheck({
-        carId,
-        checkId,
-      })
+      const check = await handleGetCheck(checkId)
 
       setCheck(check)
     })()
