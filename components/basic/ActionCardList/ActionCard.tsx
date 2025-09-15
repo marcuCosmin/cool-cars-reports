@@ -12,7 +12,6 @@ const getStyles = (theme: Theme) =>
   ({
     button: {
       width: theme.actionCardSize,
-      height: theme.actionCardSize,
       gap: 20,
       display: "flex",
       alignItems: "center",
@@ -26,8 +25,7 @@ const getStyles = (theme: Theme) =>
       fontWeight: "bold",
     },
     overlay: {
-      height: theme.actionCardSize,
-      width: theme.actionCardSize,
+      borderRadius: theme.borderRadius,
       backgroundColor: theme.colors.overlay,
       display: "flex",
       alignItems: "flex-end",
@@ -35,8 +33,9 @@ const getStyles = (theme: Theme) =>
       position: "absolute",
       top: 0,
       left: 0,
+      right: 0,
+      bottom: 0,
       zIndex: 1,
-      padding: 5,
     },
   } as const)
 

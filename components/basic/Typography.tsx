@@ -9,8 +9,8 @@ const getStyles = (theme: Theme) =>
     heading: {
       fontSize: theme.fontSize.large,
       color: theme.colors.primary,
+      marginBottom: 20,
       fontWeight: "bold",
-      marginBottom: 50,
       textAlign: "center",
     },
     label: {

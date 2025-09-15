@@ -1,17 +1,19 @@
-import { useStyles } from "@/hooks/useStyles"
+import { ScrollView } from "react-native"
 
-import { View } from "@/components/basic/View"
+import { useStyles } from "@/hooks/useStyles"
+import { type Theme } from "@/hooks/useTheme"
 
 import { ActionCard, type ActionCardProps } from "./ActionCard"
 
-const getStyles = () =>
+const getStyles = (theme: Theme) =>
   ({
     view: {
+      paddingBottom: theme.inputPadding,
       display: "flex",
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "center",
-      gap: 50,
+      gap: 40,
     },
   } as const)
 
@@ -22,11 +24,11 @@ export const ActionCardList = ({ items }: ActionCardListProps) => {
   const styles = useStyles(getStyles)
 
   return (
-    <View style={styles.view}>
+    <ScrollView contentContainerStyle={styles.view}>
       {items.map((item, index) => (
         <ActionCard {...item} key={index} />
       ))}
-    </View>
+    </ScrollView>
   )
 }
 export type { ActionCardProps }

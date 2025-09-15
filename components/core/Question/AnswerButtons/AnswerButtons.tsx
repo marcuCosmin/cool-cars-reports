@@ -14,6 +14,7 @@ import { AnswerButton } from "./AnswerButton"
 const getStlyes = () =>
   ({
     view: {
+      marginTop: "auto",
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",

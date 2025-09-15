@@ -22,10 +22,12 @@ const getStyles = (theme: Theme) =>
     modalButton: {
       display: "flex",
       flexDirection: "row",
+      flexWrap: "wrap",
       alignItems: "center",
       justifyContent: "center",
       alignSelf: "flex-start",
       width: "100%",
+      flex: 0,
     },
   } as const)
 

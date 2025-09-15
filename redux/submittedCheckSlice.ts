@@ -13,7 +13,7 @@ type SubmittedCheckState = {
 }
 
 const initialState: SubmittedCheckState = {
-  isLoading: true,
+  isLoading: false,
   id: "",
   error: "",
 }

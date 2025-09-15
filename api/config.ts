@@ -26,6 +26,7 @@ export const executeApiRequest = async <
   const request = async () => {
     const idToken = await firebaseAuth.currentUser?.getIdToken()
 
+    console.log(`${baseUrl}${path}`)
     const response = await fetch(`${baseUrl}${path}`, {
       method,
       headers: {

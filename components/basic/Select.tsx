@@ -18,7 +18,6 @@ const getStyles = (theme: Theme) =>
       borderColor: theme.colors.primary,
       borderWidth: theme.borderWidth,
       padding: theme.inputPadding,
-      height: theme.inputHeight,
     },
     selectedTextStyle: {
       color: theme.colors.text,

@@ -21,7 +21,7 @@ const getStyles = (theme: Theme) =>
       display: "flex",
       alignItems: "center",
       flex: 0,
-      paddingTop: 50,
+      paddingTop: 20,
       paddingBottom: 0,
       padding: 20,
     },

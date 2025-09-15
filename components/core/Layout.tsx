@@ -24,7 +24,7 @@ const getStyles = (theme: Theme) =>
     mainView: {
       paddingLeft: theme.mainViewPaddingX,
       paddingRight: theme.mainViewPaddingX,
-      paddingBottom: 100,
+      paddingBottom: 50,
       paddingTop: 20,
     },
   } as const)
@@ -71,6 +71,7 @@ export const Layout = () => {
           <Stack.Protected guard={!!uid}>
             <Stack.Screen name="index" />
             <Stack.Screen name="reports" />
+            <Stack.Screen name="checks" />
             <Stack.Screen name="notifications" />
             <Stack.Screen name="history" />
           </Stack.Protected>

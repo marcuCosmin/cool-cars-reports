@@ -20,17 +20,9 @@ import type { DatePickerProps } from "./DatePicker.model"
 
 const getStyles = (theme: Theme) =>
   ({
-    dayMonthView: {
+    containerView: {
       flex: 0,
-      flexDirection: "row",
       gap: theme.gap,
-    },
-    yearView: {
-      flex: 0,
-      marginTop: 10,
-    },
-    inlineSelect: {
-      flex: 1,
     },
     confirmButton: {
       marginTop: 20,
@@ -101,23 +93,19 @@ export const DatePickerModal = ({
 
   return (
     <Modal isOpen={isModalOpen} onClose={onModalClose}>
-      <View style={styles.dayMonthView}>
+      <View style={styles.containerView}>
         <Select
           label="Day"
-          style={styles.inlineSelect}
           options={daysOptions}
           value={String(selectedDay)}
           onChange={onDayChange}
         />
         <Select
-          style={styles.inlineSelect}
           label="Month"
           options={monthOptions}
           value={String(selectedMonth)}
           onChange={onMonthChange}
         />
-      </View>
-      <View style={styles.yearView}>
         <Select
           label="Year"
           options={yearsOptions}

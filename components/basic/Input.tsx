@@ -17,7 +17,6 @@ const getStyles = (theme: Theme) =>
       padding: theme.inputPadding,
       color: theme.colors.text,
       fontSize: theme.fontSize.medium,
-      height: theme.inputHeight,
     },
     textarea: {
       maxHeight: "50%",

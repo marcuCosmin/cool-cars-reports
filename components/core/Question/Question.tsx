@@ -25,12 +25,12 @@ const getStyles = (theme: Theme) =>
       borderColor: theme.colors.primary,
       borderRadius: theme.borderRadius,
       padding: theme.inputPadding,
+      maxHeight: "45%",
+      minHeight: 200,
       flex: 0,
-      height: "40%",
-      marginBottom: 50,
     },
     typography: {
-      fontSize: 20,
+      fontSize: theme.fontSize.medium,
       textAlign: "center",
     },
     mainMenuButton: {
@@ -80,7 +80,7 @@ export const Question = () => {
   }
 
   return (
-    <View>
+    <View style={{ justifyContent: "space-between", flex: 1, gap: 10 }}>
       <Typography type="heading">Check {displayedIndex}</Typography>
 
       <View style={styles.labelView}>

@@ -24,6 +24,7 @@ const getStlyes = (theme: Theme) =>
       borderRadius: theme.borderRadius,
       borderWidth: theme.borderWidth,
       borderColor: theme.colors.primary,
+      padding: 0,
       backgroundColor: "transparent",
       display: "flex",
       alignItems: "center",
