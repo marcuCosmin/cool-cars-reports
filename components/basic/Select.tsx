@@ -5,6 +5,7 @@ import { Dropdown } from "react-native-element-dropdown"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
+import { Input } from "./Input"
 import { Typography } from "./Typography"
 import { View } from "./View"
 
@@ -35,9 +36,7 @@ const getStyles = (theme: Theme) =>
       tintColor: theme.colors.text,
     },
     inputSearchStyle: {
-      borderRadius: theme.borderRadius,
-      color: theme.colors.text,
-      borderColor: theme.colors.primary,
+      marginBottom: theme.gap,
     },
     itemTextStyle: {
       color: theme.colors.text,
@@ -47,6 +46,8 @@ const getStyles = (theme: Theme) =>
       border: 0,
     },
   } as const)
+
+type OnInputSearch = (text: string) => void
 
 export type SelectOption = {
   value: string
@@ -71,7 +72,7 @@ export const Select = ({
   style,
 }: SelectProps) => {
   const theme = useTheme()
-  const { itemTextStyle, ...styles } = useStyles(getStyles)
+  const { itemTextStyle, inputSearchStyle, ...styles } = useStyles(getStyles)
 
   const parsedOptions = options.map(({ value, label }) => ({
     value,
@@ -100,6 +101,17 @@ export const Select = ({
     [theme]
   )
 
+  const renderInputSearch = useCallback(
+    (onSearch: OnInputSearch) => (
+      <Input
+        style={inputSearchStyle}
+        placeholder="Search"
+        onChange={onSearch}
+      />
+    ),
+    [theme]
+  )
+
   const handleChange = ({ value }: SelectOption) => onChange(value)
 
   return (
@@ -107,6 +119,7 @@ export const Select = ({
       {label && <Typography type="label">{label}</Typography>}
       <Dropdown
         {...styles}
+        renderInputSearch={renderInputSearch}
         labelField="label"
         valueField="label"
         searchField="label"

@@ -11,6 +11,8 @@ const getStyles = (theme: Theme) =>
     view: {
       flexDirection: "row",
       alignItems: "center",
+      flexWrap: "wrap",
+      justifyContent: "center",
       gap: 5,
       marginTop: 5,
       flex: 0,
@@ -18,6 +20,7 @@ const getStyles = (theme: Theme) =>
     typography: {
       fontSize: theme.fontSize.small,
       color: theme.colors.primary,
+      textAlign: "center",
       fontWeight: "bold",
     },
   } as const)

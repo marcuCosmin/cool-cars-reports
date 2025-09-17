@@ -6,7 +6,7 @@ import {
 } from "react-native"
 
 import { useStyles } from "@/hooks/useStyles"
-import { type Theme } from "@/hooks/useTheme"
+import { useTheme, type Theme } from "@/hooks/useTheme"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -28,7 +28,8 @@ const getStyles = (theme: Theme) =>
 type InputProps = {
   type?: "text" | "number" | "textarea"
   style?: StyleProp<TextStyle>
-  value: string
+  value?: string
+  placeholder?: string
   onChange: (value: string) => void
 }
 
@@ -42,8 +43,10 @@ export const Input = ({
   type = "text",
   style,
   value,
+  placeholder,
   onChange,
 }: InputProps) => {
+  const theme = useTheme()
   const isTextarea = type === "textarea"
   const keyboardType = keyboardTypes[type]
 
@@ -58,7 +61,10 @@ export const Input = ({
 
   return (
     <NativeInput
+      placeholder={placeholder}
+      placeholderTextColor={theme.colors.placeholder}
       multiline={isTextarea}
+      numberOfLines={isTextarea ? 10 : 1}
       keyboardType={keyboardType}
       style={mergedStyles}
       value={value}

@@ -17,7 +17,7 @@ const getStyles = () =>
     button: {
       marginTop: "auto",
     },
-    mileageLabel: {
+    tab: {
       marginTop: 20,
     },
   } as const)
@@ -53,11 +53,14 @@ export default function OdoReading() {
   return (
     <View>
       <Typography type="heading">ODO Reading</Typography>
-      <Tab options={tabOptions} value={unit} onChange={onTabChange} />
-      <Typography type="label" style={styles.mileageLabel}>
-        Vehicle mileage
-      </Typography>
+      <Typography type="label">Vehicle mileage</Typography>
       <Input type="number" value={value} onChange={setValue} />
+      <Tab
+        style={styles.tab}
+        options={tabOptions}
+        value={unit}
+        onChange={onTabChange}
+      />
       {value && (
         <Button style={styles.button} onClick={onConfirmClick}>
           <Typography type="button">Confirm</Typography>

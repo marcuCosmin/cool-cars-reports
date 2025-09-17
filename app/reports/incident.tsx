@@ -24,7 +24,7 @@ const getStyles = () =>
       textAlign: "center",
     },
     button: {
-      marginTop: 40,
+      marginTop: "auto",
     },
   } as const)
 
@@ -68,13 +68,13 @@ export default function Incident() {
         behavior="height"
       >
         <Input type="textarea" value={value} onChange={onChange} />
-
-        {!!value.length && (
-          <Button style={styles.button} onClick={onSubmitClick}>
-            <Typography type="button">Report incident</Typography>
-          </Button>
-        )}
       </KeyboardAvoidingView>
+
+      {!!value.length && (
+        <Button style={styles.button} onClick={onSubmitClick}>
+          <Typography type="button">Report incident</Typography>
+        </Button>
+      )}
     </View>
   )
 }
