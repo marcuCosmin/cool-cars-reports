@@ -158,7 +158,12 @@ export const getIncident = withErrorPropagation(async (incidentId: string) => {
   return incident
 })
 
-type ReportsNotificationType = "incident" | "check" | "fault"
+type ReportsNotificationType =
+  | "incident"
+  | "check"
+  | "fault"
+  | "fault-resolved"
+  | "incident-resolved"
 
 export type Notification = {
   id: string
@@ -174,10 +179,21 @@ export type Notification = {
 }
 
 export type NotificationsFilters = {
-  type: string
+  carId: string
+  type: "all" | Notification["type"]
   startDate: number | null
   endDate: number | null
-  carId: string
+}
+
+const getNotificationTypeConstraint = (type: Notification["type"]) => {
+  switch (type) {
+    case "fault":
+      return where("type", "in", ["fault", "fault-resolved"])
+    case "incident":
+      return where("type", "in", ["incident", "incident-resolved"])
+    default:
+      return where("type", "==", type)
+  }
 }
 
 type GetNotificationsChunkProps = {
@@ -198,7 +214,7 @@ export const getNotificationsChunk = withErrorPropagation(
     const queryConstraints = [
       orderBy("creationTimestamp", "desc"),
       lastRefValue && startAfter(lastRefValue),
-      filters.type !== "all" && where("type", "==", filters.type),
+      filters.type !== "all" && getNotificationTypeConstraint(filters.type),
       filters.startDate && where("creationTimestamp", ">=", filters.startDate),
       filters.endDate && where("creationTimestamp", "<=", filters.endDate),
       filters.carId !== "all" && where("carId", "==", filters.carId),

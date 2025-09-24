@@ -37,8 +37,16 @@ export const getNotificationItemConfig = ({
         bulkCount > 1 ? "faults" : "fault"
       } for car with registration number: ${carId}.`
       break
+    case "fault-resolved":
+      message = `${bulkCount} ${
+        bulkCount > 1 ? "faults" : "fault"
+      } have been resolved for car with registration number: ${carId}.`
+      break
     case "incident":
       message = `You have reported an incident for car with registration number: ${carId}.`
+      break
+    case "incident-resolved":
+      message = `An incident you reported for the car with registration number ${carId} has been resolved.`
       break
     default:
       message = `You have a new notification for car with registration number: ${carId}.`
@@ -58,7 +66,7 @@ export const filtersReducer = (
     case "SET_TYPE":
       return {
         ...state,
-        type: action.payload,
+        type: action.payload as NotificationsFilters["type"],
       }
     case "SET_START_DATE":
       return {
