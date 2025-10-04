@@ -39,8 +39,8 @@ export const getNotificationItemConfig = ({
       break
     case "fault-resolved":
       message = `${bulkCount} ${
-        bulkCount > 1 ? "faults" : "fault"
-      } have been resolved for car with registration number: ${carId}.`
+        bulkCount > 1 ? "faults have" : "fault has"
+      } been resolved for car with registration number: ${carId}.`
       break
     case "incident":
       message = `You have reported an incident for car with registration number: ${carId}.`
