@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { StyleSheet } from "react-native"
 
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
@@ -6,7 +7,8 @@ import { useTheme, type Theme } from "@/hooks/useTheme"
 import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
-import { StyleSheet } from "react-native"
+
+import type { ActionCardProps } from "./ActionCardList.model"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -39,24 +41,8 @@ const getStyles = (theme: Theme) =>
     },
   } as const)
 
-type Icons =
-  | "car-arrow-left"
-  | "car-arrow-right"
-  | "car-cog"
-  | "speedometer"
-  | "playlist-check"
-  | "check-circle"
-
-export type ActionCardProps = {
-  label: string
-  icon: Icons
-  displayOverlay?: boolean
-  disabled?: boolean
-  overlayIcon?: Icons
-  onClick: () => void
-}
-
 export const ActionCard = ({
+  hidden,
   icon,
   label,
   displayOverlay,
@@ -71,6 +57,10 @@ export const ActionCard = ({
     styles.button,
     displayOverlay && styles.buttonWithOverlay,
   ])
+
+  if (hidden) {
+    return null
+  }
 
   return (
     <Button style={buttonStyle} onClick={onClick} disabled={disabled}>

@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { submitAnswers } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { fetchQuestions } from "@/redux/questionsSlice"
+import { setSubmittedCheckId } from "@/redux/submittedCheckSlice"
 
 import { useStyles } from "@/hooks/useStyles"
 
@@ -16,7 +17,6 @@ import { Button } from "@/components/basic/Button"
 import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
-import { setSubmittedCheckId } from "@/redux/submittedCheckSlice"
 
 const getStyles = () =>
   ({
@@ -53,9 +53,20 @@ export default function Check() {
       answers.exterior.length > 0 ||
       answers.odoReading !== null
   )
+  const hasFaults = useAppSelector(({ answers }) => {
+    const allQuestions = [...answers.interior, ...answers.exterior]
+
+    return allQuestions.some(({ value }) => !value)
+  })
+  const faultsDetailsIsCompleted = useAppSelector(({ answers }) =>
+    hasFaults ? !!answers.faultsDetails : true
+  )
 
   const allSectionsAreCompleted =
-    interiorIsCompleted && exteriorIsCompleted && odoReadingIsCompleted
+    interiorIsCompleted &&
+    exteriorIsCompleted &&
+    odoReadingIsCompleted &&
+    faultsDetailsIsCompleted
 
   const actionCardListItems: ActionCardProps[] = [
     {
@@ -78,6 +89,14 @@ export default function Check() {
       displayOverlay: odoReadingIsCompleted,
       overlayIcon: "check-circle",
       onClick: () => router.push("/reports/check/odo-reading"),
+    },
+    {
+      hidden: !hasFaults,
+      label: "Faults Details",
+      icon: "file-document-edit",
+      displayOverlay: faultsDetailsIsCompleted,
+      overlayIcon: "check-circle",
+      onClick: () => router.push("/reports/check/faults-details"),
     },
   ]
 

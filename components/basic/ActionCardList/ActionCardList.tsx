@@ -3,7 +3,9 @@ import { ScrollView } from "react-native"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
-import { ActionCard, type ActionCardProps } from "./ActionCard"
+import { ActionCard } from "./ActionCard"
+
+import type { ActionCardProps } from "./ActionCardList.model"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -31,4 +33,5 @@ export const ActionCardList = ({ items }: ActionCardListProps) => {
     </ScrollView>
   )
 }
+
 export type { ActionCardProps }

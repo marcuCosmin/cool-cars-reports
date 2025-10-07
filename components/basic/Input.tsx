@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import {
   InputAccessoryView,
   Keyboard,
+  KeyboardAvoidingView,
   TextInput as NativeInput,
   StyleSheet,
   type StyleProp,
@@ -16,6 +17,9 @@ import { Button } from "./Button"
 
 const getStyles = (theme: Theme) =>
   ({
+    keyboardAvoidingView: {
+      flex: 1,
+    },
     input: {
       borderWidth: theme.borderWidth,
       borderColor: theme.colors.primary,
@@ -79,7 +83,7 @@ export const Input = ({
 
   const onChangeText = (text: string) => onChange(text)
 
-  return (
+  const renderedContent = (
     <>
       <NativeInput
         placeholder={placeholder}
@@ -107,4 +111,17 @@ export const Input = ({
       </InputAccessoryView>
     </>
   )
+
+  if (type === "textarea") {
+    return (
+      <KeyboardAvoidingView
+        behavior="height"
+        style={styles.keyboardAvoidingView}
+      >
+        {renderedContent}
+      </KeyboardAvoidingView>
+    )
+  }
+
+  return renderedContent
 }

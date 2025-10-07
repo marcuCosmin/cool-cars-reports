@@ -17,18 +17,20 @@ export type OdoReading = {
   value: string
 }
 
-type SelectedCarState = {
+type AnswersState = {
   isLoading: boolean
   interior: Answer[]
   exterior: Answer[]
   odoReading: OdoReading | null
+  faultsDetails: string
 }
 
-const initialState: SelectedCarState = {
+const initialState: AnswersState = {
   isLoading: false,
   interior: [],
   exterior: [],
   odoReading: null,
+  faultsDetails: "",
 }
 
 type AsyncThunkConfig = {
@@ -50,6 +52,7 @@ export const submitAnswers = createAsyncThunk<
       exterior: answers.exterior,
       odoReading: answers.odoReading as OdoReading,
       carId: cars.selectedCar.id,
+      faultsDetails: answers.faultsDetails,
     })
 
     dispatch(showToast("Check submitted successfully!"))
@@ -71,6 +74,7 @@ const answersSlice = createSlice({
       state.interior = []
       state.exterior = []
       state.odoReading = null
+      state.faultsDetails = ""
     },
     setAnswer: (
       state,
@@ -87,6 +91,9 @@ const answersSlice = createSlice({
     setOdoReading: (state, action: PayloadAction<OdoReading | null>) => {
       state.odoReading = action.payload
     },
+    setFaultsDetails: (state, action: PayloadAction<string>) => {
+      state.faultsDetails = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(submitAnswers.pending, (state) => {
@@ -97,6 +104,7 @@ const answersSlice = createSlice({
       state.interior = []
       state.exterior = []
       state.odoReading = null
+      state.faultsDetails = ""
     })
     builder.addCase(submitAnswers.rejected, (state) => {
       state.isLoading = false
@@ -104,5 +112,6 @@ const answersSlice = createSlice({
   },
 })
 
-export const { resetAnswers, setAnswer, setOdoReading } = answersSlice.actions
+export const { resetAnswers, setAnswer, setOdoReading, setFaultsDetails } =
+  answersSlice.actions
 export const { reducer: answers } = answersSlice

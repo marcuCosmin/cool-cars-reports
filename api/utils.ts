@@ -7,6 +7,7 @@ type PostCheckAnswersPayload = {
   exterior: Answer[]
   odoReading: OdoReading
   carId: string
+  faultsDetails?: string
 }
 export type PostCheckAnswersResponse = {
   checkId: string

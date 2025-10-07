@@ -1,6 +1,5 @@
 import { router } from "expo-router"
 import { useState } from "react"
-import { KeyboardAvoidingView } from "react-native"
 
 import { postIncident } from "@/api/utils"
 
@@ -17,9 +16,6 @@ import { View } from "@/components/basic/View"
 
 const getStyles = () =>
   ({
-    keyboardAvoidingView: {
-      flex: 1,
-    },
     heading: {
       textAlign: "center",
     },
@@ -63,12 +59,7 @@ export default function Incident() {
         Incident
       </Typography>
 
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior="height"
-      >
-        <Input type="textarea" value={value} onChange={onChange} />
-      </KeyboardAvoidingView>
+      <Input type="textarea" value={value} onChange={onChange} />
 
       {!!value.length && (
         <Button style={styles.button} onClick={onSubmitClick}>
