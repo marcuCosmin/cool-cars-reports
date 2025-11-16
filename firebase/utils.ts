@@ -25,6 +25,7 @@ const withErrorPropagation =
 
       return data as Awaited<ReturnType<T>>
     } catch (error) {
+      console.log(error)
       if (error instanceof FirebaseError) {
         throw new Error(error.message)
       }
@@ -46,29 +47,26 @@ export type QuestionDoc = {
   exterior: Question[]
 }
 
-const questionsPaths: Partial<Record<Councils, string>> = {
-  PSV: "psv-questions",
-}
+export const getQuestions = withErrorPropagation(
+  async (questionsPath: string) => {
+    const questionsRef = doc(firestore, "reports-config", questionsPath)
 
-export const getQuestions = withErrorPropagation(async (council: Councils) => {
-  const questionsPath = questionsPaths[council] || "taxi-questions"
+    const questionsSnapshot = await getDoc(questionsRef)
 
-  const questionsRef = doc(firestore, "reports-config", questionsPath)
+    if (!questionsSnapshot.exists()) {
+      return
+    }
 
-  const questionsSnapshot = await getDoc(questionsRef)
-
-  if (!questionsSnapshot.exists()) {
-    return
+    return questionsSnapshot.data() as QuestionDoc
   }
-
-  return questionsSnapshot.data() as QuestionDoc
-})
+)
 
 type Councils = "PSV" | "Cornwall"
 
 export type Car = {
   id: string
   council: Councils
+  isRental: boolean
 }
 
 export const getCars = withErrorPropagation(async () => {
@@ -308,5 +306,29 @@ export const getCheckSubmittedToday = withErrorPropagation(
     })
 
     return todaySubmittedCheck
+  }
+)
+
+export const getHighestOdoReading = withErrorPropagation(
+  async (carId: string) => {
+    const checksRef = collection(firestore, "checks")
+    const checksQuery = query(
+      checksRef,
+      where("carId", "==", carId),
+      orderBy("odoReading.value", "desc"),
+      limit(1)
+    )
+
+    const checksSnapshot = await getDocs(checksQuery)
+
+    if (checksSnapshot.empty) {
+      return 0
+    }
+
+    const [highestOdoReadingDoc] = checksSnapshot.docs.map(
+      (doc) => doc.data() as CheckDoc
+    )
+
+    return Number(highestOdoReadingDoc.odoReading.value)
   }
 )

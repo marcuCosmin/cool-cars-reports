@@ -32,9 +32,21 @@ export default function Check() {
   const questionsAreLoading = useAppSelector(
     ({ questions }) => questions.isLoading
   )
-  const selectedCarCouncil = useAppSelector(
-    ({ cars }) => cars.selectedCar.council
-  )
+
+  const questionsPath = useAppSelector(({ cars }) => {
+    const { isRental, council } = cars.selectedCar
+
+    if (isRental) {
+      return "rental-questions"
+    }
+
+    if (council === "PSV") {
+      return "psv-questions"
+    }
+
+    return "non-psv-questions"
+  })
+
   const answersAreLoading = useAppSelector(({ answers }) => answers.isLoading)
   const interiorIsCompleted = useAppSelector(
     ({ answers, questions }) =>
@@ -105,7 +117,7 @@ export default function Check() {
       return
     }
 
-    dispatch(fetchQuestions(selectedCarCouncil))
+    dispatch(fetchQuestions(questionsPath))
   }, [checkStarted])
 
   const onSubmitClick = async () => {
