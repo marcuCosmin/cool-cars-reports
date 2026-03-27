@@ -10,7 +10,6 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundlerIdentifier": "com.coolcars.reports",
       "bundleIdentifier": "cool.cars.reports",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false

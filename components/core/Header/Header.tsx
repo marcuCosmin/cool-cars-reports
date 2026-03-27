@@ -21,7 +21,7 @@ const getStyles = (theme: Theme) =>
       display: "flex",
       alignItems: "center",
       flex: 0,
-      paddingTop: 20,
+      paddingTop: 40,
       paddingBottom: 0,
       padding: 20,
     },
@@ -42,11 +42,11 @@ const getStyles = (theme: Theme) =>
       flex: 0,
       width: "auto",
     },
-  } as const)
+  }) as const
 
 export const Header = () => {
   const submittedCheckId = useAppSelector(
-    ({ submittedCheck }) => submittedCheck.id
+    ({ submittedCheck }) => submittedCheck.id,
   )
   const selectedCarId = useAppSelector(({ cars }) => cars.selectedCar.id)
   const carId = useCarId()
