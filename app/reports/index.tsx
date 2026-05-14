@@ -11,7 +11,7 @@ import { View } from "@/components/basic/View"
 
 export default function Reports() {
   const submittedCheckId = useAppSelector(
-    ({ submittedCheck }) => submittedCheck.id
+    ({ submittedCheck }) => submittedCheck.id,
   )
 
   const actionCardListItems: ActionCardProps[] = [
@@ -22,7 +22,7 @@ export default function Reports() {
       overlayIcon: submittedCheckId ? "check-circle" : undefined,
       displayOverlay: !!submittedCheckId,
       onClick: () => {
-        router.push("/reports/check")
+        router.dismissTo("/reports/check")
       },
     },
     {
@@ -31,7 +31,7 @@ export default function Reports() {
       disabled: !submittedCheckId,
       displayOverlay: !submittedCheckId,
       onClick: () => {
-        router.push("/reports/incident")
+        router.dismissTo("/reports/incident")
       },
     },
   ]

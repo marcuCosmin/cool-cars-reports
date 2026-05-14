@@ -17,6 +17,7 @@ const initialState: SelectedCarState = {
   isLoading: true,
   selectedCar: {
     id: "",
+    isRental: false,
     council: "PSV",
   },
   carsList: [],

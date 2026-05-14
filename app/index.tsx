@@ -27,7 +27,7 @@ const getStyles = () =>
     loadingView: {
       flex: 0,
     },
-  } as const)
+  }) as const
 
 export default function Index() {
   const uid = useAppSelector(({ user }) => user.uid)
@@ -37,10 +37,10 @@ export default function Index() {
   const selectOptions = carsList.map((car) => ({ value: car.id }))
   const isCarsLoading = useAppSelector(({ cars }) => cars.isLoading)
   const isSubmittedCheckLoading = useAppSelector(
-    ({ submittedCheck }) => submittedCheck.isLoading
+    ({ submittedCheck }) => submittedCheck.isLoading,
   )
   const submittedCheckError = useAppSelector(
-    ({ submittedCheck }) => submittedCheck.error
+    ({ submittedCheck }) => submittedCheck.error,
   )
 
   const error = carsError || submittedCheckError
@@ -84,7 +84,7 @@ export default function Index() {
     dispatch(fetchCheckSubmittedToday({ carId: selectedCar.id, uid }))
   }, [selectedCar.id])
 
-  const onButtonClick = () => router.push("/reports")
+  const onButtonClick = () => router.dismissTo("/reports")
 
   return (
     <View>

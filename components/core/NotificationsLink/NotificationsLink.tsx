@@ -28,7 +28,7 @@ const getStyles = (theme: Theme) =>
       textAlign: "center",
       width: "100%",
     },
-  } as const)
+  }) as const
 
 type NotificationsLinkProps = {
   style?: StyleProp<ViewStyle>
@@ -43,7 +43,7 @@ export const NotificationsLink = ({ style }: NotificationsLinkProps) => {
   const styles = useStyles(getStyles)
   const mergedStyles = StyleSheet.flatten([styles.button, style])
 
-  const onClick = () => router.push("/notifications")
+  const onClick = () => router.dismissTo("/notifications")
 
   return (
     <Button style={mergedStyles} onClick={onClick}>

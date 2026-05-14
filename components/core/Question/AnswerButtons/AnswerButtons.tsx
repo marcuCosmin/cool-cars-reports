@@ -21,7 +21,7 @@ const getStlyes = () =>
       alignItems: "center",
       flex: 0,
     },
-  } as const)
+  }) as const
 
 type AnswerButtonsProps = {
   questionIndex: number
@@ -53,16 +53,16 @@ export const AnswerButtons = ({
           value,
           label: questionLabel,
         },
-      })
+      }),
     )
 
     if (hasNextQuestion) {
       const nextIndex = questionIndex + 1
-      router.push(`/reports/check/${sectionKey}/${nextIndex}`)
+      router.dismissTo(`/reports/check/${sectionKey}/${nextIndex}`)
       return
     }
 
-    router.push("/reports/check")
+    router.dismissTo("/reports/check")
   }
 
   const onYesClick = () => handleButtonClick(true)

@@ -41,7 +41,7 @@ const getStlyes = (theme: Theme) =>
     activeTypography: {
       color: theme.colors.white,
     },
-  } as const)
+  }) as const
 
 type PaginationItem = {
   isActive: boolean
@@ -95,8 +95,8 @@ export const Pagination = ({
           const displayedIndex = index + 1
 
           const onClick = () =>
-            router.push(
-              `/reports/check/${sectionKey}/${index}` as RelativePathString
+            router.dismissTo(
+              `/reports/check/${sectionKey}/${index}` as RelativePathString,
             )
 
           return (

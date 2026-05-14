@@ -9,6 +9,7 @@ import { setOdoReading, type OdoReadingUnit } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 
 import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"
+import { useCheckStartTimeInit } from "@/hooks/useCheckStartTimeInit"
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
@@ -43,7 +44,7 @@ const getStyles = (theme: Theme) =>
       borderWidth: 1,
       backgroundColor: "transparent",
     },
-  } as const)
+  }) as const
 
 const tabOptions = [
   {
@@ -77,13 +78,14 @@ export default function OdoReading() {
 
   useEffect(() => {
     ;(async () => {
-      const highestOdoReading = await handleHighestOdoReadingFetch(
-        selectedCarId
-      )
+      const highestOdoReading =
+        await handleHighestOdoReadingFetch(selectedCarId)
 
       setHighestOdoReading(highestOdoReading || 0)
     })()
   }, [selectedCarId])
+
+  useCheckStartTimeInit()
 
   const onModalClose = () => setIsModalOpen(false)
 
@@ -95,7 +97,7 @@ export default function OdoReading() {
     }
 
     onModalClose()
-    router.push("/reports/check")
+    router.dismissTo("/reports/check")
   }
 
   const onConfirmButtonClick = () => {

@@ -22,6 +22,7 @@ type AnswersState = {
   interior: Answer[]
   exterior: Answer[]
   odoReading: OdoReading | null
+  startTimestamp: number
   faultsDetails: string
 }
 
@@ -30,6 +31,7 @@ const initialState: AnswersState = {
   interior: [],
   exterior: [],
   odoReading: null,
+  startTimestamp: 0,
   faultsDetails: "",
 }
 
@@ -53,12 +55,15 @@ export const submitAnswers = createAsyncThunk<
       odoReading: answers.odoReading as OdoReading,
       carId: cars.selectedCar.id,
       faultsDetails: answers.faultsDetails,
+      startTimestamp: answers.startTimestamp,
+      endTimestamp: Date.now(),
     })
 
     dispatch(showToast("Check submitted successfully!"))
 
     return response.checkId
   } catch (error) {
+    console.log(error)
     const errorMessage = (error as Error).message
     dispatch(showToast(errorMessage))
 
@@ -75,6 +80,7 @@ const answersSlice = createSlice({
       state.exterior = []
       state.odoReading = null
       state.faultsDetails = ""
+      state.startTimestamp = 0
     },
     setAnswer: (
       state,
@@ -82,7 +88,7 @@ const answersSlice = createSlice({
         sectionKey: "interior" | "exterior"
         index: number
         answer: Answer
-      }>
+      }>,
     ) => {
       const { sectionKey, index, answer } = action.payload
 
@@ -93,6 +99,9 @@ const answersSlice = createSlice({
     },
     setFaultsDetails: (state, action: PayloadAction<string>) => {
       state.faultsDetails = action.payload
+    },
+    initStartTimestamp: (state) => {
+      state.startTimestamp = Date.now()
     },
   },
   extraReducers: (builder) => {
@@ -105,6 +114,7 @@ const answersSlice = createSlice({
       state.exterior = []
       state.odoReading = null
       state.faultsDetails = ""
+      state.startTimestamp = initialState.startTimestamp
     })
     builder.addCase(submitAnswers.rejected, (state) => {
       state.isLoading = false
@@ -112,6 +122,11 @@ const answersSlice = createSlice({
   },
 })
 
-export const { resetAnswers, setAnswer, setOdoReading, setFaultsDetails } =
-  answersSlice.actions
+export const {
+  resetAnswers,
+  setAnswer,
+  setOdoReading,
+  setFaultsDetails,
+  initStartTimestamp,
+} = answersSlice.actions
 export const { reducer: answers } = answersSlice

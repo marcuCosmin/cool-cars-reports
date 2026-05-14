@@ -8,6 +8,8 @@ type PostCheckAnswersPayload = {
   odoReading: OdoReading
   carId: string
   faultsDetails?: string
+  startTimestamp: number
+  endTimestamp: number
 }
 export type PostCheckAnswersResponse = {
   checkId: string

@@ -13,7 +13,7 @@ export default function FaultsDetails() {
   const dispatch = useAppDispatch()
 
   const onChange = (text: string) => dispatch(setFaultsDetails(text))
-  const onConfirmClick = () => router.push("/reports/check")
+  const onConfirmClick = () => router.dismissTo("/reports/check")
 
   return (
     <View>

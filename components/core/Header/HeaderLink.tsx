@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { router, type RelativePathString } from "expo-router"
+import { useRouter, type RelativePathString } from "expo-router"
 
 import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
@@ -19,7 +19,7 @@ const getStyles = (theme: Theme) =>
       color: theme.colors.text,
       fontWeight: "bold",
     },
-  } as const)
+  }) as const
 
 type HeaderLinkProps = {
   href: string
@@ -36,6 +36,7 @@ export const HeaderLink = ({
 }: HeaderLinkProps) => {
   const styles = useStyles(getStyles)
   const theme = useTheme()
+  const router = useRouter()
 
   const onClick = () => {
     if (propsOnClick) {
@@ -43,7 +44,7 @@ export const HeaderLink = ({
       return
     }
 
-    router.push(href as RelativePathString)
+    router.dismissTo(href as RelativePathString)
   }
 
   return (

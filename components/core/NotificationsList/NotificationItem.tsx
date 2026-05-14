@@ -38,7 +38,7 @@ const getStyles = (theme: Theme) =>
       fontSize: theme.fontSize.small,
       fontWeight: "bold",
     },
-  } as const)
+  }) as const
 
 export const NotificationItem = ({
   creationTimestamp,
@@ -74,7 +74,7 @@ export const NotificationItem = ({
       })
     }
 
-    router.push(redirectUrl)
+    router.dismissTo(redirectUrl)
   }
 
   return (

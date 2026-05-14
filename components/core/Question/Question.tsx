@@ -9,6 +9,7 @@ import {
 import { Answer } from "@/redux/answersSlice"
 import { useAppSelector } from "@/redux/config"
 
+import { useCheckStartTimeInit } from "@/hooks/useCheckStartTimeInit"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
@@ -42,7 +43,7 @@ const getStyles = (theme: Theme) =>
       backgroundColor: "transparent",
       zIndex: 10,
     },
-  } as const)
+  }) as const
 
 type LocalSearchParams = {
   questionIndex: string
@@ -74,6 +75,8 @@ export const Question = () => {
       isDisabled: !answer && index !== questionIndex,
     }
   })
+
+  useCheckStartTimeInit()
 
   if (!question) {
     return <View />

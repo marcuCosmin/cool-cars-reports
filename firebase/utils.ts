@@ -58,7 +58,7 @@ export const getQuestions = withErrorPropagation(
     }
 
     return questionsSnapshot.data() as QuestionDoc
-  }
+  },
 )
 
 type Councils = "PSV" | "Cornwall"
@@ -80,11 +80,12 @@ export const getCars = withErrorPropagation(async () => {
   const snapshotDocs = carsSnapshot.docs
 
   return snapshotDocs.map((doc) => {
-    const { council } = doc.data() as Omit<Car, "id">
+    const { council, isRental } = doc.data() as Omit<Car, "id">
 
     return {
       id: doc.id,
       council,
+      isRental,
     }
   })
 })
@@ -206,7 +207,7 @@ export const getNotificationsChunk = withErrorPropagation(
       firestore,
       "users",
       uid,
-      "notifications"
+      "notifications",
     )
 
     const queryConstraints = [
@@ -239,7 +240,7 @@ export const getNotificationsChunk = withErrorPropagation(
     })
 
     return notifications
-  }
+  },
 )
 
 type MarkNotificationAsViewedProps = {
@@ -254,15 +255,15 @@ export const markNotificationAsViewed = withErrorPropagation(
       "users",
       uid,
       "notifications",
-      notificationId
+      notificationId,
     )
 
     await updateDoc(notificationRef, { viewed: true })
-  }
+  },
 )
 
 export const signIn = withErrorPropagation((authToken: string) =>
-  signInWithCustomToken(firebaseAuth, authToken)
+  signInWithCustomToken(firebaseAuth, authToken),
 )
 
 type GetCheckSubmittedTodayProps = {
@@ -287,7 +288,7 @@ export const getCheckSubmittedToday = withErrorPropagation(
       where("carId", "==", carId),
       where("driverId", "==", uid),
       where("creationTimestamp", ">=", startTimestamp),
-      where("creationTimestamp", "<=", endTimestamp)
+      where("creationTimestamp", "<=", endTimestamp),
     )
 
     const checksSnapshot = await getDocs(checksQuery)
@@ -306,7 +307,7 @@ export const getCheckSubmittedToday = withErrorPropagation(
     })
 
     return todaySubmittedCheck
-  }
+  },
 )
 
 export const getHighestOdoReading = withErrorPropagation(
@@ -316,7 +317,7 @@ export const getHighestOdoReading = withErrorPropagation(
       checksRef,
       where("carId", "==", carId),
       orderBy("odoReading.value", "desc"),
-      limit(1)
+      limit(1),
     )
 
     const checksSnapshot = await getDocs(checksQuery)
@@ -326,9 +327,9 @@ export const getHighestOdoReading = withErrorPropagation(
     }
 
     const [highestOdoReadingDoc] = checksSnapshot.docs.map(
-      (doc) => doc.data() as CheckDoc
+      (doc) => doc.data() as CheckDoc,
     )
 
     return Number(highestOdoReadingDoc.odoReading.value)
-  }
+  },
 )
