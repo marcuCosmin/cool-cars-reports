@@ -88,7 +88,7 @@ export default function Index() {
 
   return (
     <View>
-      <Typography type="heading">Cool Cars South Coast</Typography>
+      <Typography type="heading">The Real Slim Shady</Typography>
 
       {error ? (
         <ErrorView message={error} />
