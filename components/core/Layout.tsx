@@ -28,6 +28,9 @@ const getStyles = (theme: Theme) =>
       paddingBottom: 50,
       paddingTop: 20,
     },
+    loadingView: {
+      padding: 10,
+    },
   }) as const
 
 export const Layout = () => {
@@ -58,6 +61,7 @@ export const Layout = () => {
   if (isLoading || isUpdating) {
     return (
       <LoadingView
+        style={styles.loadingView}
         text={
           isUpdating
             ? "A new software version is available. Updating..."
