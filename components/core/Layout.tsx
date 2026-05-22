@@ -7,6 +7,7 @@ import { onIdTokenChanged } from "firebase/auth"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { clearUserData, initUserData } from "@/redux/userSlice"
 
+import { useAppUpdate } from "@/hooks/useAppUpdate"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
@@ -27,11 +28,12 @@ const getStyles = (theme: Theme) =>
       paddingBottom: 50,
       paddingTop: 20,
     },
-  } as const)
+  }) as const
 
 export const Layout = () => {
   const uid = useAppSelector(({ user }) => user.uid)
   const isLoading = useAppSelector(({ user }) => user.isLoading)
+  const { isUpdating } = useAppUpdate()
 
   const dispatch = useAppDispatch()
   const styles = useStyles(getStyles)
@@ -47,14 +49,22 @@ export const Layout = () => {
         }
 
         dispatch(clearUserData())
-      }
+      },
     )
 
     return cancelTokenChangeSubscription
   }, [])
 
-  if (isLoading) {
-    return <LoadingView />
+  if (isLoading || isUpdating) {
+    return (
+      <LoadingView
+        text={
+          isUpdating
+            ? "A new software version is available. Updating..."
+            : undefined
+        }
+      />
+    )
   }
 
   return (
