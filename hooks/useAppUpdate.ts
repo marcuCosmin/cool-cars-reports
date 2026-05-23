@@ -7,10 +7,15 @@ import { useEffect, useState } from "react"
 import { AppState } from "react-native"
 
 export const useAppUpdate = () => {
+  const [isCheckingForUpdate, setIsCheckingForUpdate] = useState(true)
   const [isUpdating, setIsUpdating] = useState(false)
 
   const checkAndApplyUpdates = async () => {
+    setIsCheckingForUpdate(true)
+
     const { isAvailable } = await checkForUpdateAsync()
+
+    setIsCheckingForUpdate(false)
 
     if (!isAvailable) {
       return
@@ -40,5 +45,5 @@ export const useAppUpdate = () => {
     return () => subscription.remove()
   }, [])
 
-  return { isUpdating }
+  return { isCheckingForUpdate, isUpdating }
 }

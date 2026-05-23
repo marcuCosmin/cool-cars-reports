@@ -36,7 +36,7 @@ const getStyles = (theme: Theme) =>
 export const Layout = () => {
   const uid = useAppSelector(({ user }) => user.uid)
   const isLoading = useAppSelector(({ user }) => user.isLoading)
-  const { isUpdating } = useAppUpdate()
+  const { isCheckingForUpdate, isUpdating } = useAppUpdate()
 
   const dispatch = useAppDispatch()
   const styles = useStyles(getStyles)
@@ -58,7 +58,7 @@ export const Layout = () => {
     return cancelTokenChangeSubscription
   }, [])
 
-  if (isLoading || isUpdating) {
+  if (isLoading || isUpdating || isCheckingForUpdate) {
     return (
       <LoadingView
         style={styles.loadingView}
