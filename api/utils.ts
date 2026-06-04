@@ -7,7 +7,6 @@ type PostCheckAnswersPayload = {
   exterior: Answer[]
   odoReading: OdoReading
   carId: string
-  faultsDetails?: string
   startTimestamp: number
   endTimestamp: number
 }

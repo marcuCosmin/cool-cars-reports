@@ -14,6 +14,7 @@ import { useStyles } from "@/hooks/useStyles"
 import { useTheme, type Theme } from "@/hooks/useTheme"
 
 import { Button } from "./Button"
+import { Typography } from "./Typography"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -41,13 +42,20 @@ const getStyles = (theme: Theme) =>
       borderWidth: 1,
       alignSelf: "flex-end",
     },
-  } as const)
+    characterCountTypography: {
+      color: theme.colors.text,
+      alignSelf: "flex-end",
+      marginTop: 10,
+    },
+  }) as const
 
 type InputProps = {
   type?: "text" | "number" | "textarea"
   style?: StyleProp<TextStyle>
   value?: string
   placeholder?: string
+  minLength?: number
+  maxLength?: number
   onChange: (value: string) => void
 }
 
@@ -64,6 +72,8 @@ export const Input = ({
   style,
   value,
   placeholder,
+  minLength,
+  maxLength,
   onChange,
 }: InputProps) => {
   const theme = useTheme()
@@ -83,6 +93,12 @@ export const Input = ({
 
   const onChangeText = (text: string) => onChange(text)
 
+  const hasMaxLength = maxLength !== undefined
+  const hasMinLength = minLength !== undefined
+
+  const showCharacterCount = hasMinLength || hasMaxLength
+  const currentLength = value?.length ?? 0
+
   const renderedContent = (
     <>
       <NativeInput
@@ -93,6 +109,7 @@ export const Input = ({
         keyboardType={keyboardType}
         style={mergedStyles}
         value={value}
+        maxLength={maxLength}
         onChangeText={onChangeText}
         inputAccessoryViewID={index.toString()}
       />
@@ -119,6 +136,13 @@ export const Input = ({
         style={styles.keyboardAvoidingView}
       >
         {renderedContent}
+        {showCharacterCount && (
+          <Typography style={styles.characterCountTypography}>
+            {currentLength}
+            {hasMinLength && ` / ${maxLength}`}
+            {hasMinLength && ` (minimum ${minLength})`}
+          </Typography>
+        )}
       </KeyboardAvoidingView>
     )
   }

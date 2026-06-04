@@ -8,6 +8,7 @@ import { showToast } from "./toastSlice"
 export type Answer = {
   label: string
   value: boolean
+  details?: string
 }
 
 export type OdoReadingUnit = "km" | "miles"
@@ -23,7 +24,6 @@ type AnswersState = {
   exterior: Answer[]
   odoReading: OdoReading | null
   startTimestamp: number
-  faultsDetails: string
 }
 
 const initialState: AnswersState = {
@@ -32,7 +32,6 @@ const initialState: AnswersState = {
   exterior: [],
   odoReading: null,
   startTimestamp: 0,
-  faultsDetails: "",
 }
 
 type AsyncThunkConfig = {
@@ -54,7 +53,6 @@ export const submitAnswers = createAsyncThunk<
       exterior: answers.exterior,
       odoReading: answers.odoReading as OdoReading,
       carId: cars.selectedCar.id,
-      faultsDetails: answers.faultsDetails,
       startTimestamp: answers.startTimestamp,
       endTimestamp: Date.now(),
     })
@@ -79,7 +77,6 @@ const answersSlice = createSlice({
       state.interior = []
       state.exterior = []
       state.odoReading = null
-      state.faultsDetails = ""
       state.startTimestamp = 0
     },
     setAnswer: (
@@ -91,14 +88,29 @@ const answersSlice = createSlice({
       }>,
     ) => {
       const { sectionKey, index, answer } = action.payload
+      const existingDetails = state[sectionKey][index]?.details
 
-      state[sectionKey][index] = answer
+      state[sectionKey][index] =
+        !answer.value && existingDetails
+          ? { ...answer, details: existingDetails }
+          : answer
     },
     setOdoReading: (state, action: PayloadAction<OdoReading | null>) => {
       state.odoReading = action.payload
     },
-    setFaultsDetails: (state, action: PayloadAction<string>) => {
-      state.faultsDetails = action.payload
+    setAnswerDetails: (
+      state,
+      action: PayloadAction<{
+        sectionKey: "interior" | "exterior"
+        index: number
+        details: string
+      }>,
+    ) => {
+      const { sectionKey, index, details } = action.payload
+      const answer = state[sectionKey][index]
+      if (answer) {
+        state[sectionKey][index] = { ...answer, details }
+      }
     },
     initStartTimestamp: (state) => {
       state.startTimestamp = Date.now()
@@ -113,7 +125,6 @@ const answersSlice = createSlice({
       state.interior = []
       state.exterior = []
       state.odoReading = null
-      state.faultsDetails = ""
       state.startTimestamp = initialState.startTimestamp
     })
     builder.addCase(submitAnswers.rejected, (state) => {
@@ -126,7 +137,7 @@ export const {
   resetAnswers,
   setAnswer,
   setOdoReading,
-  setFaultsDetails,
+  setAnswerDetails,
   initStartTimestamp,
 } = answersSlice.actions
 export const { reducer: answers } = answersSlice

@@ -34,11 +34,13 @@ const getStyles = (theme: Theme) =>
 type TypographyProps = PropsWithChildren<{
   type?: "heading" | "label" | "text" | "button"
   style?: StyleProp<TextStyle>
+  numberOfLines?: number
 }>
 
 export const Typography = ({
   type = "text",
   style,
+  numberOfLines,
   children,
 }: TypographyProps) => {
   const styles = useStyles(getStyles)
@@ -49,5 +51,9 @@ export const Typography = ({
     style
   )
 
-  return <Text style={mergedStyles}>{children}</Text>
+  return (
+    <Text style={mergedStyles} numberOfLines={numberOfLines}>
+      {children}
+    </Text>
+  )
 }

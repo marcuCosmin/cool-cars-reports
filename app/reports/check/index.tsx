@@ -4,6 +4,11 @@ import { useEffect } from "react"
 
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { fetchQuestions } from "@/redux/questionsSlice"
+import {
+  selectExteriorIsCompleted,
+  selectInteriorIsCompleted,
+  selectOdoReadingIsCompleted,
+} from "@/redux/answers.selectors"
 
 import { useStyles } from "@/hooks/useStyles"
 
@@ -43,25 +48,9 @@ export default function Check() {
     return "non-psv-questions"
   })
   const answersAreLoading = useAppSelector(({ answers }) => answers.isLoading)
-  const interiorIsCompleted = useAppSelector(
-    ({ answers, questions }) =>
-      questions.interior.length === answers.interior.length,
-  )
-  const exteriorIsCompleted = useAppSelector(
-    ({ answers, questions }) =>
-      questions.exterior.length === answers.exterior.length,
-  )
-  const odoReadingIsCompleted = useAppSelector(
-    ({ answers }) => answers.odoReading !== null,
-  )
-  const hasFaults = useAppSelector(({ answers }) => {
-    const allQuestions = [...answers.interior, ...answers.exterior]
-
-    return allQuestions.some(({ value }) => !value)
-  })
-  const faultsDetailsIsCompleted = useAppSelector(({ answers }) =>
-    hasFaults ? !!answers.faultsDetails : true,
-  )
+  const interiorIsCompleted = useAppSelector(selectInteriorIsCompleted)
+  const exteriorIsCompleted = useAppSelector(selectExteriorIsCompleted)
+  const odoReadingIsCompleted = useAppSelector(selectOdoReadingIsCompleted)
 
   const actionCardListItems: ActionCardProps[] = [
     {
@@ -84,14 +73,6 @@ export default function Check() {
       displayOverlay: odoReadingIsCompleted,
       overlayIcon: "check-circle",
       onClick: () => router.dismissTo("/reports/check/odo-reading"),
-    },
-    {
-      hidden: !hasFaults,
-      label: "Faults Details",
-      icon: "file-document-edit",
-      displayOverlay: faultsDetailsIsCompleted,
-      overlayIcon: "check-circle",
-      onClick: () => router.dismissTo("/reports/check/faults-details"),
     },
   ]
 

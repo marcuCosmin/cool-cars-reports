@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 
 import { submitAnswers } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
+import { selectAllSectionsAreCompleted } from "@/redux/answers.selectors"
 import { setSubmittedCheckId } from "@/redux/submittedCheckSlice"
 
 import { useStyles } from "@/hooks/useStyles"
@@ -39,8 +40,8 @@ const getStyles = (theme: Theme) =>
 export const CheckFooter = () => {
   const styles = useStyles(getStyles)
 
-  const checkStarted = useAppSelector(({ answers }) => !!answers.startTimestamp)
   const startTimestamp = useAppSelector(({ answers }) => answers.startTimestamp)
+  const checkStarted = !!startTimestamp
 
   const [remainingMandatoryTime, setRemainingMandatoryTime] = useState(() =>
     startTimestamp
@@ -48,24 +49,7 @@ export const CheckFooter = () => {
       : mandatoryCheckDurationMs,
   )
 
-  const allSectionsAreCompleted = useAppSelector(({ answers, questions }) => {
-    const interiorIsCompleted =
-      questions.interior.length === answers.interior.length
-    const exteriorIsCompleted =
-      questions.exterior.length === answers.exterior.length
-    const odoReadingIsCompleted = answers.odoReading !== null
-    const hasFaults = [...answers.interior, ...answers.exterior].some(
-      ({ value }) => !value,
-    )
-    const faultsDetailsIsCompleted = hasFaults ? !!answers.faultsDetails : true
-
-    return (
-      interiorIsCompleted &&
-      exteriorIsCompleted &&
-      odoReadingIsCompleted &&
-      faultsDetailsIsCompleted
-    )
-  })
+  const allSectionsAreCompleted = useAppSelector(selectAllSectionsAreCompleted)
 
   const hasRemainingMandatoryTimeElapsed =
     checkStarted && remainingMandatoryTime <= 0

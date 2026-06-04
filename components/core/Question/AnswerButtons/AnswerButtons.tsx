@@ -56,6 +56,13 @@ export const AnswerButtons = ({
       }),
     )
 
+    if (!value && answer !== false) {
+      router.dismissTo(
+        `/reports/check/${sectionKey}/${questionIndex}/fault-details`,
+      )
+      return
+    }
+
     if (hasNextQuestion) {
       const nextIndex = questionIndex + 1
       router.dismissTo(`/reports/check/${sectionKey}/${nextIndex}`)

@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useSegments } from "expo-router"
+import { router, useLocalSearchParams, useSegments } from "expo-router"
 import { ScrollView } from "react-native"
 
 import {
@@ -13,6 +13,7 @@ import { useCheckStartTimeInit } from "@/hooks/useCheckStartTimeInit"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
+import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
@@ -21,6 +22,11 @@ import { Pagination } from "./Pagination"
 
 const getStyles = (theme: Theme) =>
   ({
+    containerView: {
+      justifyContent: "space-between",
+      flex: 1,
+      gap: 10,
+    },
     labelView: {
       borderWidth: theme.borderWidth,
       borderColor: theme.colors.primary,
@@ -42,6 +48,12 @@ const getStyles = (theme: Theme) =>
       alignItems: "center",
       backgroundColor: "transparent",
       zIndex: 10,
+    },
+    faultDetailsButton: {
+      alignSelf: "center",
+      maxWidth: "50%",
+      marginBottom: 10,
+      padding: 5,
     },
   }) as const
 
@@ -76,6 +88,11 @@ export const Question = () => {
     }
   })
 
+  const onViewFaultDetailsClick = () =>
+    router.dismissTo(
+      `/reports/check/${sectionKey}/${questionIndex}/fault-details`,
+    )
+
   useCheckStartTimeInit()
 
   if (!question) {
@@ -83,7 +100,18 @@ export const Question = () => {
   }
 
   return (
-    <View style={{ justifyContent: "space-between", flex: 1, gap: 10 }}>
+    <View style={styles.containerView}>
+      {answer?.value === false && (
+        <Button
+          style={styles.faultDetailsButton}
+          onClick={onViewFaultDetailsClick}
+        >
+          <Typography type="button" numberOfLines={1}>
+            Fault details
+          </Typography>
+        </Button>
+      )}
+
       <Typography type="heading">Check {displayedIndex}</Typography>
 
       <View style={styles.labelView}>
