@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { AppState } from "react-native"
 
 export const useAppUpdate = () => {
-  const [isCheckingForUpdate, setIsCheckingForUpdate] = useState(true)
+  const [isCheckingForUpdate, setIsCheckingForUpdate] = useState(!__DEV__)
   const [isUpdating, setIsUpdating] = useState(false)
 
   const checkAndApplyUpdates = async () => {
