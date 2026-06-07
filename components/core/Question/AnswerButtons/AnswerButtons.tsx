@@ -29,6 +29,7 @@ type AnswerButtonsProps = {
   hasNextQuestion: boolean
   questionLabel: string
   answer?: boolean
+  faultDetails?: string
 }
 
 export const AnswerButtons = ({
@@ -37,6 +38,7 @@ export const AnswerButtons = ({
   hasNextQuestion,
   questionLabel,
   answer,
+  faultDetails,
 }: AnswerButtonsProps) => {
   const styles = useStyles(getStlyes)
   const dispatch = useAppDispatch()
@@ -56,7 +58,7 @@ export const AnswerButtons = ({
       }),
     )
 
-    if (!value && answer !== false) {
+    if (!value && !faultDetails) {
       router.dismissTo(
         `/reports/check/${sectionKey}/${questionIndex}/fault-details`,
       )

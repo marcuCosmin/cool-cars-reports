@@ -126,6 +126,7 @@ export const Question = () => {
         hasNextQuestion={hasNextQuestion}
         questionLabel={question.label}
         answer={answer?.value}
+        faultDetails={answer?.details}
       />
 
       <Pagination
