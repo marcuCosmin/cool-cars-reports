@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20.15.0
+          node-version: 24.14.1
 
       - name: Setup EAS
         uses: expo/expo-github-action@v8
