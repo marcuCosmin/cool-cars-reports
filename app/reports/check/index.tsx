@@ -1,12 +1,13 @@
-import { router } from "expo-router"
+import { router, type RelativePathString } from "expo-router"
 
 import { useEffect } from "react"
+
+import { QUESTION_SECTIONS, type QuestionSection } from "@/firebase/utils"
 
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 import { fetchQuestions } from "@/redux/questionsSlice"
 import {
-  selectExteriorIsCompleted,
-  selectInteriorIsCompleted,
+  selectCompletedSections,
   selectOdoReadingIsCompleted,
 } from "@/redux/answers.selectors"
 
@@ -21,6 +22,23 @@ import {
 import { LoadingView } from "@/components/basic/LoadingView/LoadingView"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
+
+type SectionCard = Pick<ActionCardProps, "label" | "icon">
+
+const sectionCards: Record<QuestionSection, SectionCard> = {
+  interior: {
+    label: "Interior",
+    icon: "car-arrow-left",
+  },
+  exterior: {
+    label: "Exterior",
+    icon: "car-arrow-right",
+  },
+  driver: {
+    label: "Driver",
+    icon: "account",
+  },
+}
 
 const getStyles = () =>
   ({
@@ -48,25 +66,19 @@ export default function Check() {
     return "non-psv-questions"
   })
   const answersAreLoading = useAppSelector(({ answers }) => answers.isLoading)
-  const interiorIsCompleted = useAppSelector(selectInteriorIsCompleted)
-  const exteriorIsCompleted = useAppSelector(selectExteriorIsCompleted)
+  const completedSections = useAppSelector(selectCompletedSections)
   const odoReadingIsCompleted = useAppSelector(selectOdoReadingIsCompleted)
 
   const actionCardListItems: ActionCardProps[] = [
-    {
-      label: "Interior",
-      icon: "car-arrow-left",
-      displayOverlay: interiorIsCompleted,
-      overlayIcon: "check-circle",
-      onClick: () => router.dismissTo("/reports/check/interior/0"),
-    },
-    {
-      label: "Exterior",
-      icon: "car-arrow-right",
-      displayOverlay: exteriorIsCompleted,
-      overlayIcon: "check-circle",
-      onClick: () => router.dismissTo("/reports/check/exterior/0"),
-    },
+    ...QUESTION_SECTIONS.map((section) => ({
+      ...sectionCards[section],
+      displayOverlay: completedSections[section],
+      overlayIcon: "check-circle" as const,
+      onClick: () =>
+        router.dismissTo(
+          `/reports/check/${section}/0` as RelativePathString,
+        ),
+    })),
     {
       label: "ODO Reading",
       icon: "speedometer",

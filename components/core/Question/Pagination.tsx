@@ -1,7 +1,7 @@
 import { router, type RelativePathString } from "expo-router"
 import { ScrollView, StyleSheet } from "react-native"
 
-import { type QuestionDoc } from "@/firebase/utils"
+import { type QuestionSection } from "@/firebase/utils"
 
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
@@ -50,12 +50,12 @@ type PaginationItem = {
 
 type PaginationProps = {
   questionIndex: number
-  sectionKey: keyof QuestionDoc
+  section: QuestionSection
   items: PaginationItem[]
 }
 
 export const Pagination = ({
-  sectionKey,
+  section,
   items,
   questionIndex,
 }: PaginationProps) => {
@@ -73,7 +73,7 @@ export const Pagination = ({
       x: questionIndex * itemSize,
       animated: false,
     })
-  }, [sectionKey, questionIndex])
+  }, [section, questionIndex])
 
   return (
     <View style={styles.view}>
@@ -96,7 +96,7 @@ export const Pagination = ({
 
           const onClick = () =>
             router.dismissTo(
-              `/reports/check/${sectionKey}/${index}` as RelativePathString,
+              `/reports/check/${section}/${index}` as RelativePathString,
             )
 
           return (

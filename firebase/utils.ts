@@ -15,8 +15,6 @@ import {
 } from "firebase/firestore"
 import { firebaseAuth, firestore } from "./config"
 
-import { Answer, OdoReading } from "@/redux/answersSlice"
-
 const withErrorPropagation =
   <T extends (...args: any[]) => Promise<unknown>>(request: T) =>
   async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
@@ -38,13 +36,17 @@ const withErrorPropagation =
     }
   }
 
+export const QUESTION_SECTIONS = ["interior", "exterior", "driver"] as const
+
+export type QuestionSection = (typeof QUESTION_SECTIONS)[number]
+
 export type Question = {
   label: string
+  section: QuestionSection
 }
 
 export type QuestionDoc = {
-  interior: Question[]
-  exterior: Question[]
+  questions: Question[]
 }
 
 export const getQuestions = withErrorPropagation(
@@ -61,11 +63,11 @@ export const getQuestions = withErrorPropagation(
   },
 )
 
-type Councils = "PSV" | "Cornwall"
+export type Council = "PSV" | "Cornwall"
 
 export type Car = {
   id: string
-  council: Councils
+  council: Council
   isRental: boolean
 }
 
@@ -90,15 +92,33 @@ export const getCars = withErrorPropagation(async () => {
   })
 })
 
+export type CheckAnswer = {
+  label: string
+  section: QuestionSection
+  value: boolean
+  details?: string
+}
+
+export type OdoReadingUnit = "km" | "miles"
+
+export type OdoReading = {
+  unit: OdoReadingUnit
+  value: string
+}
+
 export type CheckDoc = {
+  council: Council
   carId: string
   creationTimestamp: number
+  startTimestamp: number
+  endTimestamp: number
   driverId: string
   odoReading: OdoReading
-  interior: Answer[]
-  exterior: Answer[]
+  answers: CheckAnswer[]
   faultsCount?: number
   hasUnresolvedFaults?: boolean
+  incidentsCount?: number
+  hasUnresolvedIncidents?: boolean
 }
 
 export const getCheck = withErrorPropagation(async (checkId: string) => {

@@ -1,10 +1,9 @@
-import { type Answer, type OdoReading } from "@/redux/answersSlice"
+import { type CheckAnswer, type OdoReading } from "@/firebase/utils"
 
 import { executeApiRequest } from "./config"
 
 type PostCheckAnswersPayload = {
-  interior: Answer[]
-  exterior: Answer[]
+  answers: CheckAnswer[]
   odoReading: OdoReading
   carId: string
   startTimestamp: number

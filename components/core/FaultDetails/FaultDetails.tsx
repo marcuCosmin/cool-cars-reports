@@ -1,9 +1,11 @@
 import { router, useLocalSearchParams, useSegments } from "expo-router"
 
-import { type QuestionDoc } from "@/firebase/utils"
+import { type QuestionSection } from "@/firebase/utils"
 
+import { selectAnswersBySection } from "@/redux/answers.selectors"
 import { setAnswerDetails } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
+import { selectQuestionsBySection } from "@/redux/questions.selectors"
 
 import { useStyles } from "@/hooks/useStyles"
 
@@ -31,7 +33,7 @@ type LocalSearchParams = {
 
 export const FaultDetails = () => {
   const segments = useSegments()
-  const sectionKey = segments[segments.length - 3] as keyof QuestionDoc
+  const section = segments[segments.length - 3] as QuestionSection
 
   const { questionIndex: questionIndexParam } =
     useLocalSearchParams<LocalSearchParams>()
@@ -40,33 +42,40 @@ export const FaultDetails = () => {
   const styles = useStyles(getStyles)
   const dispatch = useAppDispatch()
 
-  const questionLabel = useAppSelector(
-    ({ questions }) => questions[sectionKey][questionIndex].label,
+  const questions = useAppSelector(
+    (state) => selectQuestionsBySection(state)[section],
   )
-  const value = useAppSelector(
-    ({ answers }) => answers[sectionKey][questionIndex]?.details ?? "",
+  const answers = useAppSelector(
+    (state) => selectAnswersBySection(state)[section],
   )
-  const questionsCount = useAppSelector(
-    ({ questions }) => questions[sectionKey].length,
-  )
+
+  const question = questions[questionIndex]
+  const value =
+    answers.find(({ label }) => label === question?.label)?.details ?? ""
+
+  if (!question) {
+    return <View />
+  }
 
   const displayedIndex = questionIndex + 1
   const isValid = isAnswerDetailsValid(value)
-  const hasNextQuestion = questionIndex < questionsCount - 1
+  const hasNextQuestion = questionIndex < questions.length - 1
 
   const handleChange = (text: string) =>
-    dispatch(setAnswerDetails({ sectionKey, index: questionIndex, details: text }))
+    dispatch(
+      setAnswerDetails({
+        section,
+        label: question.label,
+        details: text,
+      }),
+    )
 
   const onBackClick = () =>
-    router.dismissTo(
-      `/reports/check/${sectionKey}/${questionIndex}`,
-    )
+    router.dismissTo(`/reports/check/${section}/${questionIndex}`)
 
   const onConfirmClick = () => {
     if (hasNextQuestion) {
-      router.dismissTo(
-        `/reports/check/${sectionKey}/${questionIndex + 1}`,
-      )
+      router.dismissTo(`/reports/check/${section}/${questionIndex + 1}`)
     } else {
       router.dismissTo("/reports/check")
     }
@@ -76,7 +85,7 @@ export const FaultDetails = () => {
     <View>
       <Button style={styles.questionButton} onClick={onBackClick}>
         <Typography type="button" numberOfLines={1}>
-          Q{displayedIndex}: {questionLabel}
+          Q{displayedIndex}: {question.label}
         </Typography>
       </Button>
 

@@ -3,9 +3,12 @@ import { router } from "expo-router"
 
 import { useEffect, useState } from "react"
 
-import { getHighestOdoReading } from "@/firebase/utils"
+import {
+  getHighestOdoReading,
+  type OdoReadingUnit,
+} from "@/firebase/utils"
 
-import { setOdoReading, type OdoReadingUnit } from "@/redux/answersSlice"
+import { setOdoReading } from "@/redux/answersSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/config"
 
 import { useAsyncRequestHandler } from "@/hooks/useAsyncRequestHandler"

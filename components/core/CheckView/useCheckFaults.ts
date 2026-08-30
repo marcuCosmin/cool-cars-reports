@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { FaultDoc, getCheckFaults } from "@/firebase/utils"
 
@@ -13,13 +13,17 @@ type UseCheckFaultsProps = {
 
 export const useCheckFaults = ({ carId, checkId }: UseCheckFaultsProps) => {
   const [faultsData, setFaultsData] = useState<FaultDoc[]>([])
-  const faults = faultsData.reduce((acc, fault) => {
-    const { description, ...remainingFaultProps } = fault
+  const faults = useMemo(
+    () =>
+      faultsData.reduce((acc, fault) => {
+        const { description, ...remainingFaultProps } = fault
 
-    acc[description] = remainingFaultProps
+        acc[description] = remainingFaultProps
 
-    return acc
-  }, {} as CheckViewFaults)
+        return acc
+      }, {} as CheckViewFaults),
+    [faultsData],
+  )
   const { isLoading, handleAsyncRequest: handleGetCheckFaults } =
     useAsyncRequestHandler({
       request: getCheckFaults,

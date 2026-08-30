@@ -1,38 +1,42 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
+import {
+  type CheckAnswer,
+  type OdoReading,
+  type QuestionSection,
+} from "@/firebase/utils"
+
 import { postCheckAnswers, type PostCheckAnswersResponse } from "@/api/utils"
 
 import { type Dispatch, type State } from "./config"
 import { showToast } from "./toastSlice"
 
-export type Answer = {
-  label: string
-  value: boolean
-  details?: string
-}
-
-export type OdoReadingUnit = "km" | "miles"
-
-export type OdoReading = {
-  unit: OdoReadingUnit
-  value: string
-}
-
 type AnswersState = {
   isLoading: boolean
-  interior: Answer[]
-  exterior: Answer[]
+  items: CheckAnswer[]
   odoReading: OdoReading | null
   startTimestamp: number
 }
 
 const initialState: AnswersState = {
   isLoading: false,
-  interior: [],
-  exterior: [],
+  items: [],
   odoReading: null,
   startTimestamp: 0,
 }
+
+type AnswerIdentifier = {
+  section: QuestionSection
+  label: string
+}
+
+const findAnswerIndex = (
+  answers: CheckAnswer[],
+  { section, label }: AnswerIdentifier,
+): number =>
+  answers.findIndex(
+    (answer) => answer.section === section && answer.label === label,
+  )
 
 type AsyncThunkConfig = {
   state: State
@@ -49,8 +53,7 @@ export const submitAnswers = createAsyncThunk<
     const { answers, cars } = getState()
 
     const response = await postCheckAnswers({
-      interior: answers.interior,
-      exterior: answers.exterior,
+      answers: answers.items,
       odoReading: answers.odoReading as OdoReading,
       carId: cars.selectedCar.id,
       startTimestamp: answers.startTimestamp,
@@ -74,42 +77,40 @@ const answersSlice = createSlice({
   initialState,
   reducers: {
     resetAnswers: (state) => {
-      state.interior = []
-      state.exterior = []
+      state.items = []
       state.odoReading = null
       state.startTimestamp = 0
     },
-    setAnswer: (
-      state,
-      action: PayloadAction<{
-        sectionKey: "interior" | "exterior"
-        index: number
-        answer: Answer
-      }>,
-    ) => {
-      const { sectionKey, index, answer } = action.payload
-      const existingDetails = state[sectionKey][index]?.details
+    setAnswer: (state, action: PayloadAction<CheckAnswer>) => {
+      const existingIndex = findAnswerIndex(state.items, action.payload)
+      const existingDetails = state.items[existingIndex]?.details
 
-      state[sectionKey][index] =
-        !answer.value && existingDetails
-          ? { ...answer, details: existingDetails }
-          : answer
+      const nextAnswer =
+        !action.payload.value && existingDetails
+          ? { ...action.payload, details: existingDetails }
+          : action.payload
+
+      if (existingIndex === -1) {
+        state.items.push(nextAnswer)
+      } else {
+        state.items[existingIndex] = nextAnswer
+      }
     },
     setOdoReading: (state, action: PayloadAction<OdoReading | null>) => {
       state.odoReading = action.payload
     },
     setAnswerDetails: (
       state,
-      action: PayloadAction<{
-        sectionKey: "interior" | "exterior"
-        index: number
-        details: string
-      }>,
+      action: PayloadAction<AnswerIdentifier & { details: string }>,
     ) => {
-      const { sectionKey, index, details } = action.payload
-      const answer = state[sectionKey][index]
-      if (answer) {
-        state[sectionKey][index] = { ...answer, details }
+      const { details } = action.payload
+      const existingIndex = findAnswerIndex(state.items, action.payload)
+
+      if (existingIndex !== -1) {
+        state.items[existingIndex] = {
+          ...state.items[existingIndex],
+          details,
+        }
       }
     },
     initStartTimestamp: (state) => {
@@ -122,8 +123,7 @@ const answersSlice = createSlice({
     })
     builder.addCase(submitAnswers.fulfilled, (state) => {
       state.isLoading = false
-      state.interior = []
-      state.exterior = []
+      state.items = []
       state.odoReading = null
       state.startTimestamp = initialState.startTimestamp
     })

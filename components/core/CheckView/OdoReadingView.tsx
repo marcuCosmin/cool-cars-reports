@@ -1,4 +1,4 @@
-import { type OdoReading } from "@/redux/answersSlice"
+import { type OdoReading } from "@/firebase/utils"
 
 import { useStyles } from "@/hooks/useStyles"
 

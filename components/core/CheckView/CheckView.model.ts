@@ -1,11 +1,9 @@
-import { type FaultDoc } from "@/firebase/utils"
-
-import { type Answer } from "@/redux/answersSlice"
+import { type CheckAnswer, type FaultDoc } from "@/firebase/utils"
 
 export type CheckViewFaults = {
   [description: string]: Omit<FaultDoc, "description">
 }
 
-export type AnswerWithFault = Answer & {
+export type AnswerWithFault = CheckAnswer & {
   fault?: Pick<FaultDoc, "status">
 }

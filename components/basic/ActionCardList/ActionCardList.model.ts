@@ -1,4 +1,5 @@
 type Icons =
+  | "account"
   | "car-arrow-left"
   | "car-arrow-right"
   | "car-cog"

@@ -1,6 +1,6 @@
 import { router } from "expo-router"
 
-import { type QuestionDoc } from "@/firebase/utils"
+import { type QuestionSection } from "@/firebase/utils"
 
 import { setAnswer } from "@/redux/answersSlice"
 import { useAppDispatch } from "@/redux/config"
@@ -25,7 +25,7 @@ const getStlyes = () =>
 
 type AnswerButtonsProps = {
   questionIndex: number
-  sectionKey: keyof QuestionDoc
+  section: QuestionSection
   hasNextQuestion: boolean
   questionLabel: string
   answer?: boolean
@@ -34,7 +34,7 @@ type AnswerButtonsProps = {
 
 export const AnswerButtons = ({
   questionIndex,
-  sectionKey,
+  section,
   hasNextQuestion,
   questionLabel,
   answer,
@@ -49,25 +49,22 @@ export const AnswerButtons = ({
   const handleButtonClick = (value: boolean) => {
     dispatch(
       setAnswer({
-        sectionKey,
-        index: questionIndex,
-        answer: {
-          value,
-          label: questionLabel,
-        },
+        section,
+        label: questionLabel,
+        value,
       }),
     )
 
     if (!value && !faultDetails) {
       router.dismissTo(
-        `/reports/check/${sectionKey}/${questionIndex}/fault-details`,
+        `/reports/check/${section}/${questionIndex}/fault-details`,
       )
       return
     }
 
     if (hasNextQuestion) {
       const nextIndex = questionIndex + 1
-      router.dismissTo(`/reports/check/${sectionKey}/${nextIndex}`)
+      router.dismissTo(`/reports/check/${section}/${nextIndex}`)
       return
     }
 

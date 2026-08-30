@@ -1,6 +1,10 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
-import { type CheckDoc } from "@/firebase/utils"
+import {
+  QUESTION_SECTIONS,
+  type CheckDoc,
+  type QuestionSection,
+} from "@/firebase/utils"
 
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
@@ -10,6 +14,7 @@ import { Tab } from "@/components/basic/Tab/Tab"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
+import { groupBySection } from "@/utils/groupBySection"
 import { parseTimestampForDisplay } from "@/utils/parseTimestampForDisplay"
 
 import { useCheckFaults } from "./useCheckFaults"
@@ -35,15 +40,17 @@ const getStyles = (theme: Theme) =>
     },
   } as const)
 
+const sectionLabels: Record<QuestionSection, string> = {
+  interior: "Interior",
+  exterior: "Exterior",
+  driver: "Driver",
+}
+
 const tabOptions = [
-  {
-    value: "interior",
-    label: "Interior",
-  },
-  {
-    value: "exterior",
-    label: "Exterior",
-  },
+  ...QUESTION_SECTIONS.map((section) => ({
+    value: section,
+    label: sectionLabels[section],
+  })),
   {
     value: "odoReading",
     label: "Odo Reading",
@@ -60,35 +67,29 @@ export const CheckView = ({
   checkId,
   carId,
   odoReading,
-  interior,
-  exterior,
+  answers,
 }: CheckViewProps) => {
   const { faults, isLoading: isLoadingFaults } = useCheckFaults({
     carId,
     checkId,
   })
 
-  const mappedInterior = mapAnswersToFaults({
-    faults,
-    answers: interior,
-  })
-  const mappedExterior = mapAnswersToFaults({
-    faults,
-    answers: exterior,
-  })
+  const answersBySection = useMemo(
+    () => groupBySection(mapAnswersToFaults({ faults, answers })),
+    [answers, faults],
+  )
 
-  const [tabValue, setTabValue] = useState("interior")
+  const [tabValue, setTabValue] = useState<string>("interior")
   const styles = useStyles(getStyles)
 
   const renderTabContent = () => {
-    switch (tabValue) {
-      case "interior":
-        return <QuestionsView answers={mappedInterior} />
-      case "exterior":
-        return <QuestionsView answers={mappedExterior} />
-      case "odoReading":
-        return <OdoReadingView odoReading={odoReading} />
+    const section = QUESTION_SECTIONS.find((section) => section === tabValue)
+
+    if (!section) {
+      return <OdoReadingView odoReading={odoReading} />
     }
+
+    return <QuestionsView answers={answersBySection[section]} />
   }
 
   const parsedTimestamp = parseTimestampForDisplay({

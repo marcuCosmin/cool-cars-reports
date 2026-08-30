@@ -1,9 +1,9 @@
-import { type Answer } from "@/redux/answersSlice"
+import { type CheckAnswer } from "@/firebase/utils"
 
 import type { AnswerWithFault, CheckViewFaults } from "./CheckView.model"
 
 type MapAnswersToFaultsProps = {
-  answers: Answer[]
+  answers: CheckAnswer[]
   faults: CheckViewFaults
 }
 

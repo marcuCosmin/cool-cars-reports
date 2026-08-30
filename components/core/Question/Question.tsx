@@ -1,13 +1,11 @@
 import { router, useLocalSearchParams, useSegments } from "expo-router"
 import { ScrollView } from "react-native"
 
-import {
-  type QuestionDoc,
-  type Question as QuestionType,
-} from "@/firebase/utils"
+import { type QuestionSection } from "@/firebase/utils"
 
-import { Answer } from "@/redux/answersSlice"
+import { selectAnswersBySection } from "@/redux/answers.selectors"
 import { useAppSelector } from "@/redux/config"
+import { selectQuestionsBySection } from "@/redux/questions.selectors"
 
 import { useCheckStartTimeInit } from "@/hooks/useCheckStartTimeInit"
 import { useStyles } from "@/hooks/useStyles"
@@ -63,7 +61,7 @@ type LocalSearchParams = {
 
 export const Question = () => {
   const segments = useSegments()
-  const sectionKey = segments[segments.length - 2] as keyof QuestionDoc
+  const section = segments[segments.length - 2] as QuestionSection
 
   const styles = useStyles(getStyles)
 
@@ -72,15 +70,19 @@ export const Question = () => {
   const questionIndex = Number(searchParamQuestionIndex)
   const displayedIndex = questionIndex + 1
 
-  const questions = useAppSelector(({ questions }) => questions[sectionKey])
-  const answers = useAppSelector(({ answers }) => answers[sectionKey])
+  const questions = useAppSelector(
+    (state) => selectQuestionsBySection(state)[section],
+  )
+  const answers = useAppSelector(
+    (state) => selectAnswersBySection(state)[section],
+  )
 
-  const question = questions?.[questionIndex] as QuestionType | undefined
-  const answer = answers?.[questionIndex] as Answer | undefined
-  const hasNextQuestion = questionIndex < questions?.length - 1
+  const question = questions[questionIndex]
+  const answer = answers.find(({ label }) => label === question?.label)
+  const hasNextQuestion = questionIndex < questions.length - 1
 
-  const paginationItems = questions?.map((_, index) => {
-    const answer = answers?.[index] as Answer | undefined
+  const paginationItems = questions.map((question, index) => {
+    const answer = answers.find(({ label }) => label === question.label)
 
     return {
       isActive: index === questionIndex,
@@ -90,7 +92,7 @@ export const Question = () => {
 
   const onViewFaultDetailsClick = () =>
     router.dismissTo(
-      `/reports/check/${sectionKey}/${questionIndex}/fault-details`,
+      `/reports/check/${section}/${questionIndex}/fault-details`,
     )
 
   useCheckStartTimeInit()
@@ -121,7 +123,7 @@ export const Question = () => {
       </View>
 
       <AnswerButtons
-        sectionKey={sectionKey}
+        section={section}
         questionIndex={questionIndex}
         hasNextQuestion={hasNextQuestion}
         questionLabel={question.label}
@@ -130,7 +132,7 @@ export const Question = () => {
       />
 
       <Pagination
-        sectionKey={sectionKey}
+        section={section}
         questionIndex={questionIndex}
         items={paginationItems}
       />
