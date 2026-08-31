@@ -8,6 +8,7 @@ import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
+import { ANSWER_ICONS } from "./CheckView.const"
 import type { AnswerWithFault } from "./CheckView.model"
 
 const getStyles = (theme: Theme) =>
@@ -56,18 +57,14 @@ export const QuestionsView = ({ answers }: QuestionsViewProps) => {
       <ScrollView contentContainerStyle={styles.scrollView}>
         {answers.map((answer, index) => {
           const { fault, label } = answer
-
-          const iconName = answer.value ? "check-circle" : "close-circle"
-          const iconColor = answer.value
-            ? theme.colors.primary
-            : theme.colors.text
+          const { name, colorKey } = ANSWER_ICONS[`${answer.value}`]
 
           return (
             <View key={index} style={styles.itemView}>
               <Typography style={styles.labelTypography}>{label}</Typography>
               <MaterialCommunityIcons
-                name={iconName}
-                color={iconColor}
+                name={name}
+                color={theme.colors[colorKey]}
                 size={24}
               />
               {fault && <IssuesStatus status={fault.status} />}

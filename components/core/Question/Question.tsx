@@ -127,6 +127,7 @@ export const Question = () => {
         questionIndex={questionIndex}
         hasNextQuestion={hasNextQuestion}
         questionLabel={question.label}
+        showNotApplicable={question.showNotApplicable}
         answer={answer?.value}
         faultDetails={answer?.details}
       />

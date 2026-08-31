@@ -43,6 +43,7 @@ export type QuestionSection = (typeof QUESTION_SECTIONS)[number]
 export type Question = {
   label: string
   section: QuestionSection
+  showNotApplicable?: boolean
 }
 
 export type QuestionDoc = {
@@ -95,7 +96,7 @@ export const getCars = withErrorPropagation(async () => {
 export type CheckAnswer = {
   label: string
   section: QuestionSection
-  value: boolean
+  value: boolean | "not-applicable"
   details?: string
 }
 

@@ -4,12 +4,13 @@ import { useEffect } from "react"
 
 import { QUESTION_SECTIONS, type QuestionSection } from "@/firebase/utils"
 
-import { useAppDispatch, useAppSelector } from "@/redux/config"
-import { fetchQuestions } from "@/redux/questionsSlice"
 import {
   selectCompletedSections,
   selectOdoReadingIsCompleted,
 } from "@/redux/answers.selectors"
+import { useAppDispatch, useAppSelector } from "@/redux/config"
+import { selectQuestionsBySection } from "@/redux/questions.selectors"
+import { fetchQuestions } from "@/redux/questionsSlice"
 
 import { useStyles } from "@/hooks/useStyles"
 
@@ -68,16 +69,17 @@ export default function Check() {
   const answersAreLoading = useAppSelector(({ answers }) => answers.isLoading)
   const completedSections = useAppSelector(selectCompletedSections)
   const odoReadingIsCompleted = useAppSelector(selectOdoReadingIsCompleted)
+  const questionsBySection = useAppSelector(selectQuestionsBySection)
 
   const actionCardListItems: ActionCardProps[] = [
-    ...QUESTION_SECTIONS.map((section) => ({
+    ...QUESTION_SECTIONS.filter(
+      (section) => !!questionsBySection[section].length,
+    ).map((section) => ({
       ...sectionCards[section],
       displayOverlay: completedSections[section],
       overlayIcon: "check-circle" as const,
       onClick: () =>
-        router.dismissTo(
-          `/reports/check/${section}/0` as RelativePathString,
-        ),
+        router.dismissTo(`/reports/check/${section}/0` as RelativePathString),
     })),
     {
       label: "ODO Reading",
