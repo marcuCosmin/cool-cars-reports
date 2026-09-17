@@ -8,8 +8,6 @@ import { useAppDispatch } from "@/redux/config"
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
-import { Button } from "@/components/basic/Button"
-import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
 import { AnswerButton } from "./AnswerButton"
@@ -24,14 +22,13 @@ const getStyles = (theme: Theme) =>
     mainButtonsView: {
       display: "flex",
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "space-around",
       alignItems: "center",
     },
-    notApplicableButton: {
-      marginTop: 0,
-    },
-    notApplicableButtonActive: {
-      backgroundColor: theme.colors.primary,
+    notApplicableView: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
     },
   }) as const
 
@@ -98,6 +95,7 @@ export const AnswerButtons = ({
           onClick={onYesClick}
           isActive={isYesButtonActive}
         />
+
         <AnswerButton
           icon="close"
           onClick={onNoClick}
@@ -106,17 +104,13 @@ export const AnswerButtons = ({
       </View>
 
       {showNotApplicable && (
-        <Button
-          style={[
-            styles.notApplicableButton,
-            isNotApplicableButtonActive && styles.notApplicableButtonActive,
-          ]}
-          onClick={onNotApplicableClick}
-        >
-          <Typography type="button" numberOfLines={1}>
-            Not applicable
-          </Typography>
-        </Button>
+        <View style={styles.notApplicableView}>
+          <AnswerButton
+            text="N/A"
+            onClick={onNotApplicableClick}
+            isActive={isNotApplicableButtonActive}
+          />
+        </View>
       )}
     </View>
   )

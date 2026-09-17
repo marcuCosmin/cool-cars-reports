@@ -24,6 +24,7 @@ const getTheme = (isDarkMode: boolean) => {
       small: 12,
       medium: 16,
       large: 24,
+      extraLarge: 32,
     },
     gap: 10,
     borderRadius: 8,

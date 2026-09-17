@@ -1,10 +1,11 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { StyleSheet, type ViewStyle } from "react-native"
+import { StyleSheet } from "react-native"
 
 import { useStyles } from "@/hooks/useStyles"
-import { useTheme, type Theme } from "@/hooks/useTheme"
+import { type Theme } from "@/hooks/useTheme"
 
-import { Button as DefaultButton } from "@/components/basic/Button"
+import { Button } from "@/components/basic/Button"
+import { Typography } from "@/components/basic/Typography"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -15,36 +16,70 @@ const getStyles = (theme: Theme) =>
       borderWidth: 1,
       display: "flex",
       alignItems: "center",
+      justifyContent: "center",
       width: 100,
       height: 100,
+    },
+    content: {
+      alignSelf: "stretch",
+      display: "flex",
+      textAlign: "center",
+      fontSize: theme.fontSize.extraLarge,
+      color: theme.colors.primary,
+      fontWeight: "bold",
+    },
+    contentActive: {
+      color: theme.colors.white,
     },
     buttonActive: {
       backgroundColor: theme.colors.primary,
     },
-  } as const)
+  }) as const
 
-type AnswerButtonProps = {
+type AnswerButtonIconProps = {
   icon: "check" | "close"
-  isActive?: boolean
-  onClick: () => void
 }
 
+type AnswerButtonTextProps = {
+  text: string
+}
+
+type AnswerButtonProps = {
+  isActive?: boolean
+  onClick: () => void
+} & (AnswerButtonIconProps | AnswerButtonTextProps)
+
 export const AnswerButton = ({
-  icon,
   isActive,
   onClick,
+  ...props
 }: AnswerButtonProps) => {
   const styles = useStyles(getStyles)
-  const mergedStyles = StyleSheet.compose<ViewStyle, ViewStyle, ViewStyle>(
+  const mergedStyles = StyleSheet.flatten([
     styles.button,
-    isActive && styles.buttonActive
-  )
-  const theme = useTheme()
-  const iconColor = isActive ? theme.colors.white : theme.colors.primary
+    isActive && styles.buttonActive,
+  ])
+
+  if ("text" in props) {
+    const mergedTypographyStyles = StyleSheet.flatten([
+      styles.content,
+      isActive && styles.contentActive,
+    ])
+
+    return (
+      <Button style={mergedStyles} onClick={onClick}>
+        <Typography numberOfLines={1} style={mergedTypographyStyles}>
+          {props.text}
+        </Typography>
+      </Button>
+    )
+  }
+
+  const iconColor = isActive ? styles.contentActive.color : styles.content.color
 
   return (
-    <DefaultButton style={mergedStyles} onClick={onClick}>
-      <MaterialCommunityIcons name={icon} size={75} color={iconColor} />
-    </DefaultButton>
+    <Button style={mergedStyles} onClick={onClick}>
+      <MaterialCommunityIcons name={props.icon} size={75} color={iconColor} />
+    </Button>
   )
 }

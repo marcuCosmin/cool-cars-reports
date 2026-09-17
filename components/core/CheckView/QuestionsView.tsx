@@ -8,7 +8,8 @@ import { IssuesStatus } from "@/components/basic/IssuesStatus"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { ANSWER_ICONS } from "./CheckView.const"
+import { answersIconsConfig } from "./CheckView.const"
+
 import type { AnswerWithFault } from "./CheckView.model"
 
 const getStyles = (theme: Theme) =>
@@ -42,7 +43,11 @@ const getStyles = (theme: Theme) =>
       color: theme.colors.primary,
       fontWeight: "bold",
     },
-  } as const)
+    answerTypography: {
+      fontSize: theme.fontSize.medium,
+      fontWeight: "bold",
+    },
+  }) as const
 
 type QuestionsViewProps = {
   answers: AnswerWithFault[]
@@ -57,16 +62,23 @@ export const QuestionsView = ({ answers }: QuestionsViewProps) => {
       <ScrollView contentContainerStyle={styles.scrollView}>
         {answers.map((answer, index) => {
           const { fault, label } = answer
-          const { name, colorKey } = ANSWER_ICONS[`${answer.value}`]
+          const answerIcon = answersIconsConfig[`${answer.value}`]
+          const color = theme.colors[answerIcon.colorKey]
 
           return (
             <View key={index} style={styles.itemView}>
               <Typography style={styles.labelTypography}>{label}</Typography>
-              <MaterialCommunityIcons
-                name={name}
-                color={theme.colors[colorKey]}
-                size={24}
-              />
+              {"text" in answerIcon ? (
+                <Typography style={[styles.answerTypography, { color }]}>
+                  {answerIcon.text}
+                </Typography>
+              ) : (
+                <MaterialCommunityIcons
+                  name={answerIcon.name}
+                  color={color}
+                  size={24}
+                />
+              )}
               {fault && <IssuesStatus status={fault.status} />}
             </View>
           )

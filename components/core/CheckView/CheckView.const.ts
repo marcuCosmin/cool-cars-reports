@@ -4,13 +4,20 @@ import { type CheckAnswer } from "@/firebase/utils"
 
 import { type Theme } from "@/hooks/useTheme"
 
-type AnswerIconName = React.ComponentProps<typeof MaterialCommunityIcons>["name"]
+type AnswerIconName = React.ComponentProps<
+  typeof MaterialCommunityIcons
+>["name"]
 
-export const ANSWER_ICONS: Record<
+type AnswerIconConfig = { colorKey: keyof Theme["colors"] } & (
+  | { name: AnswerIconName }
+  | { text: string }
+)
+
+export const answersIconsConfig: Record<
   `${CheckAnswer["value"]}`,
-  { name: AnswerIconName; colorKey: keyof Theme["colors"] }
+  AnswerIconConfig
 > = {
   true: { name: "check-circle", colorKey: "primary" },
   false: { name: "close-circle", colorKey: "text" },
-  "not-applicable": { name: "minus-circle", colorKey: "placeholder" },
+  "not-applicable": { text: "N/A", colorKey: "placeholder" },
 }

@@ -93,7 +93,7 @@ export const getCars = withErrorPropagation(async () => {
   })
 })
 
-export type CheckAnswer = {
+export type  CheckAnswer = {
   label: string
   section: QuestionSection
   value: boolean | "not-applicable"
