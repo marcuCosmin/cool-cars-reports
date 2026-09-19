@@ -128,6 +128,7 @@ export const Question = () => {
         hasNextQuestion={hasNextQuestion}
         questionLabel={question.label}
         showNotApplicable={question.showNotApplicable}
+        isBlocking={question.isBlocking}
         answer={answer?.value}
         faultDetails={answer?.details}
       />

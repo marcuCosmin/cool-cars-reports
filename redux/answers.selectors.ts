@@ -41,3 +41,6 @@ export const selectOdoReadingIsCompleted = ({ answers }: State): boolean =>
 export const selectAllSectionsAreCompleted = (state: State): boolean =>
   Object.values(selectCompletedSections(state)).every(Boolean) &&
   selectOdoReadingIsCompleted(state)
+
+export const selectHasBlockingFault = ({ answers }: State): boolean =>
+  answers.items.some(({ isBlocking, value }) => isBlocking && value === false)

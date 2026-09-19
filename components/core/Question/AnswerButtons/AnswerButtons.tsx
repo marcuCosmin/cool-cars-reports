@@ -1,6 +1,6 @@
 import { router } from "expo-router"
 
-import { type QuestionSection } from "@/firebase/utils"
+import { type CheckAnswer, type QuestionSection } from "@/firebase/utils"
 
 import { setAnswer } from "@/redux/answersSlice"
 import { useAppDispatch } from "@/redux/config"
@@ -38,6 +38,7 @@ type AnswerButtonsProps = {
   hasNextQuestion: boolean
   questionLabel: string
   showNotApplicable?: boolean
+  isBlocking?: boolean
   answer?: boolean | "not-applicable"
   faultDetails?: string
 }
@@ -48,6 +49,7 @@ export const AnswerButtons = ({
   hasNextQuestion,
   questionLabel,
   showNotApplicable,
+  isBlocking,
   answer,
   faultDetails,
 }: AnswerButtonsProps) => {
@@ -59,13 +61,13 @@ export const AnswerButtons = ({
   const isNotApplicableButtonActive = answer === "not-applicable"
 
   const handleButtonClick = (value: boolean | "not-applicable") => {
-    dispatch(
-      setAnswer({
-        section,
-        label: questionLabel,
-        value,
-      }),
-    )
+    const answer: CheckAnswer = { section, label: questionLabel, value }
+
+    if (isBlocking) {
+      answer.isBlocking = true
+    }
+
+    dispatch(setAnswer(answer))
 
     if (value === false && !faultDetails) {
       router.dismissTo(

@@ -1,11 +1,3 @@
-import { router } from "expo-router"
-import { useEffect, useState } from "react"
-
-import { submitAnswers } from "@/redux/answersSlice"
-import { useAppDispatch, useAppSelector } from "@/redux/config"
-import { selectAllSectionsAreCompleted } from "@/redux/answers.selectors"
-import { setSubmittedCheckId } from "@/redux/submittedCheckSlice"
-
 import { useStyles } from "@/hooks/useStyles"
 import { type Theme } from "@/hooks/useTheme"
 
@@ -13,9 +5,9 @@ import { Button } from "@/components/basic/Button"
 import { Typography } from "@/components/basic/Typography"
 import { View } from "@/components/basic/View"
 
-import { formatCountdown } from "@/utils/formatCountdown"
-
-import { mandatoryCheckDurationMs } from "./CheckFooter.const"
+import { BlockingFaultModal } from "./BlockingFaultModal"
+import { useCheckSubmission } from "./useCheckSubmission"
+import { useMandatoryCheckTimer } from "./useMandatoryCheckTimer"
 
 const getStyles = (theme: Theme) =>
   ({
@@ -40,69 +32,38 @@ const getStyles = (theme: Theme) =>
 export const CheckFooter = () => {
   const styles = useStyles(getStyles)
 
-  const startTimestamp = useAppSelector(({ answers }) => answers.startTimestamp)
-  const checkStarted = !!startTimestamp
+  const { hasElapsed, showRemainingTime, formattedRemainingTime } =
+    useMandatoryCheckTimer()
 
-  const [remainingMandatoryTime, setRemainingMandatoryTime] = useState(() =>
-    startTimestamp
-      ? mandatoryCheckDurationMs - (Date.now() - startTimestamp)
-      : mandatoryCheckDurationMs,
-  )
-
-  const allSectionsAreCompleted = useAppSelector(selectAllSectionsAreCompleted)
-
-  const hasRemainingMandatoryTimeElapsed =
-    checkStarted && remainingMandatoryTime <= 0
-  const isSubmitDisabled =
-    !allSectionsAreCompleted || !hasRemainingMandatoryTimeElapsed
-
-  const showRemainingMandatoryTime =
-    checkStarted && !hasRemainingMandatoryTimeElapsed
-
-  const dispatch = useAppDispatch()
-
-  const onSubmitClick = async () => {
-    const result = await dispatch(submitAnswers())
-
-    if (result.meta.requestStatus === "rejected") {
-      return
-    }
-
-    const checkId = result.payload as string
-
-    dispatch(setSubmittedCheckId(checkId))
-
-    router.dismissTo("/")
-  }
-
-  useEffect(() => {
-    if (!checkStarted || hasRemainingMandatoryTimeElapsed) {
-      return
-    }
-
-    const intervalId = setInterval(
-      () => setRemainingMandatoryTime((prev) => (prev ? prev - 1000 : prev)),
-      1000,
-    )
-
-    return () => clearInterval(intervalId)
-  }, [checkStarted, hasRemainingMandatoryTimeElapsed])
+  const {
+    isSubmitDisabled,
+    isBlockingModalOpen,
+    onSubmitClick,
+    onBlockingModalClose,
+    onBlockingModalConfirm,
+  } = useCheckSubmission({ hasMandatoryTimeElapsed: hasElapsed })
 
   return (
     <View style={styles.view}>
-      {showRemainingMandatoryTime && (
+      {showRemainingTime && (
         <View style={styles.timerView}>
           <Typography style={styles.timerLabelTypography}>
             Mandatory check time remaining
           </Typography>
           <Typography style={styles.timerValueTypography}>
-            {formatCountdown(remainingMandatoryTime)}
+            {formattedRemainingTime}
           </Typography>
         </View>
       )}
       <Button onClick={onSubmitClick} disabled={isSubmitDisabled}>
         <Typography type="button">Submit check</Typography>
       </Button>
+
+      <BlockingFaultModal
+        isOpen={isBlockingModalOpen}
+        onClose={onBlockingModalClose}
+        onConfirm={onBlockingModalConfirm}
+      />
     </View>
   )
 }

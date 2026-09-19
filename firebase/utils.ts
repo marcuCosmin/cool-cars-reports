@@ -44,6 +44,7 @@ export type Question = {
   label: string
   section: QuestionSection
   showNotApplicable?: boolean
+  isBlocking?: boolean
 }
 
 export type QuestionDoc = {
@@ -98,6 +99,7 @@ export type  CheckAnswer = {
   section: QuestionSection
   value: boolean | "not-applicable"
   details?: string
+  isBlocking?: boolean
 }
 
 export type OdoReadingUnit = "km" | "miles"
